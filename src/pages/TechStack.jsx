@@ -15,8 +15,46 @@ const TechStack = () => {
   useEffect(() => {
     const revealElements = document.querySelectorAll('.reveal');
     revealElements.forEach(el => el.classList.add('active'));
-    window.scrollTo(0, 0);
-  }, [activeTab]);
+    
+    const highlight = searchParams.get('highlight');
+    if (!highlight) {
+      window.scrollTo(0, 0);
+    }
+  }, [activeTab, searchParams]);
+
+  useEffect(() => {
+    const highlight = searchParams.get('highlight');
+    if (highlight) {
+      const cards = document.querySelectorAll('.tech-info-card');
+      let targetCard = null;
+      cards.forEach(card => {
+        const h3 = card.querySelector('h3');
+        if (h3 && h3.textContent.trim().toLowerCase() === highlight.trim().toLowerCase()) {
+          targetCard = card;
+        }
+      });
+      
+      if (targetCard) {
+        cards.forEach(c => c.classList.remove('tech-highlight-active'));
+        targetCard.classList.add('tech-highlight-active');
+        
+        const timer = setTimeout(() => {
+          targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 150);
+
+        const removeHighlight = () => {
+          targetCard.classList.remove('tech-highlight-active');
+          targetCard.removeEventListener('mouseenter', removeHighlight);
+        };
+        targetCard.addEventListener('mouseenter', removeHighlight);
+
+        return () => {
+          clearTimeout(timer);
+          targetCard.removeEventListener('mouseenter', removeHighlight);
+        };
+      }
+    }
+  }, [searchParams, activeTab]);
 
   const handleTabClick = (tabKey) => {
     setActiveTab(tabKey);

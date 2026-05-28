@@ -1,6 +1,45 @@
 import React from 'react';
 
 const Process = () => {
+  const steps = [
+    {
+      number: '01',
+      name: 'Analysis',
+      text: 'Understanding system flows and detailed scope.',
+      tags: ['Scope Doc', 'Flowcharts']
+    },
+    {
+      number: '02',
+      name: 'UI/UX Design',
+      text: 'Creating wireframes and interactive mockups.',
+      tags: ['Figma UI', 'Wireframes']
+    },
+    {
+      number: '03',
+      name: 'Coding',
+      text: 'Frontend, backend, APIs, and integrations.',
+      tags: ['Clean Code', 'APIs']
+    },
+    {
+      number: '04',
+      name: 'Testing',
+      text: 'Functional, performance, and responsive QA.',
+      tags: ['QA Report', 'Bug Fixes']
+    },
+    {
+      number: '05',
+      name: 'Deployment',
+      text: 'Publishing systems to secure hosting.',
+      tags: ['Live Server', 'SSL Setup']
+    },
+    {
+      number: '06',
+      name: 'Support',
+      text: 'Ongoing tuning, patches, and feature updates.',
+      tags: ['Uptime Check', 'Updates']
+    }
+  ];
+
   return (
     <section className="process">
       <div className="container">
@@ -12,12 +51,18 @@ const Process = () => {
 
         <div className="process-timeline reveal scale-up active">
           <div className="process-steps">
-            <div className="process-step"><div className="process-number">01</div><h4 className="process-name">Analysis</h4><p className="process-text">Understanding system flows and detailed scope.</p></div>
-            <div className="process-step"><div className="process-number">02</div><h4 className="process-name">UI/UX Design</h4><p className="process-text">Creating wireframes and interactive mockups.</p></div>
-            <div className="process-step"><div className="process-number">03</div><h4 className="process-name">Coding</h4><p className="process-text">Frontend, backend, APIs, and integrations.</p></div>
-            <div className="process-step"><div className="process-number">04</div><h4 className="process-name">Testing</h4><p className="process-text">Functional, performance, and responsive QA.</p></div>
-            <div className="process-step"><div className="process-number">05</div><h4 className="process-name">Deployment</h4><p className="process-text">Publishing systems to secure hosting.</p></div>
-            <div className="process-step"><div className="process-number">06</div><h4 className="process-name">Support</h4><p className="process-text">Ongoing tuning, patches, and feature updates.</p></div>
+            {steps.map((step, idx) => (
+              <div key={idx} className="process-step">
+                <div className="process-number">{step.number}</div>
+                <h4 className="process-name">{step.name}</h4>
+                <p className="process-text">{step.text}</p>
+                <div className="process-tags">
+                  {step.tags.map((tag, tIdx) => (
+                    <span key={tIdx}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

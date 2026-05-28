@@ -172,7 +172,7 @@ const AdminDashboard = () => {
   return (
     <>
       <div className="page-hero" style={{ paddingBottom: '30px' }}>
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="container admin-hero-header">
           <div>
             <span className="section-tag">Security Console</span>
             <h1 className="page-hero-title" style={{ fontSize: '32px' }}>Content Control Center</h1>
@@ -184,7 +184,7 @@ const AdminDashboard = () => {
       </div>
 
       <section className="content-page" style={{ paddingTop: '20px', paddingBottom: '120px' }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '30px' }}>
+        <div className="container admin-dashboard-layout">
           
           {/* Dashboard Left Sidebar - Tab triggers */}
           <aside className="glass-card" style={{ padding: '20px', alignSelf: 'start', borderRadius: '12px' }}>
@@ -392,7 +392,7 @@ const AdminDashboard = () => {
                     {content.metadata.counters?.map((counter, idx) => (
                       <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)', display: 'grid', gap: '10px' }}>
                         <strong>Counter #{idx+1}</strong>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+                        <div className="admin-counters-grid">
                           <div>
                             <label className="form-label" style={{ fontSize: '11px' }}>Label</label>
                             <input 
@@ -518,11 +518,11 @@ const AdminDashboard = () => {
 
                   <div>
                     <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Grid Metrics (Limit 4 items)</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                    <div className="admin-metrics-grid">
                       {content.metadata.metrics?.map((metric, idx) => (
                         <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border)', display: 'grid', gap: '8px' }}>
                           <strong>Metric #{idx+1}</strong>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                          <div className="admin-metric-inputs">
                             <div>
                               <label className="form-label" style={{ fontSize: '10px' }}>Label</label>
                               <input 

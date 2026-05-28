@@ -48,19 +48,41 @@ const Header = () => {
   };
 
   const handleMouseEnter = () => {
-    setMegaMenuOpen(true);
+    if (window.innerWidth > 1180) {
+      setMegaMenuOpen(true);
+    }
   };
 
   const handleMouseLeave = () => {
-    setMegaMenuOpen(false);
+    if (window.innerWidth > 1180) {
+      setMegaMenuOpen(false);
+    }
   };
 
   const handleTechMouseEnter = () => {
-    setTechMenuOpen(true);
+    if (window.innerWidth > 1180) {
+      setTechMenuOpen(true);
+    }
   };
 
   const handleTechMouseLeave = () => {
-    setTechMenuOpen(false);
+    if (window.innerWidth > 1180) {
+      setTechMenuOpen(false);
+    }
+  };
+
+  const handleServicesClick = (e) => {
+    if (window.innerWidth <= 1180) {
+      e.preventDefault();
+      setMegaMenuOpen(!megaMenuOpen);
+    }
+  };
+
+  const handleTechClick = (e) => {
+    if (window.innerWidth <= 1180) {
+      e.preventDefault();
+      setTechMenuOpen(!techMenuOpen);
+    }
   };
 
   // Determine if a service subpage route is active
@@ -96,8 +118,9 @@ const Header = () => {
             <Link 
               to="/services" 
               className={`nav-link ${isServicesActive ? 'active' : ''}`}
+              onClick={handleServicesClick}
             >
-              Services <i className="ri-arrow-down-s-line" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '2px', fontSize: '12px' }}></i>
+              Services <i className="ri-arrow-down-s-line" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '2px', fontSize: '12px', transform: megaMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }}></i>
             </Link>
             <div className="services-mega-menu">
               <div className="mega-menu-head">
@@ -105,7 +128,7 @@ const Header = () => {
                   <h3>Our Services</h3>
                   <p>Everything we build for your business</p>
                 </div>
-                <Link to="/services" className="mega-view-all">View all <i class="ri-arrow-right-s-line"></i></Link>
+                <Link to="/services" className="mega-view-all">View all <i className="ri-arrow-right-s-line"></i></Link>
               </div>
               <div className="mega-services-grid">
                 {servicesData.map((service) => (
@@ -138,8 +161,9 @@ const Header = () => {
             <Link 
               to="/technology-stack" 
               className={`nav-link ${location.pathname === '/technology-stack' ? 'active' : ''}`}
+              onClick={handleTechClick}
             >
-              Tech Stack <i className="ri-arrow-down-s-line" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '2px', fontSize: '12px' }}></i>
+              Tech Stack <i className="ri-arrow-down-s-line" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '2px', fontSize: '12px', transform: techMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }}></i>
             </Link>
             <div className="services-mega-menu">
               <div className="mega-menu-head">
@@ -191,6 +215,12 @@ const Header = () => {
             <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
               Contact
             </NavLink>
+          </li>
+          {/* Mobile-Only Direct Call Trigger */}
+          <li className="nav-item nav-mobile-only" style={{ width: '100%', marginTop: '16px' }}>
+            <a href="tel:+919999530797" className="btn btn-primary nav-btn" style={{ width: '100%', justifyContent: 'center', boxSizing: 'border-box' }}>
+              <i className="ri-phone-fill" style={{ marginRight: '6px' }}></i> Call Now
+            </a>
           </li>
         </ul>
 
