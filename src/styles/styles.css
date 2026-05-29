@@ -10648,4 +10648,754 @@ body {
     box-shadow: 0 30px 60px rgba(15, 23, 42, 0.06) !important;
 }
 
+/* ==========================================================================
+   SERVICES PAGE REDESIGN PREMIUM STYLES (LIGHT MATCHING HOME)
+   ========================================================================== */
+
+/* Services Wrapper & Background */
+.services-page-wrapper {
+    background:
+        radial-gradient(circle at 14% 18%, rgba(20, 184, 166, 0.15), transparent 30%),
+        radial-gradient(circle at 86% 30%, rgba(15, 118, 110, 0.12), transparent 28%),
+        linear-gradient(180deg, #f8fbff 0%, #f3f7fb 54%, #f8fafc 100%) !important;
+    color: #1e293b !important;
+    overflow: hidden;
+    position: relative;
+    isolation: isolate;
+}
+
+.services-page-wrapper::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: -2 !important;
+    opacity: 0.45 !important;
+    background-image:
+        linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px) !important;
+    background-size: 42px 42px !important;
+    mask-image: linear-gradient(180deg, transparent 0%, #000 5%, #000 95%, transparent 100%) !important;
+    pointer-events: none !important;
+}
+
+.services-page-wrapper::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: -1 !important;
+    opacity: 0.18 !important;
+    background-image: radial-gradient(rgba(15, 23, 42, 0.34) 0.6px, transparent 0.6px) !important;
+    background-size: 6px 6px !important;
+    pointer-events: none !important;
+}
+
+/* Sections spacing */
+.services-hero-sec,
+.services-benefits-sec,
+.services-process-sec,
+.services-tech-sec,
+.services-portfolio-sec,
+.services-premium-cta {
+    padding: 100px 0 !important;
+    position: relative !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Section 1 Hero */
+.services-hero-sec {
+    padding-top: 160px !important;
+}
+
+.services-hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.hero-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(29, 92, 99, 0.08);
+    padding-top: 25px;
+}
+
+.hero-stat-box h3 {
+    font-size: 26px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin-bottom: 4px !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.hero-stat-box span {
+    font-size: 11px !important;
+    color: #475569 !important;
+    font-weight: 600 !important;
+}
+
+/* SaaS Dashboard Mockup Styles */
+.saas-dashboard-mockup-wrapper {
+    position: relative;
+    width: 100%;
+    height: 440px;
+    background: radial-gradient(135deg, rgba(20, 184, 166, 0.05) 0%, rgba(255, 255, 255, 0.6) 100%);
+    border: 1px solid rgba(29, 92, 99, 0.08);
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 25px 55px rgba(15, 23, 42, 0.06);
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-style: preserve-3d;
+    isolation: isolate;
+}
+
+.saas-mesh-glow {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    filter: blur(75px);
+    opacity: 0.25;
+    z-index: -1;
+    animation: saasGlow 5s infinite alternate ease-in-out;
+}
+
+.saas-mesh-glow.glow-cyan {
+    background: var(--accent);
+    top: 15%;
+    left: 15%;
+}
+
+.saas-mesh-glow.glow-magenta {
+    background: var(--secondary);
+    bottom: 15%;
+    right: 15%;
+    animation-delay: -2.5s;
+}
+
+@keyframes saasGlow {
+    0% { transform: scale(1) translate(0,0); }
+    100% { transform: scale(1.15) translate(10px, -10px); }
+}
+
+.saas-dashboard-glass-frame {
+    width: 320px;
+    background: rgba(13, 20, 38, 0.94);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.saas-dashboard-head {
+    height: 34px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 8px;
+    position: relative;
+}
+
+.saas-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.saas-dots span {
+    width: 6.5px;
+    height: 6.5px;
+    border-radius: 50%;
+    background: #ef4444;
+}
+
+.saas-dots span:nth-child(2) { background: #eab308; }
+.saas-dots span:nth-child(3) { background: #22c55e; }
+
+.saas-title {
+    font-size: 9px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.saas-pulse-badge {
+    margin-left: auto;
+    font-size: 8px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pulse-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: blinker 1.4s infinite linear;
+}
+
+.saas-dashboard-body {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    height: 190px;
+}
+
+.saas-body-nav {
+    background: rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 14px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.saas-body-nav .nav-item {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+}
+
+.saas-body-nav .nav-item.active {
+    background: var(--accent);
+}
+
+.saas-body-main {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saas-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.saas-kpi-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+}
+
+.saas-kpi-card span {
+    font-size: 6px;
+    color: var(--text-muted);
+}
+
+.saas-kpi-card strong {
+    font-size: 9.5px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.saas-kpi-card .trend {
+    font-size: 5.5px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.trend.positive { color: var(--accent); }
+.trend.stable { color: var(--secondary); }
+
+.saas-charts-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 8px;
+    flex: 1;
+}
+
+.chart-item {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Floating Service Pills styles */
+.floating-service-pill {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(14px) !important;
+    border: 1px solid rgba(29, 92, 99, 0.1) !important;
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    color: #0f172a !important;
+    font-size: 11px;
+    font-weight: 700;
+    z-index: 3;
+    transition: transform 0.3s;
+}
+
+.saas-dashboard-mockup-wrapper .saas-dashboard-glass-frame + .floating-service-pill {
+    transition: transform 0.3s;
+}
+
+.floating-service-pill:hover {
+    transform: scale(1.06) translateY(-4px) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 12px 28px rgba(20, 184, 166, 0.15) !important;
+}
+
+.pill-web { top: 8%; left: -6%; animation: orbitDriftOne 5s infinite ease-in-out; }
+.pill-mobile { top: 22%; right: -8%; animation: orbitDriftTwo 4.6s infinite ease-in-out; }
+.pill-erp { bottom: 10%; left: -10%; animation: orbitDriftOne 5.4s infinite ease-in-out; }
+.saas-dashboard-mockup-wrapper .saas-dashboard-glass-frame + .saas-body-main + .saas-charts-grid + .pill-crm,
+.pill-crm { bottom: 25%; right: -6%; animation: orbitDriftTwo 4.2s infinite ease-in-out; }
+.pill-ai { top: 48%; left: 75%; animation: orbitDriftOne 4.8s infinite ease-in-out; }
+.pill-cloud { bottom: 2%; right: 26%; animation: orbitDriftTwo 5s infinite ease-in-out; }
+
+/* Section 2: Services Bento Grid */
+.services-bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.bento-card {
+    position: relative;
+    padding: 35px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.58) !important;
+    border: 1px solid rgba(29, 92, 99, 0.08) !important;
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.04) !important;
+    backdrop-filter: blur(20px) !important;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 380px;
+}
+
+.card-size-medium {
+    grid-column: span 2;
+}
+
+.bento-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.82) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 25px 50px rgba(15, 23, 42, 0.08), 0 0 20px rgba(20, 184, 166, 0.08) !important;
+}
+
+.bento-top-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent);
+}
+
+.bento-top-accent.accent-purple { background: var(--secondary); }
+.bento-top-accent.accent-blue { background: var(--primary); }
+.bento-top-accent.accent-green { background: #8fba4a; }
+.bento-top-accent.accent-yellow { background: #f59e0b; }
+.bento-top-accent.accent-pink { background: #ec4899; }
+
+.bento-icon-wrap {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 24px;
+}
+
+.bento-card h3 {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin-bottom: 12px !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.bento-card p {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    color: #475569 !important;
+    margin-bottom: 20px !important;
+}
+
+.bento-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 25px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bento-checklist li {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bento-checklist li i {
+    color: var(--accent);
+    font-size: 15px;
+}
+
+.bento-learn-btn {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent) !important;
+    transition: all 0.3s;
+}
+
+.bento-learn-btn i {
+    font-size: 14px;
+    transition: transform 0.2s;
+}
+
+.bento-learn-btn:hover i {
+    transform: translateX(4px);
+}
+
+/* Section 3: Business Benefits horizontal cards */
+.benefits-premium-horizontal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.benefit-horizontal-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 24px 28px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.58) !important;
+    border: 1px solid rgba(29, 92, 99, 0.08) !important;
+    backdrop-filter: blur(14px) !important;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03) !important;
+    transition: transform 0.3s, border-color 0.3s, background-color 0.3s;
+}
+
+.benefit-horizontal-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.06) !important;
+}
+
+.benefit-left-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.benefit-horizontal-card h4 {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin-bottom: 4px !important;
+}
+
+.benefit-horizontal-card p {
+    font-size: 12px !important;
+    color: #475569 !important;
+    line-height: 1.5 !important;
+}
+
+/* Section 5: Technology Stack Chips */
+.tech-stack-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.tech-category-card {
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.58) !important;
+    border: 1px solid rgba(29, 92, 99, 0.08) !important;
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.04) !important;
+    backdrop-filter: blur(20px) !important;
+}
+
+.tech-category-card h4 {
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin-bottom: 22px !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1.5px solid rgba(29, 92, 99, 0.08);
+    padding-bottom: 10px;
+}
+
+.tech-chips-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tech-chip-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.6) !important;
+    border: 1px solid rgba(29, 92, 99, 0.08) !important;
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155 !important;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.tech-chip-item:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent) !important;
+    box-shadow: 0 8px 16px rgba(15, 23, 42, 0.05) !important;
+}
+
+.tech-chip-item i {
+    font-size: 18px;
+}
+
+.tech-chip-item i.color-react { color: var(--accent); }
+.tech-chip-item i.color-next { color: #0f172a; }
+.tech-chip-item i.color-angular { color: #dd0031; }
+.tech-chip-item i.color-vue { color: #42b883; }
+.tech-chip-item i.color-node { color: #8cc84b; }
+.tech-chip-item i.color-laravel { color: #ff2d20; }
+.tech-chip-item i.color-php { color: #777bb4; }
+.tech-chip-item i.color-python { color: #3776ab; }
+.tech-chip-item i.color-mongo { color: #47a248; }
+.tech-chip-item i.color-mysql { color: #00758f; }
+.tech-chip-item i.color-postgres { color: #336791; }
+.tech-chip-item i.color-firebase { color: #ffca28; }
+.tech-chip-item i.color-aws { color: #ff9900; }
+.tech-chip-item i.color-docker { color: #2496ed; }
+.tech-chip-item i.color-kube { color: #326ce5; }
+.tech-chip-item i.color-vps { color: var(--secondary); }
+
+/* Section 6: Portfolio Success Stories */
+.portfolio-showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.portfolio-glass-card {
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.58) !important;
+    border: 1px solid rgba(29, 92, 99, 0.08) !important;
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.04) !important;
+    backdrop-filter: blur(20px) !important;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s;
+}
+
+.portfolio-glass-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent) !important;
+    box-shadow: 0 25px 50px rgba(15, 23, 42, 0.08), 0 0 20px rgba(20, 184, 166, 0.08) !important;
+}
+
+.portfolio-mockup-screen {
+    width: 100%;
+    height: 180px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #090810 0%, #1e293b 100%);
+    overflow: hidden;
+}
+
+.window-decor-dots {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    gap: 4px;
+}
+
+.window-decor-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.big-decor-icon {
+    font-size: 64px;
+    color: var(--accent);
+    opacity: 0.35;
+    transition: transform 0.5s ease;
+}
+
+.portfolio-glass-card:hover .big-decor-icon {
+    transform: scale(1.15) rotate(5deg);
+    opacity: 0.6;
+}
+
+.background-clinic { background: linear-gradient(135deg, #0d5c75 0%, #06b6d4 100%); }
+.background-erp-mock { background: linear-gradient(135deg, #4c1d95 0%, #8b5cf6 100%); }
+.background-re { background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%); }
+.background-ecom { background: linear-gradient(135deg, #064e3b 0%, #10b981 100%); }
+.background-mobile-mock { background: linear-gradient(135deg, #831843 0%, #db2777 100%); }
+
+.portfolio-card-desc {
+    padding: 24px;
+}
+
+.proj-cat-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 30px;
+    background: rgba(20, 184, 166, 0.08);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.portfolio-card-desc h3 {
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin-bottom: 8px !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.portfolio-card-desc p {
+    font-size: 12px !important;
+    line-height: 1.6 !important;
+    color: #475569 !important;
+    margin-bottom: 22px !important;
+}
+
+.btn-view-project {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent) !important;
+    transition: all 0.3s;
+}
+
+.btn-view-project i {
+    font-size: 13px;
+    transition: transform 0.2s;
+}
+
+.btn-view-project:hover i {
+    transform: translateX(4px);
+}
+
+/* Section 7: Services premium CTA Dark Cosmic */
+.services-premium-cta {
+    background: #080710 !important;
+}
+
+/* Services Bento Grid Responsive overrides */
+@media (max-width: 1180px) {
+    .portfolio-showcase-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 980px) {
+    .services-bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .card-size-medium {
+        grid-column: span 2;
+    }
+    .benefits-premium-horizontal-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .tech-stack-cards-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .portfolio-showcase-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .about-hero-grid,
+    .services-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+    .saas-dashboard-mockup-wrapper {
+        max-width: 540px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .services-bento-grid {
+        grid-template-columns: 1fr;
+    }
+    .card-size-medium {
+        grid-column: span 1;
+    }
+    .saas-dashboard-mockup-wrapper {
+        height: 380px;
+    }
+    .floating-service-pill {
+        display: none; /* Hide floating service badges on mobile viewports to prevent overflow */
+    }
+    .benefits-premium-horizontal-grid {
+        grid-template-columns: 1fr;
+    }
+    .tech-stack-cards-grid {
+        grid-template-columns: 1fr;
+    }
+    .portfolio-showcase-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-stats-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+}
+
+
 
