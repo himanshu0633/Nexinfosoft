@@ -209,7 +209,7 @@ const TechStack = () => {
               <h3>Not sure which technology is right for your project?</h3>
               <p>Our team can suggest a practical stack after reviewing your scope, users, integrations, and budget.</p>
             </div>
-            <Link to="/contact" className="btn btn-primary">Get Free Consultation</Link>
+            <Link to="/contact" className="btn btn-primary"><span>Get Free Consultation</span></Link>
           </div>
         </div>
       </section>

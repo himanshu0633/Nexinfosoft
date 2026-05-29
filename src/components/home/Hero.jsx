@@ -87,7 +87,9 @@ const Hero = () => {
             <span></span> {data.metadata?.tag || 'AI Powered Digital Transformation Studio'}
           </div>
           <h1 className="hero-title">
-            <span className="hero-title-line">{data.title}</span> <span className="gradient-text-accent">{rotatingWord}</span> <span className="hero-title-line">{data.subtitle}</span>
+            <span className="hero-title-line">{data.title}</span>
+            <span className="gradient-text-accent rotating-keyword">{rotatingWord}</span>
+            <span className="hero-title-line">{data.subtitle}</span>
           </h1>
           <p className="hero-desc">{data.description}</p>
           <div className="hero-btns">

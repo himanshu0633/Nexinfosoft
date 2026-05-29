@@ -93,8 +93,8 @@ const WhyChooseUs = () => {
           </div>
 
           <div className="value-actions">
-            <Link to="/contact" className="btn btn-primary">Start Your Project <i className="ri-arrow-right-line"></i></Link>
-            <Link to="/free-consultation" className="btn btn-secondary">Book Free Consultation <i className="ri-calendar-line"></i></Link>
+            <Link to="/contact" className="btn btn-primary"><span>Start Your Project</span> <i className="ri-arrow-right-line"></i></Link>
+            <Link to="/free-consultation" className="btn btn-secondary"><span>Book Free Consultation</span> <i className="ri-calendar-line"></i></Link>
           </div>
 
           <div className="value-timeline" aria-label="Delivery process timeline">

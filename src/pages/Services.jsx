@@ -226,8 +226,8 @@ const Services = () => {
             <h2 className="section-title">Ready to Kickstart Your Project?</h2>
             <p>Discuss your operational blueprints and requirements with our engineering team for a free structural quote.</p>
             <div className="hero-btns" style={{ justifyContent: 'center' }}>
-              <Link to="/contact" className="btn btn-primary">Book Consultation Session</Link>
-              <Link to="/portfolio" className="btn btn-secondary">Review Recent Works</Link>
+              <Link to="/contact" className="btn btn-primary"><span>Book Consultation Session</span></Link>
+              <Link to="/portfolio" className="btn btn-secondary"><span>Review Recent Works</span></Link>
             </div>
           </div>
         </div>

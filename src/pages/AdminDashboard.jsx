@@ -178,7 +178,7 @@ const AdminDashboard = () => {
             <h1 className="page-hero-title" style={{ fontSize: '32px' }}>Content Control Center</h1>
           </div>
           <button onClick={handleLogout} className="btn btn-secondary" style={{ padding: '8px 18px', fontSize: '13px' }}>
-            <i className="ri-logout-box-r-line"></i> Log out
+            <i className="ri-logout-box-r-line"></i> <span>Log out</span>
           </button>
         </div>
       </div>
@@ -327,7 +327,7 @@ const AdminDashboard = () => {
                       className="btn btn-secondary" 
                       style={{ padding: '8px 16px', fontSize: '13px', margin: 0, cursor: 'pointer' }}
                     >
-                      <i className="ri-upload-cloud-line"></i> {uploading ? 'Uploading...' : 'Choose File'}
+                      <i className="ri-upload-cloud-line"></i> <span>{uploading ? 'Uploading...' : 'Choose File'}</span>
                     </label>
                     {uploading && <span style={{ fontSize: '12px', color: 'var(--primary)' }}><i className="ri-loader-4-line ri-spin"></i> Uploading asset...</span>}
                   </div>
