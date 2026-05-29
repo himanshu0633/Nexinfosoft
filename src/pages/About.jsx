@@ -76,6 +76,9 @@ const About = () => {
   };
 
   useEffect(() => {
+    // Scroll reveal fallback
+    const revealElements = document.querySelectorAll('.reveal');
+    revealElements.forEach(el => el.classList.add('active'));
     window.scrollTo(0, 0);
   }, []);
 
