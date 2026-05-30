@@ -259,7 +259,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> Fast & Secure</li>
                 <li><i className="ri-checkbox-circle-fill"></i> SEO Friendly</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/business-website" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>
@@ -278,7 +278,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> Secure Checkout</li>
                 <li><i className="ri-checkbox-circle-fill"></i> Order Tracking</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/ecommerce-website" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>
@@ -297,7 +297,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> Dashboard & Portals</li>
                 <li><i className="ri-checkbox-circle-fill"></i> API Integrations</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/custom-web-development" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>
@@ -316,7 +316,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> User Friendly UI</li>
                 <li><i className="ri-checkbox-circle-fill"></i> Push Notifications</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/mobile-applications" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>
@@ -335,7 +335,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> UI/UX Design</li>
                 <li><i className="ri-checkbox-circle-fill"></i> Visual Consistency</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/branding-graphic-design" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>
@@ -354,7 +354,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> Social Media</li>
                 <li><i className="ri-checkbox-circle-fill"></i> Lead Generation</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/digital-marketing" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>
@@ -373,7 +373,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> Inventory Control</li>
                 <li><i className="ri-checkbox-circle-fill"></i> Reports & Analytics</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/erp-development" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>
@@ -392,7 +392,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> Sales Pipeline</li>
                 <li><i className="ri-checkbox-circle-fill"></i> Reports & Insights</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/custom-crm-development" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>
@@ -411,7 +411,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> Explainer Videos</li>
                 <li><i className="ri-checkbox-circle-fill"></i> Social Media Reels</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/video-editing-promotional-content" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>
@@ -430,7 +430,7 @@ const Services = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> Feature Prioritization</li>
                 <li><i className="ri-checkbox-circle-fill"></i> Scalable Architecture</li>
               </ul>
-              <Link to="/contact" className="bento-learn-btn">
+              <Link to="/service/mvp-development" className="bento-learn-btn">
                 <span>Learn More</span>
                 <i className="ri-arrow-right-line"></i>
               </Link>

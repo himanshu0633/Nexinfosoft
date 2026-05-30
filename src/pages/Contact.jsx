@@ -1,20 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import contactData from '../data/contactData';
 
-const Contact = () => {
-  const [formData, setFormData] = useState({
-    userName: '',
-    userEmail: '',
-    userPhone: '',
-    userService: '',
-    userMsg: ''
-  });
-  const [modalActive, setModalActive] = useState(false);
+// Custom scroll-triggered animated counter component
+const AnimatedCounter = ({ value, duration = 1500 }) => {
+  const [count, setCount] = useState('0');
+  const ref = useRef(null);
+  const animated = useRef(false);
 
   useEffect(() => {
-    const revealElements = document.querySelectorAll('.reveal');
-    revealElements.forEach(el => el.classList.add('active'));
-    window.scrollTo(0, 0);
-  }, []);
+    const match = value.toString().match(/^(\d+)(.*)$/);
+    if (!match) {
+      setCount(value);
+      return;
+    }
+    const target = parseInt(match[1], 10);
+    const suffix = match[2];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !animated.current) {
+          animated.current = true;
+          let currentStep = 0;
+          const totalSteps = 40;
+          const stepTime = duration / totalSteps;
+
+          const timer = setInterval(() => {
+            currentStep++;
+            const progress = currentStep / totalSteps;
+            const currentVal = Math.round(target * progress);
+            if (currentStep >= totalSteps) {
+              setCount(`${target}${suffix}`);
+              clearInterval(timer);
+            } else {
+              setCount(`${currentVal}${suffix}`);
+            }
+          }, stepTime);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+    return () => {
+      if (ref.current) observer.unobserve(ref.current);
+    };
+  }, [value, duration]);
+
+  return <span ref={ref}>{count}</span>;
+};
+
+const Contact = () => {
+  // Form state
+  const [formData, setFormData] = useState({
+    fullName: '',
+    companyName: '',
+    email: '',
+    phone: '',
+    service: '',
+    budget: '',
+    details: ''
+  });
+
+  const [modalActive, setModalActive] = useState(false);
+  const [activeFaqIndex, setActiveFaqIndex] = useState(null);
+
+  // Refs for tilt parallax
+  const heroIllustrationRef = useRef(null);
+  const ctaIllustrationRef = useRef(null);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -26,22 +82,23 @@ const Contact = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    
-    // Natively validate pattern/fields in state
     if (
-      formData.userName.trim() &&
-      formData.userEmail.trim() &&
-      formData.userPhone.trim().length === 10 &&
-      formData.userService &&
-      formData.userMsg.trim()
+      formData.fullName.trim() &&
+      formData.email.trim() &&
+      formData.phone.trim().length === 10 &&
+      formData.service &&
+      formData.budget &&
+      formData.details.trim()
     ) {
       setModalActive(true);
       setFormData({
-        userName: '',
-        userEmail: '',
-        userPhone: '',
-        userService: '',
-        userMsg: ''
+        fullName: '',
+        companyName: '',
+        email: '',
+        phone: '',
+        service: '',
+        budget: '',
+        details: ''
       });
     }
   };
@@ -50,157 +107,474 @@ const Contact = () => {
     setModalActive(false);
   };
 
-  return (
-    <>
-      <div className="page-hero">
-        <div className="container reveal slide-up">
-          <h1 className="page-hero-title">Start Engineering Your Digital Future</h1>
-          <p className="page-hero-desc">Have a system in mind or need a free technical estimate? Drop us a note, and our engineering desk will respond within 4 hours.</p>
-        </div>
-      </div>
+  const toggleFaq = (index) => {
+    if (activeFaqIndex === index) {
+      setActiveFaqIndex(null);
+    } else {
+      setActiveFaqIndex(index);
+    }
+  };
 
-      <section className="contact-section">
-        <div className="container contact-grid">
-          
-          {/* Left Info Column */}
-          <div className="glass-card contact-info-card reveal slide-left">
-            <div className="contact-info-header">
-              <h3>Office Headquarters</h3>
-              <p>Stop by our design center or contact our lines directly for urgent project escalations.</p>
-            </div>
-            
-            <div className="contact-detail-items">
-              <div className="contact-detail-item">
-                <div className="contact-detail-icon">
-                  <i className="ri-map-pin-line"></i>
+  const handleCardMouseMove = (event, cardEl) => {
+    if (!cardEl) return;
+    const rect = cardEl.getBoundingClientRect();
+    const rotateX = ((event.clientY - rect.top) / rect.height - 0.5) * -6;
+    const rotateY = ((event.clientX - rect.left) / rect.width - 0.5) * 6;
+    cardEl.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+  };
+
+  const handleCardMouseLeave = (cardEl) => {
+    if (!cardEl) return;
+    cardEl.style.transform = '';
+  };
+
+  useEffect(() => {
+    const revealElements = document.querySelectorAll('.reveal');
+    revealElements.forEach(el => el.classList.add('active'));
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="contact-page-wrapper">
+      {/* ==========================================================================
+         SECTION 1: HERO SECTION
+         ========================================================================== */}
+      <section className="contact-hero-sec">
+        {/* Soft glowing mesh background */}
+        <div className="contact-mesh-grid"></div>
+        <div className="contact-glow-accent glow-one"></div>
+        <div className="contact-glow-accent glow-two"></div>
+
+        <div className="container">
+          <div className="contact-hero-grid">
+            <div className="contact-hero-left reveal slide-left">
+              <span className="section-tag-premium">CONTACT US</span>
+              <h1 className="contact-hero-title">
+                Let's Build Something Amazing Together
+              </h1>
+              <p className="contact-hero-desc">
+                Have a project idea, need a business website, ERP system, mobile app, or custom software solution? Let's discuss your requirements.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="contact-hero-btns">
+                <Link to="/free-consultation" className="btn btn-primary">
+                  <span>Book Free Consultation</span>
+                  <i className="ri-chat-smile-2-line"></i>
+                </Link>
+                <a href="#contact-methods" className="btn btn-secondary">
+                  <span>Schedule Call</span>
+                  <i className="ri-phone-line"></i>
+                </a>
+              </div>
+
+              {/* Stats Counters */}
+              <div className="contact-hero-stats">
+                <div className="con-stat-item">
+                  <h3><AnimatedCounter value="300+" /></h3>
+                  <span>Projects Delivered</span>
                 </div>
-                <div>
-                  <div className="contact-detail-title">Address</div>
-                  <div className="contact-detail-text" style={{ fontSize: '14px', lineHeight: 1.4 }}>
-                    Nexinfosoft IT Solutions
+                <div className="con-stat-item">
+                  <h3><AnimatedCounter value="250+" /></h3>
+                  <span>Happy Clients</span>
+                </div>
+                <div className="con-stat-item">
+                  <h3><AnimatedCounter value="24/7" /></h3>
+                  <span>Support Sync</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="contact-hero-right reveal slide-right delay-200">
+              <div 
+                ref={heroIllustrationRef}
+                className="contact-hero-illustration"
+                onMouseMove={(e) => handleCardMouseMove(e, heroIllustrationRef.current)}
+                onMouseLeave={() => handleCardMouseLeave(heroIllustrationRef.current)}
+              >
+                {/* 3D Dashboard Mockup Design representation */}
+                <div className="contact-hero-3d-box">
+                  <div className="con-3d-head">
+                    <div className="con-dots">
+                      <span></span><span></span><span></span>
+                    </div>
+                    <div className="con-title">Communication Telemetry</div>
+                  </div>
+                  <div className="con-3d-body">
+                    <i className="ri-customer-service-2-fill"></i>
                   </div>
                 </div>
-              </div>
 
-              <div className="contact-detail-item">
-                <div className="contact-detail-icon">
-                  <i className="ri-phone-line"></i>
+                {/* Floating Cards */}
+                <div className="con-floating-card c-card-one">
+                  <i className="ri-phone-fill"></i>
+                  <span>Call Us</span>
                 </div>
-                <div>
-                  <div className="contact-detail-title">Direct Call Support</div>
-                  <div className="contact-detail-text">+91 99995 30797</div>
+                <div className="con-floating-card c-card-two">
+                  <i className="ri-mail-fill"></i>
+                  <span>Email Us</span>
                 </div>
-              </div>
-
-              <div className="contact-detail-item">
-                <div className="contact-detail-icon">
-                  <i className="ri-mail-line"></i>
+                <div className="con-floating-card c-card-three">
+                  <i className="ri-whatsapp-fill"></i>
+                  <span>WhatsApp Support</span>
                 </div>
-                <div>
-                  <div className="contact-detail-title">Email Inquiries</div>
-                  <div className="contact-detail-text">info@nexinfosoft.com</div>
+                <div className="con-floating-card c-card-four">
+                  <i className="ri-map-pin-fill"></i>
+                  <span>Visit Office</span>
                 </div>
               </div>
-            </div>
-
-            {/* Custom Map Placeholder */}
-            <div className="map-container">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14026.046903823485!2d77.08643875323412!3d28.49424759080517!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d193fdf6c63b1%3A0xc3cbcf79a781b0a!2sDLF%20Phase%203%2C%20Sector%2024%2C%20Gurugram%2C%20Haryana%20122022!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(1.2)' }} 
-                allowFullScreen="" 
-                loading="lazy" 
-                title="Google Maps DLF Phase 3 Sector 24 Gurugram"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Right Form Column */}
-          <div className="contact-form-card reveal slide-right delay-200">
-            <form id="contactForm" onSubmit={handleFormSubmit}>
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label" htmlFor="userName">Your Name *</label>
-                  <input 
-                    className="form-control" 
-                    type="text" 
-                    id="userName" 
-                    placeholder="eg. Amit Sharma" 
-                    value={formData.userName}
-                    onChange={handleInputChange}
-                    required 
-                  />
+      {/* ==========================================================================
+         SECTION 2: CONTACT METHODS SECTION (4 PREMIUM CARDS)
+         ========================================================================== */}
+      <section id="contact-methods" className="contact-methods-sec">
+        <div className="container">
+          <div className="contact-methods-grid">
+            {contactData.contactMethods.map((method, idx) => (
+              <a 
+                href={method.link} 
+                target="_blank" 
+                rel="noreferrer" 
+                key={idx} 
+                className="contact-method-card reveal slide-up"
+                style={{ '--delay': `${idx * 100}ms` }}
+              >
+                <div className="method-icon-wrap" style={{ background: method.color }}>
+                  <i className={method.icon}></i>
                 </div>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="userEmail">Email Address *</label>
-                  <input 
-                    className="form-control" 
-                    type="email" 
-                    id="userEmail" 
-                    placeholder="eg. amit@company.com" 
-                    value={formData.userEmail}
-                    onChange={handleInputChange}
-                    required 
-                  />
-                </div>
-              </div>
+                <h3>{method.title}</h3>
+                <strong>{method.detail}</strong>
+                <span>{method.sub}</span>
+                <div className="method-card-glow"></div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label" htmlFor="userPhone">Phone Number *</label>
-                  <input 
-                    className="form-control" 
-                    type="tel" 
-                    id="userPhone" 
-                    placeholder="eg. 9876543210" 
-                    pattern="[0-9]{10}" 
-                    title="Please enter 10 digit mobile number" 
-                    value={formData.userPhone}
-                    onChange={handleInputChange}
-                    required 
-                  />
+      {/* ==========================================================================
+         SECTION 3: CONTACT FORM + MAP LAYOUT
+         ========================================================================== */}
+      <section className="contact-form-map-sec">
+        <div className="container">
+          <div className="contact-form-map-grid">
+            {/* Left Glass Form */}
+            <div className="contact-form-wrapper reveal slide-left">
+              <h3>Inquire About Your System</h3>
+              <p>Complete our strategic scope form to coordinate a free technical consultation.</p>
+
+              <form onSubmit={handleFormSubmit}>
+                <div className="form-double-row">
+                  <div className="form-group">
+                    <label htmlFor="fullName">Full Name *</label>
+                    <input 
+                      type="text" 
+                      id="fullName" 
+                      placeholder="Amit Sharma" 
+                      value={formData.fullName} 
+                      onChange={handleInputChange} 
+                      required 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="companyName">Company Name</label>
+                    <input 
+                      type="text" 
+                      id="companyName" 
+                      placeholder="Nexinfosoft Agency" 
+                      value={formData.companyName} 
+                      onChange={handleInputChange} 
+                    />
+                  </div>
                 </div>
+
+                <div className="form-double-row">
+                  <div className="form-group">
+                    <label htmlFor="email">Email Address *</label>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      placeholder="amit@nexinfosoft.com" 
+                      value={formData.email} 
+                      onChange={handleInputChange} 
+                      required 
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="phone">Phone Number *</label>
+                    <input 
+                      type="tel" 
+                      id="phone" 
+                      placeholder="9999530797" 
+                      pattern="[0-9]{10}"
+                      title="Please enter a 10 digit mobile number"
+                      value={formData.phone} 
+                      onChange={handleInputChange} 
+                      required 
+                    />
+                  </div>
+                </div>
+
+                <div className="form-double-row">
+                  <div className="form-group">
+                    <label htmlFor="service">Service Required *</label>
+                    <select id="service" value={formData.service} onChange={handleInputChange} required>
+                      <option value="" disabled>Select Service Category</option>
+                      <option value="Web Development">Web Development</option>
+                      <option value="Mobile App">Mobile App</option>
+                      <option value="ERP System">ERP System</option>
+                      <option value="CRM Software">CRM Software</option>
+                      <option value="AI Automation">AI Automation</option>
+                      <option value="Digital Marketing">Digital Marketing</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="budget">Budget Range *</label>
+                    <select id="budget" value={formData.budget} onChange={handleInputChange} required>
+                      <option value="" disabled>Select Estimate Budget</option>
+                      <option value="< ₹50k">&lt; ₹50,000</option>
+                      <option value="₹50k - ₹1L">₹50,000 - ₹1,00,000</option>
+                      <option value="₹1L - ₹3L">₹1,00,000 - ₹3,00,000</option>
+                      <option value="₹3L - ₹5L">₹3,00,000 - ₹5,00,000</option>
+                      <option value="> ₹5L">&gt; ₹5,00,000</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div className="form-group">
-                  <label className="form-label" htmlFor="userService">Required Service *</label>
-                  <select 
-                    className="form-control" 
-                    id="userService" 
-                    style={{ backgroundColor: '#0d1426' }} 
-                    value={formData.userService}
-                    onChange={handleInputChange}
+                  <label htmlFor="details">Project Details & Objectives *</label>
+                  <textarea 
+                    id="details" 
+                    placeholder="Briefly describe your software specifications, database integrations, or future objectives..." 
+                    value={formData.details} 
+                    onChange={handleInputChange} 
                     required
+                  ></textarea>
+                </div>
+
+                <button type="submit" className="btn btn-primary form-submit-btn">
+                  <span>🚀 Get Free Consultation</span>
+                </button>
+              </form>
+            </div>
+
+            {/* Right Map & Location Card */}
+            <div className="contact-location-wrapper reveal slide-right delay-200">
+              <div className="interactive-office-card">
+                <div className="card-top-accent"></div>
+                <h3>Headquarters Location</h3>
+                
+                <div className="location-info-lines">
+                  <div className="info-line">
+                    <i className="ri-map-pin-fill"></i>
+                    <div>
+                      <strong>Office Address</strong>
+                      <p>Gurugram, Haryana, India</p>
+                    </div>
+                  </div>
+                  <div className="info-line">
+                    <i className="ri-phone-fill"></i>
+                    <div>
+                      <strong>Direct Phone Lines</strong>
+                      <p>+91 99995 30797</p>
+                    </div>
+                  </div>
+                  <div className="info-line">
+                    <i className="ri-mail-fill"></i>
+                    <div>
+                      <strong>General Email Desk</strong>
+                      <p>info@nexinfosoft.com</p>
+                    </div>
+                  </div>
+                  <div className="info-line">
+                    <i className="ri-time-fill"></i>
+                    <div>
+                      <strong>Working Hours</strong>
+                      <p>Mon - Sat (9:00 AM - 7:00 PM)</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Google Map Embed */}
+                <div className="office-map-embed">
+                  <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d112218.1724608316!2d77.026638!3d28.4594965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19d582e38859%3A0x2cf5b8e5c2e11e3d!2sGurugram%2C%20Haryana!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(1.2)' }} 
+                    allowFullScreen="" 
+                    loading="lazy" 
+                    title="Google Maps Gurugram Office Location"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         SECTION 4: WHY CHOOSE NEXINFOSOFT
+         ========================================================================== */}
+      <section className="contact-why-sec">
+        <div className="container">
+          <div className="section-header-premium reveal slide-up">
+            <span className="section-tag-premium text-center">WHY NEXINFOSOFT</span>
+            <h2 className="section-title-premium text-center">
+              Why Organizations Partner With Nexinfosoft
+            </h2>
+            <p className="section-desc-premium text-center">
+              We merge modern architectural frameworks with strategic business development objectives.
+            </p>
+          </div>
+
+          <div className="why-choose-glass-grid">
+            {contactData.whyChoose.map((item, idx) => (
+              <div key={idx} className="why-glass-card reveal slide-up" style={{ '--delay': `${idx * 80}ms` }}>
+                <div className="why-icon-badge">
+                  <i className={item.icon}></i>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         SECTION 5: PROJECT DISCUSSION PROCESS TIMELINE
+         ========================================================================== */}
+      <section className="contact-process-sec">
+        <div className="container">
+          <div className="section-header-premium reveal slide-up">
+            <span className="section-tag-premium text-center">OUR ROADMAP</span>
+            <h2 className="section-title-premium text-center">
+              Project Discussion Process
+            </h2>
+            <p className="section-desc-premium text-center">
+              A highly strategic workflow built to capture your objectives accurately from the very first call.
+            </p>
+          </div>
+
+          {/* Timeline progress connector */}
+          <div className="contact-timeline-wrapper reveal slide-up">
+            <div className="timeline-connector-line"></div>
+
+            <div className="timeline-process-grid">
+              {contactData.processTimeline.map((step, idx) => (
+                <div key={idx} className="contact-timeline-node-card">
+                  <div className="node-icon-circle-wrap">
+                    <div className="node-badge-outer">
+                      <div className="node-badge-number">{step.step}</div>
+                    </div>
+                  </div>
+                  <h4>{step.title}</h4>
+                  <p>{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         SECTION 6: FAQ ACCORDIONS
+         ========================================================================== */}
+      <section className="contact-faq-sec">
+        <div className="container">
+          <div className="contact-faq-grid">
+            <div className="faq-grid-left reveal slide-left">
+              <span className="section-tag-premium">QUESTIONS</span>
+              <h2 className="section-title-premium">
+                Frequently Asked Questions
+              </h2>
+              <p className="section-desc-premium">
+                Have questions regarding NDAs, project timelines, support agreements, or billing models? Explore our quick resources.
+              </p>
+            </div>
+
+            <div className="faq-grid-right reveal slide-right delay-200">
+              <div className="accordion-faq-list">
+                {contactData.faqs.map((faq, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`accordion-faq-card ${activeFaqIndex === idx ? 'faq-active' : ''}`}
+                    onClick={() => toggleFaq(idx)}
                   >
-                    <option value="" disabled>Select system area</option>
-                    <option value="web">Web Application</option>
-                    <option value="mobile">Android / iOS App</option>
-                    <option value="erp">Modular ERP System</option>
-                    <option value="crm">Custom CRM Platform</option>
-                    <option value="marketing">Digital Marketing</option>
-                    <option value="uiux">UI/UX Layout Design</option>
-                  </select>
+                    <div className="faq-card-head">
+                      <h4>{faq.q}</h4>
+                      <div className="faq-toggle-icon">
+                        <i className="ri-add-line"></i>
+                      </div>
+                    </div>
+                    
+                    <div className="faq-card-body">
+                      <p>{faq.a}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================================
+         SECTION 7: CTA SECTION (DARK GRADIENT)
+         ========================================================================== */}
+      <section className="contact-final-cta-sec">
+        <div className="container">
+          <div className="final-cta-dark-card reveal slide-up">
+            <div className="final-cta-glow glow-one"></div>
+            <div className="final-cta-glow glow-two"></div>
+
+            <div className="final-cta-inner-grid">
+              <div className="final-cta-left">
+                <h2 className="final-cta-title">
+                  Ready To Start Your Project?
+                </h2>
+                <p className="final-cta-desc">
+                  Let's discuss your idea and build a scalable digital solution.
+                </p>
+
+                <div className="final-cta-buttons">
+                  <Link to="/free-consultation" className="btn btn-primary">
+                    <span>Book Consultation</span>
+                    <i className="ri-magic-line"></i>
+                  </Link>
+                  <a href="https://wa.me/919999530797" target="_blank" rel="noreferrer" className="btn btn-secondary">
+                    <span>WhatsApp Us</span>
+                    <i className="ri-whatsapp-line"></i>
+                  </a>
                 </div>
               </div>
 
-              <div className="form-group full-width">
-                <label className="form-label" htmlFor="userMsg">Message & Scope Brief *</label>
-                <textarea 
-                  className="form-control" 
-                  id="userMsg" 
-                  placeholder="Briefly describe your software system specifications, timelines, or goals..." 
-                  value={formData.userMsg}
-                  onChange={handleInputChange}
-                  required
-                />
+              <div className="final-cta-right">
+                <div 
+                  ref={ctaIllustrationRef}
+                  className="cta-illustration-container"
+                  onMouseMove={(e) => handleCardMouseMove(e, ctaIllustrationRef.current)}
+                  onMouseLeave={() => handleCardMouseLeave(ctaIllustrationRef.current)}
+                >
+                  <div className="cta-icon-glass-bubble tech-sphere-bubble">
+                    <i className="ri-rocket-fill"></i>
+                  </div>
+                  
+                  {/* Orbiting particles */}
+                  <div className="tech-sphere-floating-logo t-logo-react"><i className="ri-global-line"></i></div>
+                  <div className="tech-sphere-floating-logo t-logo-node"><i className="ri-flashlight-line"></i></div>
+                  <div className="tech-sphere-floating-logo t-logo-aws"><i className="ri-shield-keyhole-line"></i></div>
+                  <div className="tech-sphere-floating-logo t-logo-flutter"><i className="ri-code-box-line"></i></div>
+                </div>
               </div>
-
-              <button className="btn btn-primary" type="submit" style={{ width: '100%', border: 'none' }}>
-                <span>Submit System Request</span>
-                <i className="ri-send-plane-line"></i>
-              </button>
-            </form>
+            </div>
           </div>
         </div>
       </section>
@@ -217,16 +591,12 @@ const Contact = () => {
           <p className="success-desc">
             Your system scope has been successfully logged. Our senior engineering architect will review it and follow up within 4 hours.
           </p>
-          <button 
-            onClick={closeModal} 
-            className="btn btn-primary modal-close-btn" 
-            style={{ width: '100%', border: 'none' }}
-          >
+          <button onClick={closeModal} className="btn btn-primary modal-close-btn">
             <span>Back to Form</span>
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
