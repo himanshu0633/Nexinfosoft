@@ -16226,9 +16226,9 @@ strong {
 
     .hero-feature-card {
         display: grid !important;
-        width: clamp(72px, 19vw, 96px) !important;
-        min-height: clamp(80px, 21vw, 104px) !important;
-        padding: 10px 8px !important;
+        width: clamp(92px, 24vw, 110px) !important;
+        min-height: clamp(88px, 23vw, 104px) !important;
+        padding: 10px 6px !important;
         border-radius: 12px !important;
         background: rgba(255, 255, 255, 0.74) !important;
         box-shadow: 0 16px 42px rgba(37, 99, 235, 0.14) !important;
@@ -16252,7 +16252,9 @@ strong {
         font-size: clamp(9px, 2.5vw, 11px) !important;
         line-height: 1.22 !important;
         max-width: 100% !important;
-        overflow-wrap: anywhere !important;
+        overflow-wrap: normal !important;
+        white-space: normal !important;
+        word-break: normal !important;
     }
 
     .hero-feature-code {
@@ -16417,9 +16419,9 @@ strong {
     .header .nav-container {
         grid-template-columns: 42px minmax(0, 1fr) minmax(86px, auto) !important;
         width: 100% !important;
-        max-width: 390px !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
         padding: 0 8px !important;
         gap: 6px !important;
     }
@@ -16434,76 +16436,103 @@ strong {
         font-size: 11px !important;
     }
 
-    .hero .container,
-    .hero-grid,
-    .hero-title,
-    .hero-desc,
-    .hero-btns,
-    .hero-visual,
-    .hero-trust-row,
-    .hero-stats-row {
-        width: 100% !important;
-        max-width: 358px !important;
-    }
-
     .hero .container {
+        width: 100% !important;
+        max-width: 100% !important;
         padding-left: 16px !important;
         padding-right: 16px !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .hero-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
     }
 
     .hero-tag {
-        max-width: calc(100vw - 32px) !important;
+        max-width: 100% !important;
         white-space: normal !important;
-        font-size: 13px !important;
+        font-size: clamp(12px, 3.5vw, 13px) !important;
+        align-self: flex-start !important;
+        margin: 0 0 20px !important;
+        text-align: left !important;
+        display: inline-flex !important;
+        justify-content: flex-start !important;
     }
 
     .hero-title {
-        font-size: clamp(28px, 7.8vw, 32px) !important;
+        font-size: clamp(30px, 9.2vw, 38px) !important;
         line-height: 1.08 !important;
-        text-align: center !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        text-align: left !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 18px !important;
     }
 
     .hero-title-line,
     .hero-title .rotating-keyword {
-        text-align: center !important;
+        text-align: left !important;
+        width: 100% !important;
+        display: block !important;
     }
 
     .hero-desc {
-        font-size: 15px !important;
-        line-height: 1.58 !important;
-        text-align: center !important;
+        font-size: clamp(14px, 4.2vw, 16px) !important;
+        line-height: 1.52 !important;
+        text-align: left !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 26px !important;
     }
 
     .hero-btns {
-        grid-template-columns: minmax(0, 1fr) !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
         gap: 12px !important;
-        margin-bottom: 18px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 28px !important;
     }
 
     .hero-btns .btn {
         min-height: 54px !important;
         white-space: nowrap !important;
-        max-width: 100% !important;
+        width: 100% !important;
     }
 
     .hero-visual {
-        min-height: 560px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: clamp(420px, 110vw, 520px) !important;
+        margin: 0 auto 24px !important;
         border-radius: 26px !important;
     }
 
     .hero-reference-visual {
-        min-height: 560px !important;
+        width: 100% !important;
+        min-height: clamp(420px, 110vw, 520px) !important;
         border-radius: 26px !important;
-        background-position: 54% top !important;
+        background-position: 72% top !important;
     }
 
     .hero-feature-card {
-        width: 88px !important;
-        min-height: 88px !important;
+        width: clamp(80px, 21vw, 92px) !important;
+        min-height: clamp(76px, 20vw, 86px) !important;
+        padding: 6px 3px !important;
+        border-radius: 10px !important;
+    }
+
+    .hero-feature-card i {
+        font-size: clamp(16px, 4.5vw, 20px) !important;
+    }
+
+    .hero-feature-card span {
+        font-size: clamp(8px, 2.1vw, 9px) !important;
+        line-height: 1.15 !important;
+        overflow-wrap: normal !important;
+        white-space: normal !important;
     }
 
     .hero-feature-code {
@@ -16532,17 +16561,19 @@ strong {
     }
 
     .hero-trust-row {
-        grid-template-columns: 1fr !important;
-        border-radius: 24px !important;
-        margin-top: -56px !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        border-radius: 999px !important;
+        margin: -40px auto 24px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 8px !important;
     }
 
     .hero-stats-row {
-        grid-template-columns: 1fr !important;
-        gap: 18px !important;
-    }
-
-    .hero-stats-row div:not(:last-child)::after {
-        display: none !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
     }
 }

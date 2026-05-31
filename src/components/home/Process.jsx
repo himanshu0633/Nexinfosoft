@@ -18,7 +18,7 @@ const Process = () => {
       number: '03',
       name: 'Coding',
       text: 'Frontend, backend, APIs, and integrations.',
-      tags: ['Clean Code', 'APIs']
+      tags: ['Clean Code', 'APIs          .']
     },
     {
       number: '04',
