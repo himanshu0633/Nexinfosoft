@@ -225,9 +225,10 @@ const Header = () => {
         </ul>
 
         <div className="nav-actions">
-          <a href="tel:+919999530797" className="btn btn-primary nav-btn">
-            <i className="ri-phone-fill" style={{ marginRight: '6px' }}></i> Call Now
-          </a>
+          <Link to="/contact" className="btn btn-primary nav-btn">
+            <span>Get Started</span>
+            <i className="ri-arrow-right-line"></i>
+          </Link>
         </div>
 
         <button 

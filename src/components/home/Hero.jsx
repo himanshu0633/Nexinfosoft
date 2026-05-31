@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 const Hero = () => {
-  const [rotatingWord, setRotatingWord] = useState('ERP Systems');
+  const [rotatingWord] = useState('CRM Solutions');
   const [data, setData] = useState({
     title: 'Build Scalable',
     subtitle: 'For Modern Teams',
@@ -10,7 +10,7 @@ const Hero = () => {
     image_url: '/assets/images/web_dev_poster.png',
     metadata: {
       tag: 'AI Powered Digital Transformation Studio',
-      rotatingKeywords: ['ERP Systems', 'AI Automation', 'SaaS Platforms', 'Mobile Apps', 'CRM Solutions'],
+      rotatingKeywords: ['CRM Solutions'],
       trustPills: ['Secure Architecture', 'Fast Delivery', 'Growth Focused'],
       stats: [
         { label: 'Digital projects', value: '100+' },
@@ -37,18 +37,6 @@ const Hero = () => {
     };
     fetchHeroContent();
   }, []);
-
-  // Rotating keywords effect
-  useEffect(() => {
-    const words = data.metadata?.rotatingKeywords || ['ERP Systems', 'AI Automation', 'SaaS Platforms', 'Mobile Apps', 'CRM Solutions'];
-    let idx = 0;
-    const interval = setInterval(() => {
-      idx = (idx + 1) % words.length;
-      setRotatingWord(words[idx]);
-    }, 2200);
-
-    return () => clearInterval(interval);
-  }, [data.metadata?.rotatingKeywords]);
 
   const handleMouseMove = (event, element) => {
     if (!element) return;
