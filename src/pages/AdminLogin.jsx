@@ -46,80 +46,99 @@ const AdminLogin = () => {
   };
 
   return (
-    <>
-      <div className="page-hero">
-        <div className="container" style={{ textAlign: 'center' }}>
-          <span className="section-tag">Security Console</span>
-          <h1 className="page-hero-title">Admin Access Portal</h1>
-          <p className="page-hero-desc">Secure authorization required to modify system databases and section copy.</p>
-        </div>
-      </div>
+    <section className="admin-login-page" aria-labelledby="admin-login-title">
+      <div className="admin-login-shell">
+        <div className="admin-login-brand-panel">
+          <img src="/assets/nex-infotech-logo.png" alt="Nexinfosoft IT Solutions" className="admin-login-logo" />
+          <div>
+            <span className="admin-login-eyebrow">Admin Console</span>
+            <h1>Secure content management for Nexinfosoft.</h1>
+            <p>
+              Manage website sections, leads, portfolio entries, services, and page content from one protected dashboard.
+            </p>
+          </div>
 
-      <section className="content-page" style={{ paddingBottom: '160px' }}>
-        <div className="container" style={{ maxWidth: '480px' }}>
-          <div className="glass-card" style={{ padding: '40px', borderRadius: '16px' }}>
-            <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-              <i className="ri-shield-keyhole-line" style={{ fontSize: '48px', color: 'var(--primary)' }}></i>
-              <h2 style={{ fontSize: '22px', fontWeight: 800, marginTop: '12px' }}>Authorized Entry Only</h2>
+          <div className="admin-login-highlights" aria-label="Admin dashboard features">
+            <div>
+              <i className="ri-shield-check-line"></i>
+              <span>Protected Access</span>
             </div>
+            <div>
+              <i className="ri-dashboard-3-line"></i>
+              <span>Live Content Control</span>
+            </div>
+            <div>
+              <i className="ri-customer-service-2-line"></i>
+              <span>Lead Management</span>
+            </div>
+          </div>
+        </div>
 
-            {error && (
-              <div style={{ 
-                background: 'rgba(239, 68, 68, 0.1)', 
-                border: '1px solid rgba(239, 68, 68, 0.2)', 
-                color: '#ef4444', 
-                padding: '12px', 
-                borderRadius: '8px', 
-                fontSize: '13px', 
-                marginBottom: '20px',
-                textAlign: 'center'
-              }}>
-                <i className="ri-error-warning-line" style={{ marginRight: '6px', verticalAlign: 'middle' }}></i>
-                {error}
-              </div>
-            )}
+        <div className="admin-login-card" role="form">
+          <div className="admin-login-card-head">
+            <div className="admin-login-icon">
+              <i className="ri-shield-keyhole-line"></i>
+            </div>
+            <span>Authorized Entry Only</span>
+            <h2 id="admin-login-title">Sign in to Dashboard</h2>
+          </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="form-group" style={{ marginBottom: '20px' }}>
-                <label className="form-label" htmlFor="username">Username</label>
+          {error && (
+            <div className="admin-login-error" role="alert">
+              <i className="ri-error-warning-line"></i>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="admin-login-form">
+            <div className="admin-login-field">
+              <label htmlFor="username">Username</label>
+              <div className="admin-login-input-wrap">
+                <i className="ri-user-3-line"></i>
                 <input 
-                  className="form-control" 
                   type="text" 
                   id="username" 
                   placeholder="Enter admin username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
                   required 
                 />
               </div>
+            </div>
 
-              <div className="form-group" style={{ marginBottom: '28px' }}>
-                <label className="form-label" htmlFor="password">Password</label>
+            <div className="admin-login-field">
+              <label htmlFor="password">Password</label>
+              <div className="admin-login-input-wrap">
+                <i className="ri-lock-password-line"></i>
                 <input 
-                  className="form-control" 
                   type="password" 
                   id="password" 
                   placeholder="Enter security password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   required 
                 />
               </div>
+            </div>
 
-              <button 
-                type="submit" 
-                className="btn btn-primary" 
-                style={{ width: '100%', border: 'none' }}
-                disabled={loading}
-              >
-                <span>{loading ? 'Authorizing Access...' : 'Authenticate Login'}</span>
-                <i className="ri-lock-unlock-line"></i>
-              </button>
-            </form>
-          </div>
+            <button 
+              type="submit" 
+              className="admin-login-submit"
+              disabled={loading}
+            >
+              <span>{loading ? 'Authorizing Access...' : 'Authenticate Login'}</span>
+              <i className={loading ? 'ri-loader-4-line' : 'ri-lock-unlock-line'}></i>
+            </button>
+          </form>
+
+          <p className="admin-login-note">
+            Access is restricted to authorized Nexinfosoft administrators.
+          </p>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 

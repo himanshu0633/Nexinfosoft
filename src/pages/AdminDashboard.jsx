@@ -136,12 +136,7 @@ const AdminDashboard = () => {
             'Post-Deployment Support & Documentation',
             'Agile Iterations & 100% Code Ownership'
           ],
-          metrics: [
-            { label: 'Projects Delivered', value: '50+', icon: 'ri-briefcase-4-line' },
-            { label: 'Client Satisfaction', value: '99%', icon: 'ri-emotion-happy-line' },
-            { label: 'Support Available', value: '24/7', icon: 'ri-customer-service-2-line' },
-            { label: 'Code Ownership', value: '100%', icon: 'ri-code-s-slash-line' }
-          ]
+     
         }
       },
       corporate_hero: {

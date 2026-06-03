@@ -166,17 +166,6 @@ const About = () => {
     }
   });
 
-  const [achievementsSec, setAchievementsSec] = useState({
-    metadata: {
-      stats: [
-        { label: 'Projects Delivered', value: '100+' },
-        { label: 'International Clients', value: '50+' },
-        { label: 'Active Support Desk', value: '24/7' },
-        { label: 'Code Ownership', value: '100%' }
-      ]
-    }
-  });
-
   const [ctaSec, setCtaSec] = useState({
     title: 'Let\'s Build Something Amazing Together',
     description: 'Discuss your technical layout, database design, or core system flow with a senior solutions architect today.'
@@ -207,7 +196,7 @@ const About = () => {
 
     // Fetch About Page content from backend Mongoose DB
     const fetchAboutData = async () => {
-      const ids = ['about_hero', 'about_overview', 'about_partner', 'about_why', 'about_lifecycle', 'about_qa', 'about_values', 'about_achievements', 'about_cta'];
+      const ids = ['about_hero', 'about_overview', 'about_partner', 'about_why', 'about_lifecycle', 'about_qa', 'about_values', 'about_cta'];
       try {
         const entries = await Promise.all(ids.map(async (id) => {
           const res = await fetch(`/api/content/${id}`);
@@ -223,7 +212,6 @@ const About = () => {
         if (dataMap.about_lifecycle) setLifecycle(dataMap.about_lifecycle);
         if (dataMap.about_qa) setQa(dataMap.about_qa);
         if (dataMap.about_values) setValuesSec(dataMap.about_values);
-        if (dataMap.about_achievements) setAchievementsSec(dataMap.about_achievements);
         if (dataMap.about_cta) setCtaSec(dataMap.about_cta);
       } catch (err) {
         // Fallbacks are already configured in state
@@ -840,25 +828,7 @@ const About = () => {
       </section>
 
       {/* ==========================================================================
-         SECTION 8: ACHIEVEMENTS
-         ========================================================================== */}
-      <section className="about-achievements-sec">
-        <div className="container">
-          <div className="achievements-flex-grid reveal scale-up">
-            {(achievementsSec.metadata?.stats || []).map((stat, idx) => (
-              <div className="achievement-stat-item" key={idx}>
-                <h2 className="achievement-stat-number">
-                  <AnimatedCounter value={stat.value} />
-                </h2>
-                <p className="achievement-stat-label">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         SECTION 9: PREMIUM CTA SECTION
+         SECTION 8: PREMIUM CTA SECTION
          ========================================================================== */}
       <section className="about-premium-cta">
         <div className="container">

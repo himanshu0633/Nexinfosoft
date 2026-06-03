@@ -1,6 +1,124 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, Link, Navigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import servicesData from '../data/servicesData';
 import servicesDetailedData from '../data/servicesDetailedData';
+
+const benefitColors = [
+  'linear-gradient(135deg, #14b8a6, #0d9488)',
+  'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+  'linear-gradient(135deg, #3b82f6, #2563eb)',
+  'linear-gradient(135deg, #f59e0b, #d97706)'
+];
+
+const defaultProcess = [
+  { step: '01', title: 'Discovery', desc: 'Understanding your business goals, users, workflow, and launch priorities.' },
+  { step: '02', title: 'Planning', desc: 'Defining scope, pages, modules, content structure, and technical requirements.' },
+  { step: '03', title: 'Design', desc: 'Creating clean interfaces and user flows that match your brand and audience.' },
+  { step: '04', title: 'Development', desc: 'Building the frontend, backend, integrations, and admin-ready functionality.' },
+  { step: '05', title: 'Testing', desc: 'Checking performance, responsiveness, forms, security basics, and browser behavior.' },
+  { step: '06', title: 'Launch', desc: 'Deploying the service, configuring domain essentials, and handing over key details.' }
+];
+
+const defaultWhyChoose = [
+  { title: 'Experienced Team', desc: 'Skilled developers and designers focused on practical business outcomes.', icon: 'ri-team-line' },
+  { title: 'Custom Solutions', desc: 'Every build is aligned with your process, content, customers, and growth plan.', icon: 'ri-palette-line' },
+  { title: 'Scalable Architecture', desc: 'Clean implementation choices make future features and integrations easier.', icon: 'ri-node-tree' },
+  { title: 'Fast Delivery', desc: 'Structured milestones keep planning, development, testing, and launch controlled.', icon: 'ri-time-line' },
+  { title: 'Reliable Support', desc: 'Post-launch support helps you keep the service stable, updated, and useful.', icon: 'ri-customer-service-2-line' },
+  { title: 'Secure Foundation', desc: 'Core security, performance, and deployment hygiene are handled from the start.', icon: 'ri-shield-check-line' }
+];
+
+const defaultPortfolio = [
+  { name: 'Business Operations Platform', industry: 'Web Application', desc: 'A focused system designed around real workflows, reporting, and customer actions.', image: 'ri-window-line' },
+  { name: 'Client Service Portal', industry: 'Customer Experience', desc: 'A responsive portal with clean navigation, forms, dashboards, and useful handoff flows.', image: 'ri-layout-grid-line' },
+  { name: 'Growth Campaign Asset', industry: 'Digital Growth', desc: 'A conversion-focused digital experience built to improve enquiries and engagement.', image: 'ri-line-chart-line' }
+];
+
+const defaultPricing = [
+  {
+    name: 'Starter',
+    price: 'Custom Quote',
+    features: ['Focused scope', 'Responsive implementation', 'Core setup', 'Launch support'],
+    support: 'Email Support',
+    timeline: 'Timeline after scope review',
+    recommended: false
+  },
+  {
+    name: 'Professional',
+    price: 'Custom Quote',
+    features: ['Custom UI', 'Advanced functionality', 'Integrations', 'Testing and deployment'],
+    support: 'Priority Chat & Email Support',
+    timeline: 'Timeline after discovery',
+    recommended: true
+  },
+  {
+    name: 'Enterprise',
+    price: 'Custom Quote',
+    features: ['Complex modules', 'Role based flows', 'Reports', 'Extended support'],
+    support: 'Dedicated Support',
+    timeline: 'Milestone based delivery',
+    recommended: false
+  }
+];
+
+const defaultFaqs = [
+  { q: 'How long does development take?', a: 'Timeline depends on scope, content, integrations, and approval speed. We confirm milestones after discovery.' },
+  { q: 'Will it work properly on mobile?', a: 'Yes. The interface is planned and tested for responsive behavior across common desktop and mobile screen sizes.' },
+  { q: 'Can this service be customized?', a: 'Yes. Backend-managed service details help us keep the page content flexible while the build remains tailored to your business.' },
+  { q: 'Do you provide post-launch support?', a: 'Yes. Support can include fixes, updates, small changes, monitoring help, and future feature planning.' }
+];
+
+const makeBenefitCards = (benefits = [], fallback = []) => {
+  const source = benefits.length > 0 ? benefits : fallback;
+
+  return source.slice(0, 4).map((benefit, index) => {
+    if (typeof benefit === 'object' && benefit.title) {
+      return benefit;
+    }
+
+    return {
+      title: benefit,
+      description: 'Planned to support clearer operations, stronger customer experience, and measurable business value.',
+      icon: ['ri-award-line', 'ri-settings-5-line', 'ri-line-chart-line', 'ri-shield-check-line'][index % 4],
+      color: benefitColors[index % benefitColors.length]
+    };
+  });
+};
+
+const normalizeServiceDetail = (apiService, staticDetail) => {
+  const fallback = servicesData.find((item) => item.slug === apiService?.slug) || {};
+  const merged = {
+    ...staticDetail,
+    ...fallback,
+    ...apiService
+  };
+
+  const benefits = Array.isArray(apiService?.benefits) ? apiService.benefits : merged.benefits || [];
+  const deliverables = Array.isArray(apiService?.deliverables) ? apiService.deliverables : merged.deliverables || [];
+  const featureSource = benefits.length > 0 ? benefits : deliverables;
+
+  return {
+    ...merged,
+    badge: staticDetail?.badge || 'OUR SERVICE',
+    title: merged.title || 'Service',
+    subtitle: merged.subtitle || merged.intro || 'A focused digital service planned around your business requirements.',
+    features: featureSource.length > 0 ? featureSource.slice(0, 4) : staticDetail?.features || ['Custom Planning', 'Responsive Build', 'Secure Setup', 'Launch Support'],
+    heroMockupTitle: staticDetail?.heroMockupTitle || `${merged.title || 'Service'} Console`,
+    floatingCards: staticDetail?.floatingCards || [
+      { text: 'Responsive', icon: 'ri-smartphone-line' },
+      { text: 'Secure Setup', icon: 'ri-shield-check-line' },
+      { text: 'Performance Ready', icon: 'ri-flashlight-line' },
+      { text: 'Admin Friendly', icon: 'ri-dashboard-line' }
+    ],
+    benefits: makeBenefitCards(benefits, staticDetail?.benefits || []),
+    whatsIncluded: deliverables.length > 0 ? deliverables : staticDetail?.whatsIncluded || ['Discovery Planning', 'Responsive Design', 'Development', 'Testing', 'Deployment', 'Launch Support'],
+    process: staticDetail?.process || defaultProcess,
+    whyChoose: staticDetail?.whyChoose || defaultWhyChoose,
+    portfolio: staticDetail?.portfolio || defaultPortfolio,
+    pricing: staticDetail?.pricing || defaultPricing,
+    faqs: staticDetail?.faqs || defaultFaqs
+  };
+};
 
 // Custom scroll-triggered animated counter component
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -55,9 +173,8 @@ const AnimatedCounter = ({ value, duration = 1500 }) => {
 
 const ServiceDetail = () => {
   const { slug } = useParams();
-  
-  // Find matching service from detailed data map
-  const service = servicesDetailedData[slug];
+  const [service, setService] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Refs for tilt animations
   const heroMockupRef = useRef(null);
@@ -90,6 +207,43 @@ const ServiceDetail = () => {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
+    const loadService = async () => {
+      setLoading(true);
+      const staticDetail = servicesDetailedData[slug];
+
+      try {
+        const res = await fetch(`/api/services/${slug}`);
+        if (res.ok) {
+          const apiService = await res.json();
+          if (isMounted) {
+            setService(normalizeServiceDetail(apiService, staticDetail));
+          }
+          return;
+        }
+      } catch (err) {
+        // Static fallback below keeps legacy service pages available if API is offline.
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+
+      const fallbackService = staticDetail || servicesData.find((item) => item.slug === slug);
+      if (isMounted) {
+        setService(fallbackService ? normalizeServiceDetail(fallbackService, staticDetail) : null);
+      }
+    };
+
+    loadService();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
+
+  useEffect(() => {
     if (service) {
       document.title = `${service.title} | Nexinfosoft`;
       const metaDesc = document.querySelector('meta[name="description"]');
@@ -104,9 +258,41 @@ const ServiceDetail = () => {
     window.scrollTo(0, 0);
   }, [service, slug]);
 
+  if (loading) {
+    return (
+      <div className="service-detail-page-wrapper">
+        <section className="service-hero-sec">
+          <div className="container">
+            <div className="section-header-premium reveal slide-up active">
+              <span className="section-tag-premium text-center">LOADING</span>
+              <h1 className="service-hero-title text-center">Loading Service</h1>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   if (!service) {
-    // If service slug is not in detailed dictionary, redirect to services overview
-    return <Navigate to="/services" replace />;
+    return (
+      <div className="service-detail-page-wrapper">
+        <section className="service-hero-sec">
+          <div className="container">
+            <div className="section-header-premium reveal slide-up active">
+              <span className="section-tag-premium text-center">SERVICE NOT FOUND</span>
+              <h1 className="service-hero-title text-center">This service is not available</h1>
+              <p className="section-desc-premium text-center">Please explore our current services list.</p>
+              <div className="service-hero-btns" style={{ justifyContent: 'center' }}>
+                <Link to="/services" className="btn btn-primary">
+                  <span>View Services</span>
+                  <i className="ri-arrow-right-line"></i>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
   }
 
   return (

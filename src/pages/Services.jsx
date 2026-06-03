@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { normalizeVisibleServices } from '../utils/services';
 
 // Custom scroll-triggered animated counter component
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -139,6 +140,15 @@ const Services = () => {
       benefits: ['Promotional Videos', 'Explainer Videos', 'Social Media Reels'],
       deliverables: ['Reels editing', 'Promo videos', 'Motion text']
     },
+    {
+      slug: 'mvp-development',
+      title: 'MVP Development',
+      subtitle: 'Fast, focused product builds for startups and businesses that need to validate an idea.',
+      icon: 'ri-rocket-line',
+      intro: 'We build MVPs that focus on the core product idea, so you can launch faster, collect feedback, and improve with less waste.',
+      benefits: ['Launch faster with core features', 'Reduce upfront development cost', 'Validate market demand early'],
+      deliverables: ['Feature planning', 'Prototype UI', 'Core product build']
+    },
 
   ]);
 
@@ -163,20 +173,6 @@ const Services = () => {
       tag: 'Web Platform',
       desc: 'Property listing database featuring advanced search and agent controls.',
       image_url: '/assets/images/portal_mockup.png'
-    },
-    {
-      name: 'E-Commerce Solution',
-      category: 'ecommerce',
-      tag: 'Web Application',
-      desc: 'Full-featured eCommerce engine equipped with secure checkouts and metrics.',
-      image_url: '/assets/images/ecommerce_mockup.png'
-    },
-    {
-      name: 'Mobile Application',
-      category: 'mobile',
-      tag: 'Mobile App',
-      desc: 'Cross-platform mobile application providing biometric setups and unified sync.',
-      image_url: '/assets/images/mobile_mockup.png'
     }
   ]);
 
@@ -208,7 +204,7 @@ const Services = () => {
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            setServices(data.filter(service => service.slug !== 'recruitment-services'));
+            setServices(normalizeVisibleServices(data));
           }
         }
       } catch (err) {
@@ -221,7 +217,7 @@ const Services = () => {
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            setProjects(data.slice(0, 5));
+            setProjects(data.slice(0, 3));
           }
         }
       } catch (err) {
@@ -309,21 +305,7 @@ const Services = () => {
     return colors[index % colors.length];
   };
 
-  const getBentoSize = (index) => {
-    const sizes = [
-      'card-size-small',
-      'card-size-small',
-      'card-size-small',
-      'card-size-medium',
-      'card-size-small',
-      'card-size-small',
-      'card-size-medium',
-      'card-size-medium',
-      'card-size-small',
-      'card-size-large'
-    ];
-    return sizes[index % sizes.length];
-  };
+  const getBentoSize = () => 'card-size-small';
 
   return (
     <div className="services-page-wrapper">
@@ -761,7 +743,7 @@ const Services = () => {
               const bgClasses = ['background-clinic', 'background-erp-mock', 'background-re', 'background-ecom', 'background-mobile-mock'];
               const bgClass = bgClasses[index % bgClasses.length];
               return (
-                <div key={project.name || index} className="portfolio-glass-card reveal slide-up">
+                <div key={project._id || project.name || index} className="portfolio-glass-card reveal slide-up active">
                   <div className={`portfolio-mockup-screen ${bgClass}`}>
                     <div className="window-decor-dots"><span></span><span></span><span></span></div>
                     {project.image_url ? (
@@ -784,6 +766,13 @@ const Services = () => {
                 </div>
               );
             })}
+          </div>
+
+          <div className="services-portfolio-view-more reveal slide-up active">
+            <Link to="/portfolio" className="btn btn-primary">
+              <span>View More</span>
+              <i className="ri-arrow-right-line"></i>
+            </Link>
           </div>
         </div>
       </section>

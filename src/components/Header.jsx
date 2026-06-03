@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import servicesData from '../data/servicesData';
+import { normalizeVisibleServices } from '../utils/services';
 
 const Header = () => {
+  const [services, setServices] = useState(normalizeVisibleServices(servicesData));
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [techMenuOpen, setTechMenuOpen] = useState(false);
@@ -26,6 +28,24 @@ const Header = () => {
     setMegaMenuOpen(false);
     setTechMenuOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await fetch('/api/services');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setServices(normalizeVisibleServices(data));
+          }
+        }
+      } catch (err) {
+        // Static servicesData remains available if the API is offline.
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   // Handle scroll events for blur progress and sticky styling
   useEffect(() => {
@@ -212,7 +232,7 @@ const Header = () => {
                   <Link to="/services" className="mega-view-all">View all <i className="ri-arrow-right-s-line"></i></Link>
                 </div>
                 <div className="mega-services-grid">
-                  {servicesData.map((service) => (
+                  {services.map((service) => (
                     <Link 
                       key={service.slug}
                       to={`/service/${service.slug}`} 

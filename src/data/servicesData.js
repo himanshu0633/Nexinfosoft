@@ -124,6 +124,20 @@ const servicesData = [
       'Gives clear visibility into team performance'
     ],
     deliverables: ['Lead dashboard', 'Follow-up reminders', 'Customer records', 'Sales pipeline', 'Team reports', 'Role permissions']
+  },
+  {
+    slug: 'mvp-development',
+    title: 'MVP Development',
+    subtitle: 'Fast, focused product builds for startups and businesses that need to validate an idea.',
+    icon: 'ri-rocket-line',
+    intro: 'We build MVPs that focus on the core product idea, so you can launch faster, collect feedback, and improve with less waste.',
+    benefits: [
+      'Launches your idea faster with core features',
+      'Reduces upfront development cost',
+      'Helps validate market demand early',
+      'Creates a base for future product scaling'
+    ],
+    deliverables: ['Feature planning', 'Prototype UI', 'Core product build', 'Admin basics', 'Testing', 'Launch roadmap']
   }
 ];
 

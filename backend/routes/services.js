@@ -13,6 +13,21 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/services/:slug - Public endpoint to retrieve a single service
+router.get('/:slug', async (req, res) => {
+  try {
+    const service = await Service.findOne({ slug: req.params.slug });
+
+    if (!service || service.slug === 'recruitment-services') {
+      return res.status(404).json({ error: 'Service not found.' });
+    }
+
+    res.json(service);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to retrieve service.' });
+  }
+});
+
 // POST /api/services - Protected endpoint to add a new service
 router.post('/', authMiddleware, async (req, res) => {
   const { slug, title, subtitle, icon, intro, benefits, deliverables, image_url } = req.body;

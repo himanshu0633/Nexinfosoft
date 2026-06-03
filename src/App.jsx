@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 // Import global elements
 import Preloader from './components/Preloader';
@@ -25,15 +25,18 @@ import ServiceDetail from './pages/ServiceDetail';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 
-const App = () => {
+const AppShell = () => {
+  const location = useLocation();
+  const isAdminLogin = location.pathname === '/admin-login';
+
   return (
-    <Router>
+    <>
       {/* Premium UX enhancements */}
       <Preloader />
-      <CursorGlow />
+      {!isAdminLogin && <CursorGlow />}
       
       {/* Navigation Header */}
-      <Header />
+      {!isAdminLogin && <Header />}
       
       {/* Route Views */}
       <main>
@@ -78,10 +81,18 @@ const App = () => {
       </main>
 
       {/* Floating Chat Widget */}
-      <WhatsAppWidget />
+      {!isAdminLogin && <WhatsAppWidget />}
 
       {/* Global Footer */}
-      <Footer />
+      {!isAdminLogin && <Footer />}
+    </>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <AppShell />
     </Router>
   );
 };
