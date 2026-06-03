@@ -150,6 +150,52 @@ const Technologies = ({ previewData = null }) => {
 
   const duplicateList = (list) => [...list, ...list, ...list];
 
+  const techBrandColors = {
+    'next.js': '#000000',
+    react: '#61dafb',
+    reactjs: '#61dafb',
+    'react native': '#61dafb',
+    flutter: '#02569b',
+    'spring boot': '#6db33f',
+    java: '#e76f00',
+    python: '#3776ab',
+    php: '#777bb4',
+    laravel: '#ff2d20',
+    'node.js': '#68a063',
+    nodejs: '#68a063',
+    tailwindcss: '#38bdf8',
+    'tailwind css': '#38bdf8',
+    typescript: '#3178c6',
+    angular: '#dd0031',
+    'vue.js': '#42b883',
+    vue: '#42b883',
+    'machine learning': '#14b8a6',
+    'ai chatbots': '#8b5cf6',
+    'generative ai': '#f59e0b',
+    'predictive systems': '#3b82f6',
+    'power bi integration': '#f2c811',
+    'workflow automations': '#8fba4a',
+    cloudflare: '#f38020',
+    'vps deployments': '#ef4444',
+    'github actions': '#24292f',
+    'ci/cd pipelines': '#10b981',
+    kubernetes: '#326ce5',
+    docker: '#2496ed',
+    aws: '#ff9900',
+    redis: '#dc382d',
+    firebase: '#ffca28',
+    mysql: '#4479a1',
+    postgresql: '#336791',
+    mongodb: '#47a248',
+    'ios native': '#111827',
+    'android native': '#3ddc84'
+  };
+
+  const getTechColor = (tech) => {
+    const brandColor = techBrandColors[String(tech.name || '').trim().toLowerCase()];
+    return brandColor || tech.color || 'var(--accent)';
+  };
+
   return (
     <section className="technologies">
       <div className="container">
@@ -165,15 +211,20 @@ const Technologies = ({ previewData = null }) => {
             <div className="marquee-container">
               <div className="marquee-content marquee-rtl">
                 {duplicateList(row1).map((tech, idx) => (
+                  (() => {
+                    const iconColor = getTechColor(tech);
+                    return (
                   <div 
                     key={`row1-${idx}`} 
                     className="tech-logo-card"
                     onClick={() => handleTechClick(tech.name)}
-                    style={{ '--hover-color': tech.color }}
+                    style={{ '--hover-color': iconColor, '--tech-color': iconColor }}
                   >
-                    <i className={tech.icon} style={{ color: tech.color }}></i>
+                    <i className={tech.icon}></i>
                     <span>{tech.name}</span>
                   </div>
+                    );
+                  })()
                 ))}
               </div>
             </div>
@@ -184,15 +235,20 @@ const Technologies = ({ previewData = null }) => {
             <div className="marquee-container">
               <div className="marquee-content marquee-ltr">
                 {duplicateList(row2).map((tech, idx) => (
+                  (() => {
+                    const iconColor = getTechColor(tech);
+                    return (
                   <div 
                     key={`row2-${idx}`} 
                     className="tech-logo-card"
                     onClick={() => handleTechClick(tech.name)}
-                    style={{ '--hover-color': tech.color }}
+                    style={{ '--hover-color': iconColor, '--tech-color': iconColor }}
                   >
-                    <i className={tech.icon} style={{ color: tech.color }}></i>
+                    <i className={tech.icon}></i>
                     <span>{tech.name}</span>
                   </div>
+                    );
+                  })()
                 ))}
               </div>
             </div>
@@ -203,15 +259,20 @@ const Technologies = ({ previewData = null }) => {
             <div className="marquee-container">
               <div className="marquee-content marquee-rtl">
                 {duplicateList(row3).map((tech, idx) => (
+                  (() => {
+                    const iconColor = getTechColor(tech);
+                    return (
                   <div 
                     key={`row3-${idx}`} 
                     className="tech-logo-card"
                     onClick={() => handleTechClick(tech.name)}
-                    style={{ '--hover-color': tech.color }}
+                    style={{ '--hover-color': iconColor, '--tech-color': iconColor }}
                   >
-                    <i className={tech.icon} style={{ color: tech.color }}></i>
+                    <i className={tech.icon}></i>
                     <span>{tech.name}</span>
                   </div>
+                    );
+                  })()
                 ))}
               </div>
             </div>
