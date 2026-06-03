@@ -20,10 +20,8 @@ const Home = () => {
   return (
     <>
       <Hero />
-
       <CoreServices />
       <WhyChooseUs />
-    
       <Technologies />
       <Industries />
       <Process />

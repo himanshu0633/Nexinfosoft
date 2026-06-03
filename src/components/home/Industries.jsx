@@ -78,19 +78,21 @@ const Industries = () => {
           <p className="section-desc">We build purpose-driven architectures tailored for operational requirements across sectors.</p>
         </div>
 
-        <div ref={industriesScrollerRef} className="industries-grid">
-          {visibleIndustries.map((industry, index) => (
-            <div key={industry.title} className={`industry-card reveal slide-up delay-${(index + 1) * 100} active`}>
-              <i className={`${industry.icon} industry-icon`}></i>
-              <h4 className="industry-title">{industry.title}</h4>
-            </div>
-          ))}
-        </div>
-        <div className="industries-view-more-row reveal slide-up active">
-          <Link to="/portfolio" className="btn btn-secondary industries-view-more-btn">
-            View More
-            <i className="fa-solid fa-arrow-right"></i>
-          </Link>
+        <div className="industries-carousel-block">
+          <div ref={industriesScrollerRef} className="industries-grid">
+            {visibleIndustries.map((industry, index) => (
+              <div key={industry.title} className={`industry-card reveal slide-up delay-${(index + 1) * 100} active`}>
+                <i className={`${industry.icon} industry-icon`}></i>
+                <h4 className="industry-title">{industry.title}</h4>
+              </div>
+            ))}
+          </div>
+          <div className="industries-view-more-row reveal slide-up active">
+            <Link to="/portfolio" className="btn btn-secondary industries-view-more-btn">
+              View More
+              <i className="fa-solid fa-arrow-right"></i>
+            </Link>
+          </div>
         </div>
       </div>
     </section>

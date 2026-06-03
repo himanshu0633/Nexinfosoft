@@ -4904,6 +4904,10 @@ section {
     padding: 0 10px;
 }
 
+.process-slider-dots {
+    display: none;
+}
+
 /* ==========================================
    TECHNOLOGIES (MARQUEE)
    ========================================== */
@@ -5195,6 +5199,10 @@ section {
 
 .portfolio-view-more-card .portfolio-view-more-btn {
     min-width: 156px;
+}
+
+.portfolio-view-more-mobile {
+    display: none;
 }
 
 /* ==========================================
@@ -18668,6 +18676,12 @@ strong {
 
 /* Mobile-only Recent Work auto scroller */
 @media (max-width: 768px) {
+    .portfolio {
+        background: #f8fbff !important;
+        border-top: 0 !important;
+        border-bottom: 0 !important;
+    }
+
     .portfolio .portfolio-grid {
         display: flex !important;
         grid-template-columns: none !important;
@@ -18675,6 +18689,8 @@ strong {
         width: calc(100% + 36px) !important;
         margin-left: -18px !important;
         padding: 4px 18px 14px !important;
+        background: transparent !important;
+        box-shadow: none !important;
         overflow-x: auto !important;
         overflow-y: hidden !important;
         scroll-snap-type: x mandatory !important;
@@ -18691,19 +18707,25 @@ strong {
         flex: 0 0 min(84vw, 330px) !important;
         width: min(84vw, 330px) !important;
         max-width: min(84vw, 330px) !important;
+        background: rgba(255, 255, 255, 0.94) !important;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
         scroll-snap-align: start !important;
     }
 
     .portfolio .portfolio-view-more-card {
-        flex: 0 0 min(84vw, 330px) !important;
-        width: min(84vw, 330px) !important;
-        max-width: min(84vw, 330px) !important;
-        min-height: 180px;
-        scroll-snap-align: start !important;
+        display: none !important;
     }
 
     .portfolio .portfolio-img-box {
         height: 210px !important;
+    }
+
+    .portfolio .portfolio-view-more-mobile {
+        display: flex !important;
+        justify-content: center !important;
+        margin-top: 18px !important;
     }
 }
 
@@ -21639,4 +21661,220 @@ strong {
 .capability-chart-line-secondary,
 .capability-chart-shadow {
     vector-effect: non-scaling-stroke;
+}
+
+/* Our Verticals View More below carousel */
+.industries-carousel-block {
+    position: relative;
+    max-width: 100%;
+}
+
+.industries .industries-view-more-row {
+    margin-top: 18px !important;
+    background: transparent !important;
+}
+
+@media (max-width: 768px) {
+    .industries {
+        background: #f8fbff !important;
+        border-top: 0 !important;
+        border-bottom: 0 !important;
+    }
+
+    .industries .industries-carousel-block {
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+    }
+
+    .industries .industries-carousel-block::before {
+        display: none !important;
+    }
+
+    .industries .industries-grid {
+        width: calc(100% + 36px) !important;
+        margin-left: -18px !important;
+        padding: 4px 18px 10px !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    .industries .industry-card {
+        background: rgba(255, 255, 255, 0.92) !important;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .industries .industries-view-more-row {
+        margin-top: 12px !important;
+        padding: 0 !important;
+    }
+
+    .industries .industries-view-more-btn {
+        width: auto !important;
+        min-width: 154px !important;
+        max-width: max-content !important;
+        min-height: 48px !important;
+        padding: 0 24px !important;
+        border-radius: 999px !important;
+        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08) !important;
+    }
+}
+
+/* Core Services mobile vertical stack */
+@media (max-width: 768px) {
+    .core-services-premium {
+        overflow-x: hidden !important;
+    }
+
+    .core-services-premium .core-services-layout {
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+    }
+
+    .core-services-premium .core-service-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        grid-auto-rows: auto !important;
+        gap: 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        scroll-snap-type: none !important;
+    }
+
+    .core-services-premium .core-service-card,
+    .core-services-premium .core-service-card-compact {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 112px !important;
+        flex: none !important;
+        scroll-snap-align: none !important;
+    }
+}
+
+/* Mobile: tighten Core Services to Value Proposition gap */
+@media (max-width: 768px) {
+    .core-services-premium {
+        padding-bottom: 28px !important;
+    }
+
+    .value-proposition-premium.why-choose-us {
+        padding-top: 26px !important;
+    }
+}
+
+/* Mobile Workflow Blueprint centered slider */
+@media (max-width: 768px) {
+    .process .process-timeline {
+        margin-top: 28px !important;
+        padding: 70px 0 22px !important;
+        overflow: hidden !important;
+        border-radius: 24px !important;
+    }
+
+    .process .process-timeline::before {
+        display: none !important;
+    }
+
+    .process .process-steps {
+        display: flex !important;
+        grid-template-columns: none !important;
+        gap: 16px !important;
+        width: calc(100% + 36px) !important;
+        margin-left: -18px !important;
+        padding: 4px max(18px, calc((100vw - 320px) / 2)) 20px !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory !important;
+        scroll-padding-inline: max(18px, calc((100vw - 320px) / 2)) !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+    }
+
+    .process .process-step {
+        flex: 0 0 min(82vw, 320px) !important;
+        width: min(82vw, 320px) !important;
+        max-width: min(82vw, 320px) !important;
+        min-height: 230px !important;
+        padding: 70px 20px 28px !important;
+        justify-content: center !important;
+        scroll-snap-align: center !important;
+    }
+
+    .process .process-slider-dots {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin-top: 4px !important;
+    }
+
+    .process .process-slider-dots button {
+        width: 8px !important;
+        height: 8px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 999px !important;
+        background: rgba(15, 118, 110, 0.22) !important;
+        cursor: pointer !important;
+        transition: width 0.25s ease, background-color 0.25s ease, transform 0.25s ease !important;
+    }
+
+    .process .process-slider-dots button.active {
+        width: 24px !important;
+        background: #0f8b8d !important;
+        transform: translateY(-1px) !important;
+    }
+}
+
+/* Mobile hero: move visual image behind the text */
+@media (max-width: 768px) {
+    .hero {
+        position: relative !important;
+        padding-bottom: 42px !important;
+        background:
+            linear-gradient(90deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.86) 44%, rgba(255, 255, 255, 0.52) 100%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.5) 54%, rgba(248, 251, 255, 0.9) 100%),
+            url("/assets/images/herobanner.png") 82% 52% / min(142vw, 680px) auto no-repeat,
+            #ffffff !important;
+    }
+
+    .hero-grid {
+        position: relative !important;
+        z-index: 2 !important;
+    }
+
+    .hero-content {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .hero-title,
+    .hero-desc,
+    .hero-btns,
+    .hero-trusted-line {
+        position: relative !important;
+        z-index: 3 !important;
+    }
+
+    .hero-visual {
+        display: none !important;
+    }
+
+    .hero-btns {
+        margin-bottom: 28px !important;
+    }
+
+    .hero-trusted-line {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
 }

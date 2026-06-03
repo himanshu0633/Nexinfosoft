@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const Process = () => {
   const processScrollerRef = useRef(null);
+  const [activeStep, setActiveStep] = useState(0);
   const steps = [
     {
       number: '01',
@@ -46,10 +47,23 @@ const Process = () => {
     const mobileQuery = window.matchMedia('(max-width: 768px)');
     let intervalId;
     let resumeTimer;
+    let scrollFrame;
 
     const stopAutoScroll = () => {
       clearInterval(intervalId);
       clearTimeout(resumeTimer);
+    };
+
+    const scrollToStep = (index) => {
+      if (!scroller) return;
+      const items = Array.from(scroller.querySelectorAll('.process-step'));
+      const target = items[index];
+      if (!target) return;
+
+      scroller.scrollTo({
+        left: target.offsetLeft - (scroller.clientWidth - target.clientWidth) / 2,
+        behavior: 'smooth'
+      });
     };
 
     const startAutoScroll = () => {
@@ -57,42 +71,65 @@ const Process = () => {
       if (!scroller || !mobileQuery.matches) return;
 
       intervalId = setInterval(() => {
-        const firstItem = scroller.querySelector('.process-step');
-        if (!firstItem) return;
-
-        const cardWidth = firstItem.getBoundingClientRect().width;
-        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
-        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-        const nextLeft = scroller.scrollLeft + cardWidth + gap;
-
-        scroller.scrollTo({
-          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
-          behavior: 'smooth'
+        setActiveStep((current) => {
+          const next = (current + 1) % steps.length;
+          requestAnimationFrame(() => scrollToStep(next));
+          return next;
         });
-      }, 1000);
+      }, 2000);
     };
 
     const pauseThenResume = () => {
       stopAutoScroll();
-      resumeTimer = setTimeout(startAutoScroll, 2200);
+      resumeTimer = setTimeout(startAutoScroll, 2600);
+    };
+
+    const syncActiveStep = () => {
+      if (!scroller || !mobileQuery.matches) return;
+      cancelAnimationFrame(scrollFrame);
+      scrollFrame = requestAnimationFrame(() => {
+        const items = Array.from(scroller.querySelectorAll('.process-step'));
+        const center = scroller.scrollLeft + scroller.clientWidth / 2;
+        const nearestIndex = items.reduce((nearest, item, index) => {
+          const itemCenter = item.offsetLeft + item.clientWidth / 2;
+          const currentCenter = items[nearest].offsetLeft + items[nearest].clientWidth / 2;
+          return Math.abs(itemCenter - center) < Math.abs(currentCenter - center) ? index : nearest;
+        }, 0);
+        setActiveStep(nearestIndex);
+      });
     };
 
     startAutoScroll();
 
     if (scroller) {
       scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+      scroller.addEventListener('scroll', syncActiveStep, { passive: true });
     }
 
     mobileQuery.addEventListener('change', startAutoScroll);
 
     return () => {
       stopAutoScroll();
+      cancelAnimationFrame(scrollFrame);
       mobileQuery.removeEventListener('change', startAutoScroll);
       if (scroller) {
         scroller.removeEventListener('touchstart', pauseThenResume);
+        scroller.removeEventListener('scroll', syncActiveStep);
       }
     };
-  }, []);
+  }, [steps.length]);
+
+  const handleDotClick = (index) => {
+    const scroller = processScrollerRef.current;
+    const target = scroller?.querySelectorAll('.process-step')[index];
+    if (!scroller || !target) return;
+
+    scroller.scrollTo({
+      left: target.offsetLeft - (scroller.clientWidth - target.clientWidth) / 2,
+      behavior: 'smooth'
+    });
+    setActiveStep(index);
+  };
 
   return (
     <section className="process">
@@ -116,6 +153,18 @@ const Process = () => {
                   ))}
                 </div>
               </div>
+            ))}
+          </div>
+          <div className="process-slider-dots" aria-label="Workflow step navigation">
+            {steps.map((step, idx) => (
+              <button
+                type="button"
+                key={step.number}
+                className={activeStep === idx ? 'active' : ''}
+                aria-label={`Show workflow step ${step.number}`}
+                aria-current={activeStep === idx ? 'true' : undefined}
+                onClick={() => handleDotClick(idx)}
+              />
             ))}
           </div>
         </div>

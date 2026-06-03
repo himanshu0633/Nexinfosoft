@@ -158,6 +158,15 @@ const PortfolioPreview = () => {
             </div>
           )}
         </div>
+
+        {hasMoreProjects && (
+          <div className="portfolio-view-more-mobile">
+            <Link to="/portfolio" className="btn btn-secondary portfolio-view-more-btn">
+              View More
+              <i className="fa-solid fa-arrow-right"></i>
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
