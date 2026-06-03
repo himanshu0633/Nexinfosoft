@@ -23,21 +23,7 @@ const sections = [
       ]
     }
   },
-  {
-    _id: 'stats',
-    title: 'Trusted Delivery Metrics',
-    subtitle: 'Company Stats',
-    description: 'Performance numbers that summarize our delivery record.',
-    image_url: '',
-    metadata: {
-      counters: [
-        { target: 100, suffix: '+', label: 'Projects Completed' },
-        { target: 50, suffix: '+', label: 'Happy Clients' },
-        { target: 5, suffix: '+', label: 'Years Experience' },
-        { target: 99, suffix: '%', label: 'Client Retention' }
-      ]
-    }
-  },
+
   {
     _id: 'services',
     title: 'Everything Your Business Needs To Build,',

@@ -6,7 +6,7 @@ const authMiddleware = require('../middleware/auth');
 // GET /api/services - Public endpoint to retrieve all services
 router.get('/', async (req, res) => {
   try {
-    const services = await Service.find().sort({ createdAt: 1 });
+    const services = await Service.find({ slug: { $ne: 'recruitment-services' } }).sort({ createdAt: 1 });
     res.json(services);
   } catch (err) {
     res.status(500).json({ error: 'Failed to retrieve services.' });

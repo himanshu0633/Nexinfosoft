@@ -245,12 +245,19 @@ const Contact = () => {
       resumeTimers.push(setTimeout(startAutoScroll, 2200));
     };
 
+    const pauseAutoScroll = () => stopAutoScroll();
+    const resumeAutoScroll = () => startAutoScroll();
+
     startAutoScroll();
 
     scrollers.forEach(({ ref }) => {
       const scroller = ref.current;
       if (scroller) {
         scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+        scroller.addEventListener('mouseenter', pauseAutoScroll);
+        scroller.addEventListener('focusin', pauseAutoScroll);
+        scroller.addEventListener('mouseleave', resumeAutoScroll);
+        scroller.addEventListener('focusout', resumeAutoScroll);
       }
     });
 
@@ -263,6 +270,10 @@ const Contact = () => {
         const scroller = ref.current;
         if (scroller) {
           scroller.removeEventListener('touchstart', pauseThenResume);
+          scroller.removeEventListener('mouseenter', pauseAutoScroll);
+          scroller.removeEventListener('focusin', pauseAutoScroll);
+          scroller.removeEventListener('mouseleave', resumeAutoScroll);
+          scroller.removeEventListener('focusout', resumeAutoScroll);
         }
       });
     };

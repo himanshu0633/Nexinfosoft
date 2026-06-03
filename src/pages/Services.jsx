@@ -139,15 +139,7 @@ const Services = () => {
       benefits: ['Promotional Videos', 'Explainer Videos', 'Social Media Reels'],
       deliverables: ['Reels editing', 'Promo videos', 'Motion text']
     },
-    {
-      slug: 'mvp-development',
-      title: 'MVP Development',
-      subtitle: 'Rapid prototyping and focused MVP launches.',
-      icon: 'ri-lightbulb-line',
-      intro: 'Quick MVP development for startups to validate ideas and launch faster.',
-      benefits: ['Rapid Prototyping', 'Feature Prioritization', 'Scalable Architecture'],
-      deliverables: ['Feature planning', 'Prototype UI', 'Core product build']
-    }
+
   ]);
 
   const [projects, setProjects] = useState([
@@ -216,7 +208,7 @@ const Services = () => {
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            setServices(data);
+            setServices(data.filter(service => service.slug !== 'recruitment-services'));
           }
         }
       } catch (err) {
@@ -276,10 +268,17 @@ const Services = () => {
       resumeTimer = setTimeout(startAutoScroll, 2200);
     };
 
+    const pauseAutoScroll = () => stopAutoScroll();
+    const resumeAutoScroll = () => startAutoScroll();
+
     startAutoScroll();
 
     if (scroller) {
       scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+      scroller.addEventListener('mouseenter', pauseAutoScroll);
+      scroller.addEventListener('focusin', pauseAutoScroll);
+      scroller.addEventListener('mouseleave', resumeAutoScroll);
+      scroller.addEventListener('focusout', resumeAutoScroll);
     }
 
     mobileQuery.addEventListener('change', startAutoScroll);
@@ -289,6 +288,10 @@ const Services = () => {
       mobileQuery.removeEventListener('change', startAutoScroll);
       if (scroller) {
         scroller.removeEventListener('touchstart', pauseThenResume);
+        scroller.removeEventListener('mouseenter', pauseAutoScroll);
+        scroller.removeEventListener('focusin', pauseAutoScroll);
+        scroller.removeEventListener('mouseleave', resumeAutoScroll);
+        scroller.removeEventListener('focusout', resumeAutoScroll);
       }
     };
   }, []);

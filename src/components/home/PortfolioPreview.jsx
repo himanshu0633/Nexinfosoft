@@ -1,9 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const PortfolioPreview = () => {
+const PortfolioPreview = ({ previewData = null }) => {
   const portfolioScrollerRef = useRef(null);
   
+  const [data, setData] = useState({
+    title: 'Digital Products Built For Real Operations',
+    subtitle: 'Recent Work',
+    description: 'A quick look at specialized software categories our team designs, builds, and maintains.'
+  });
+
   const [projects, setProjects] = useState([
     {
       tag: 'E-Commerce Platform',
@@ -44,13 +50,31 @@ const PortfolioPreview = () => {
   ]);
 
   useEffect(() => {
+    if (previewData) {
+      setData(previewData);
+      return;
+    }
+
+    const fetchHeaders = async () => {
+      try {
+        const res = await fetch('/api/content/portfoliopreview');
+        if (res.ok) {
+          const json = await res.json();
+          setData(json);
+        }
+      } catch (e) {}
+    };
+
+    fetchHeaders();
+  }, [previewData]);
+
+  useEffect(() => {
     const fetchDynamicProjects = async () => {
       try {
         const res = await fetch('/api/projects');
         if (res.ok) {
           const dbProjects = await res.json();
           if (dbProjects && dbProjects.length > 0) {
-            // Map Mongoose schema fields to the expected preview layout keys
             const mapped = dbProjects.map(proj => ({
               tag: proj.tag || proj.category.toUpperCase(),
               title: proj.name,
@@ -104,10 +128,17 @@ const PortfolioPreview = () => {
       resumeTimer = setTimeout(startAutoScroll, 2200);
     };
 
+    const pauseAutoScroll = () => stopAutoScroll();
+    const resumeAutoScroll = () => startAutoScroll();
+
     startAutoScroll();
 
     if (scroller) {
       scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+      scroller.addEventListener('mouseenter', pauseAutoScroll);
+      scroller.addEventListener('focusin', pauseAutoScroll);
+      scroller.addEventListener('mouseleave', resumeAutoScroll);
+      scroller.addEventListener('focusout', resumeAutoScroll);
     }
 
     mobileQuery.addEventListener('change', startAutoScroll);
@@ -117,9 +148,13 @@ const PortfolioPreview = () => {
       mobileQuery.removeEventListener('change', startAutoScroll);
       if (scroller) {
         scroller.removeEventListener('touchstart', pauseThenResume);
+        scroller.removeEventListener('mouseenter', pauseAutoScroll);
+        scroller.removeEventListener('focusin', pauseAutoScroll);
+        scroller.removeEventListener('mouseleave', resumeAutoScroll);
+        scroller.removeEventListener('focusout', resumeAutoScroll);
       }
     };
-  }, []);
+  }, [projects]);
 
   const visibleProjects = projects.slice(0, 2);
   const hasMoreProjects = projects.length > 2;
@@ -128,9 +163,9 @@ const PortfolioPreview = () => {
     <section className="portfolio">
       <div className="container">
         <div className="section-header reveal slide-up active">
-          <span className="section-tag">Recent Work</span>
-          <h2 className="section-title">Digital Products Built For Real Operations</h2>
-          <p className="section-desc">A quick look at specialized software categories our team designs, builds, and maintains.</p>
+          <span className="section-tag">{data.subtitle || 'Recent Work'}</span>
+          <h2 className="section-title">{data.title}</h2>
+          <p className="section-desc">{data.description}</p>
         </div>
 
         <div ref={portfolioScrollerRef} className="portfolio-grid">

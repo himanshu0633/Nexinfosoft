@@ -3,6 +3,50 @@ const router = express.Router();
 const SectionContent = require('../models/SectionContent');
 const authMiddleware = require('../middleware/auth');
 
+// GET /api/content - Public endpoint to retrieve all sections or filter by page
+router.get('/', async (req, res) => {
+  const { page } = req.query;
+  try {
+    const filter = page === 'home' ? { page, _id: { $ne: 'stats' } } : page ? { page } : {};
+    const sections = await SectionContent.find(filter).sort({ order: 1 });
+    res.json(sections);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to retrieve sections.' });
+  }
+});
+
+// POST /api/content - Protected endpoint to create a new section
+router.post('/', authMiddleware, async (req, res) => {
+  const { _id, title, subtitle, description, image_url, page, visible, order, metadata } = req.body;
+
+  if (!_id) {
+    return res.status(400).json({ error: 'Section ID (_id) is required.' });
+  }
+
+  try {
+    const existing = await SectionContent.findById(_id);
+    if (existing) {
+      return res.status(400).json({ error: 'A section with this ID already exists.' });
+    }
+
+    const newSection = await SectionContent.create({
+      _id,
+      title,
+      subtitle,
+      description,
+      image_url,
+      page: page || 'home',
+      visible: visible !== undefined ? visible : true,
+      order: order !== undefined ? order : 0,
+      metadata: metadata || {}
+    });
+
+    res.status(201).json({ message: 'Section successfully created', data: newSection });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create section.' });
+  }
+});
+
 // GET /api/content/:sectionId - Public endpoint to retrieve section content
 router.get('/:sectionId', async (req, res) => {
   const { sectionId } = req.params;
@@ -21,7 +65,7 @@ router.get('/:sectionId', async (req, res) => {
 // PUT /api/content/:sectionId - Protected endpoint to edit section content
 router.put('/:sectionId', authMiddleware, async (req, res) => {
   const { sectionId } = req.params;
-  const { title, subtitle, description, image_url, metadata } = req.body;
+  const { title, subtitle, description, image_url, page, visible, order, metadata } = req.body;
 
   // Strict backend constraints validation to protect visual layout integrity
   if (title && title.length > 100) {
@@ -101,13 +145,27 @@ router.put('/:sectionId', authMiddleware, async (req, res) => {
   try {
     const updated = await SectionContent.findByIdAndUpdate(
       sectionId,
-      { title, subtitle, description, image_url, metadata },
+      { title, subtitle, description, image_url, page, visible, order, metadata },
       { new: true, upsert: true }
     );
 
     res.json({ message: 'Content successfully updated', data: updated });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update section content.' });
+  }
+});
+
+// DELETE /api/content/:sectionId - Protected endpoint to delete a section
+router.delete('/:sectionId', authMiddleware, async (req, res) => {
+  const { sectionId } = req.params;
+  try {
+    const deleted = await SectionContent.findByIdAndDelete(sectionId);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Section not found.' });
+    }
+    res.json({ message: 'Section successfully deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete section.' });
   }
 });
 

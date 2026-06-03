@@ -120,10 +120,17 @@ const About = () => {
       resumeTimer = setTimeout(startAutoScroll, 2200);
     };
 
+    const pauseAutoScroll = () => stopAutoScroll();
+    const resumeAutoScroll = () => startAutoScroll();
+
     startAutoScroll();
 
     if (scroller) {
       scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+      scroller.addEventListener('mouseenter', pauseAutoScroll);
+      scroller.addEventListener('focusin', pauseAutoScroll);
+      scroller.addEventListener('mouseleave', resumeAutoScroll);
+      scroller.addEventListener('focusout', resumeAutoScroll);
     }
 
     mobileQuery.addEventListener('change', startAutoScroll);
@@ -133,6 +140,10 @@ const About = () => {
       mobileQuery.removeEventListener('change', startAutoScroll);
       if (scroller) {
         scroller.removeEventListener('touchstart', pauseThenResume);
+        scroller.removeEventListener('mouseenter', pauseAutoScroll);
+        scroller.removeEventListener('focusin', pauseAutoScroll);
+        scroller.removeEventListener('mouseleave', resumeAutoScroll);
+        scroller.removeEventListener('focusout', resumeAutoScroll);
       }
     };
   }, []);
@@ -173,10 +184,17 @@ const About = () => {
       resumeTimer = setTimeout(startAutoScroll, 2200);
     };
 
+    const pauseAutoScroll = () => stopAutoScroll();
+    const resumeAutoScroll = () => startAutoScroll();
+
     startAutoScroll();
 
     if (scroller) {
       scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+      scroller.addEventListener('mouseenter', pauseAutoScroll);
+      scroller.addEventListener('focusin', pauseAutoScroll);
+      scroller.addEventListener('mouseleave', resumeAutoScroll);
+      scroller.addEventListener('focusout', resumeAutoScroll);
     }
 
     mobileQuery.addEventListener('change', startAutoScroll);
@@ -186,6 +204,10 @@ const About = () => {
       mobileQuery.removeEventListener('change', startAutoScroll);
       if (scroller) {
         scroller.removeEventListener('touchstart', pauseThenResume);
+        scroller.removeEventListener('mouseenter', pauseAutoScroll);
+        scroller.removeEventListener('focusin', pauseAutoScroll);
+        scroller.removeEventListener('mouseleave', resumeAutoScroll);
+        scroller.removeEventListener('focusout', resumeAutoScroll);
       }
     };
   }, []);

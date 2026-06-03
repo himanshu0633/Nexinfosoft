@@ -77,116 +77,204 @@ async function initializeDatabase() {
     }
 
     // 2. Seed Default Section Contents
-    const defaultSectionsCount = await SectionContent.countDocuments();
-    if (defaultSectionsCount === 0) {
-      const sections = [
-        {
-          _id: 'hero',
-          title: 'Build Scalable',
-          subtitle: 'For Modern Teams',
-          description: 'Nexinfosoft designs high-performance SaaS platforms, ERP systems, mobile apps, CRM workflows, and AI automation tools that help modern businesses move faster, reduce manual work, and unlock measurable growth.',
-          image_url: '/assets/images/web_dev_poster.png',
-          metadata: {
-            tag: 'AI Powered Digital Transformation Studio',
-            rotatingKeywords: ['ERP Systems', 'AI Automation', 'SaaS Platforms', 'Mobile Apps', 'CRM Solutions'],
-            trustPills: ['Secure Architecture', 'Fast Delivery', 'Growth Focused'],
-            stats: [
-              { label: 'Digital projects', value: '100+' },
-              { label: 'Business clients', value: '50+' },
-              { label: 'Delivery health', value: '99%' }
-            ]
-          }
-        },
-        {
-          _id: 'stats',
-          title: 'Our Track Record',
-          subtitle: 'Key Metrics',
-          description: 'Verified operations metrics',
-          image_url: '',
-          metadata: {
-            counters: [
-              { target: 100, suffix: '+', label: 'Projects Completed' },
-              { target: 50, suffix: '+', label: 'Happy Clients' },
-              { target: 5, suffix: '+', label: 'Years Experience' },
-              { target: 99, suffix: '%', label: 'Client Retention' }
-            ]
-          }
-        },
-        {
-          _id: 'services',
-          title: 'Everything Your Business Needs To Build,',
-          subtitle: 'Scale & Automate',
-          description: 'From web apps to AI automation, we deliver secure and scalable digital solutions that help your business grow faster, operate smarter, and launch with confidence.',
-          image_url: '',
-          metadata: {
-            badge: 'Core Services',
-            capabilityStack: {
-              kicker: 'Digital Capability Stack',
-              title: 'Enterprise delivery console for modern product teams',
-              description: 'End-to-end planning, design, development, cloud deployment, QA, security and optimization under one reliable delivery system.'
-            }
-          }
-        },
-        {
-          _id: 'whychooseus',
-          title: 'Why Global Businesses Choose',
-          subtitle: 'Nexinfosoft',
-          description: 'We align engineering with business outcomes through structured planning, secure implementation, clear reporting, and dependable support.',
-          image_url: '',
-          metadata: {
-            badge: 'Value Proposition',
-            checklist: [
-              'Gurugram-based Dedicated In-House Team',
-              'Post-Deployment Support & Documentation',
-              'Agile Iterations & 100% Code Ownership'
-            ],
-            metrics: [
-              { label: 'Projects Delivered', value: '50+', icon: 'ri-briefcase-4-line' },
-              { label: 'Client Satisfaction', value: '99%', icon: 'ri-emotion-happy-line' },
-              { label: 'Support Available', value: '24/7', icon: 'ri-customer-service-2-line' },
-              { label: 'Code Ownership', value: '100%', icon: 'ri-code-s-slash-line' }
-            ]
-          }
-        },
-        {
-          _id: 'corporate_hero',
-          title: 'Fastest Way To Grow Your Business Is Being With Us.',
-          subtitle: 'UNIQUE OUTCOMES FROM EXPERIENCED DEVELOPERS',
-          description: 'We strive to provide highly customized and reliable IT solutions for various business aspects.',
-          image_url: '/assets/images/corporate_hero.png',
-          metadata: {}
-        },
-        {
-          _id: 'corporate_about',
-          title: 'Top Class IT Services Provider',
-          subtitle: 'ABOUT US',
-          description: 'Nexinfosoft is a full-service Digital agency based in India. We are professional, experienced and forward thinking, and our great strength is decoding our client\'s needs into effective solutions.',
-          image_url: '/assets/images/corporate_about.png',
-          metadata: {
-            paragraphs: [
-              "Nexinfosoft is a full-service Digital agency based in India. We are professional, experienced and forward thinking, and our great strength is decoding our client's needs into effective solutions.",
-              "We live in the digital gamut and stay there round the clock to address your needs. We are uncommonly unique because we build tomorrow by developing premium brands, web portals and mobile apps seeing the future.",
-              "We integrate marketing and branding with digital innovations. At Nexinfosoft, we believe in bringing more with a persistent search for triumph, and we begin where other agencies stop."
-            ]
-          }
-        },
-        {
-          _id: 'corporate_mission',
-          title: 'Functional Websites That Move Businesses Forward',
-          subtitle: 'OUR MISSION',
-          description: 'To deliver the most functional and attractive websites to our clients and help them take their businesses to the next level.',
-          image_url: '/assets/images/corporate_mission.png',
-          metadata: {
-            vision: {
-              title: 'Innovative And Dedicated IT Solutions',
-              desc: 'To provide clients with the most innovative and dedicated IT solutions through continuous learning efforts.'
-            }
+    // 2. Seed Default Section Contents
+    const sections = [
+      {
+        _id: 'hero',
+        title: 'Build Scalable',
+        subtitle: 'For Modern Teams',
+        description: 'Nexinfosoft designs high-performance SaaS platforms, ERP systems, mobile apps, CRM workflows, and AI automation tools that help modern businesses move faster, reduce manual work, and unlock measurable growth.',
+        image_url: '/assets/images/web_dev_poster.png',
+        page: 'home',
+        order: 0,
+        visible: true,
+        metadata: {
+          tag: 'AI Powered Digital Transformation Studio',
+          rotatingKeywords: ['ERP Systems', 'AI Automation', 'SaaS Platforms', 'Mobile Apps', 'CRM Solutions'],
+          trustPills: ['Secure Architecture', 'Fast Delivery', 'Growth Focused'],
+          stats: [
+            { label: 'Digital projects', value: '100+' },
+            { label: 'Business clients', value: '50+' },
+            { label: 'Delivery health', value: '99%' }
+          ]
+        }
+      },
+      {
+        _id: 'services',
+        title: 'Everything Your Business Needs To Build,',
+        subtitle: 'Scale & Automate',
+        description: 'From web apps to AI automation, we deliver secure and scalable digital solutions that help your business grow faster, operate smarter, and launch with confidence.',
+        image_url: '',
+        page: 'home',
+        order: 1,
+        visible: true,
+        metadata: {
+          badge: 'Core Services',
+          capabilityStack: {
+            kicker: 'Digital Capability Stack',
+            title: 'Enterprise delivery console for modern product teams',
+            description: 'End-to-end planning, design, development, cloud deployment, QA, security and optimization under one reliable delivery system.'
           }
         }
-      ];
+      },
+      {
+        _id: 'whychooseus',
+        title: 'Why Global Businesses Choose',
+        subtitle: 'Nexinfosoft',
+        description: 'We align engineering with business outcomes through structured planning, secure implementation, clear reporting, and dependable support.',
+        image_url: '',
+        page: 'home',
+        order: 2,
+        visible: true,
+        metadata: {
+          badge: 'Value Proposition',
+          checklist: [
+            'Gurugram-based Dedicated In-House Team',
+            'Post-Deployment Support & Documentation',
+            'Agile Iterations & 100% Code Ownership'
+          ],
+          metrics: [
+            { label: 'Projects Delivered', value: '50+', icon: 'ri-briefcase-4-line' },
+            { label: 'Client Satisfaction', value: '99%', icon: 'ri-emotion-happy-line' },
+            { label: 'Support Available', value: '24/7', icon: 'ri-customer-service-2-line' },
+            { label: 'Code Ownership', value: '100%', icon: 'ri-code-s-slash-line' }
+          ]
+        }
+      },
+      {
+        _id: 'technologies',
+        title: 'Requirement-Based Technology Selection',
+        subtitle: 'Technology Stack',
+        description: 'We choose tools around business goals, integrations, performance requirements, and long-term maintainability.',
+        image_url: '',
+        page: 'home',
+        order: 3,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'industries',
+        title: 'Custom Ecosystems Built For Core Industries',
+        subtitle: 'Our Verticals',
+        description: 'We build purpose-driven architectures tailored for operational requirements across sectors.',
+        image_url: '',
+        page: 'home',
+        order: 4,
+        visible: true,
+        metadata: {
+          industries: [
+            { title: 'Healthcare', icon: 'ri-heart-pulse-line' },
+            { title: 'Real Estate', icon: 'ri-home-4-line' },
+            { title: 'Education', icon: 'ri-book-open-line' },
+            { title: 'E-commerce', icon: 'ri-shopping-cart-2-line' },
+            { title: 'Restaurants', icon: 'ri-restaurant-2-line' },
+            { title: 'Finance', icon: 'ri-bank-line' },
+            { title: 'Government', icon: 'ri-government-line' },
+            { title: 'Manufacturing', icon: 'ri-tools-line' }
+          ]
+        }
+      },
+      {
+        _id: 'process',
+        title: 'Our Structured Software Creation Lifecycle',
+        subtitle: 'Workflow Blueprint',
+        description: 'We maintain transparent, structured development timelines to ensure projects are delivered on time and within scope.',
+        image_url: '',
+        page: 'home',
+        order: 5,
+        visible: true,
+        metadata: {
+          steps: [
+            { number: '01', name: 'Analysis', text: 'Understanding system flows and detailed scope.', tags: ['Scope Doc', 'Flowcharts'] },
+            { number: '02', name: 'UI/UX Design', text: 'Creating wireframes and interactive mockups.', tags: ['Figma UI', 'Wireframes'] },
+            { number: '03', name: 'Coding', text: 'Frontend, backend, APIs, and integrations.', tags: ['Clean Code', 'APIs          .'] },
+            { number: '04', name: 'Testing', text: 'Functional, performance, and responsive QA.', tags: ['QA Report', 'Bug Fixes'] },
+            { number: '05', name: 'Deployment', text: 'Publishing systems to secure hosting.', tags: ['Live Server', 'SSL Setup'] },
+            { number: '06', name: 'Support', text: 'Ongoing tuning, patches, and feature updates.', tags: ['Uptime Check', 'Updates'] }
+          ]
+        }
+      },
+      {
+        _id: 'portfoliopreview',
+        title: 'Digital Products Built For Real Operations',
+        subtitle: 'Recent Work',
+        description: 'A quick look at specialized software categories our team designs, builds, and maintains.',
+        image_url: '',
+        page: 'home',
+        order: 6,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'corporate_hero',
+        title: 'Fastest Way To Grow Your Business Is Being With Us.',
+        subtitle: 'UNIQUE OUTCOMES FROM EXPERIENCED DEVELOPERS',
+        description: 'We strive to provide highly customized and reliable IT solutions for various business aspects.',
+        image_url: '/assets/images/corporate_hero.png',
+        page: 'corporate',
+        order: 0,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'corporate_about',
+        title: 'Top Class IT Services Provider',
+        subtitle: 'ABOUT US',
+        description: 'Nexinfosoft is a full-service Digital agency based in India. We are professional, experienced and forward thinking, and our great strength is decoding our client\'s needs into effective solutions.',
+        image_url: '/assets/images/corporate_about.png',
+        page: 'corporate',
+        order: 1,
+        visible: true,
+        metadata: {
+          paragraphs: [
+            "Nexinfosoft is a full-service Digital agency based in India. We are professional, experienced and forward thinking, and our great strength is decoding our client's needs into effective solutions.",
+            "We live in the digital gamut and stay there round the clock to address your needs. We are uncommonly unique because we build tomorrow by developing premium brands, web portals and mobile apps seeing the future.",
+            "We integrate marketing and branding with digital innovations. At Nexinfosoft, we believe in bringing more with a persistent search for triumph, and we begin where other agencies stop."
+          ]
+        }
+      },
+      {
+        _id: 'corporate_mission',
+        title: 'Functional Websites That Move Businesses Forward',
+        subtitle: 'OUR MISSION',
+        description: 'To deliver the most functional and attractive websites to our clients and help them take their businesses to the next level.',
+        image_url: '/assets/images/corporate_mission.png',
+        page: 'corporate',
+        order: 2,
+        visible: true,
+        metadata: {
+          vision: {
+            title: 'Innovative And Dedicated IT Solutions',
+            desc: 'To provide clients with the most innovative and dedicated IT solutions through continuous learning efforts.'
+          }
+        }
+      }
+    ];
 
-      await SectionContent.insertMany(sections);
-      console.log('Default section contents successfully seeded in MongoDB.');
+    for (const section of sections) {
+      const existing = await SectionContent.findById(section._id);
+      if (!existing) {
+        await SectionContent.create(section);
+        console.log(`Seeded section content: ${section._id}`);
+      } else {
+        let hasChanges = false;
+        if (existing.order === undefined || (existing.order === 0 && section.order !== 0)) {
+          existing.order = section.order;
+          hasChanges = true;
+        }
+        if (existing.page === undefined || existing.page !== section.page) {
+          existing.page = section.page;
+          hasChanges = true;
+        }
+        if (existing.visible === undefined) {
+          existing.visible = section.visible;
+          hasChanges = true;
+        }
+        if (hasChanges) {
+          await existing.save();
+          console.log(`Updated section config: ${section._id}`);
+        }
+      }
     }
 
     // 3. Seed Default Services
@@ -341,21 +429,6 @@ async function initializeDatabase() {
             'Creates a base for future product scaling'
           ],
           deliverables: ['Feature planning', 'Prototype UI', 'Core product build', 'Admin basics', 'Testing', 'Launch roadmap'],
-          image_url: ''
-        },
-        {
-          slug: 'recruitment-services',
-          title: 'Recruitment Services',
-          subtitle: 'Hiring support for technology, operations, sales, and digital roles as your business scales.',
-          icon: 'ri-user-search-line',
-          intro: 'We help businesses identify and shortlist suitable talent for key roles so teams can scale with less hiring friction.',
-          benefits: [
-            'Saves time in candidate sourcing',
-            'Improves shortlist quality',
-            'Supports business expansion with the right people',
-            'Reduces hiring coordination load on founders'
-          ],
-          deliverables: ['Role understanding', 'Candidate sourcing', 'Profile screening', 'Shortlisting', 'Interview coordination', 'Hiring support'],
           image_url: ''
         }
       ];

@@ -124,34 +124,6 @@ const servicesData = [
       'Gives clear visibility into team performance'
     ],
     deliverables: ['Lead dashboard', 'Follow-up reminders', 'Customer records', 'Sales pipeline', 'Team reports', 'Role permissions']
-  },
-  {
-    slug: 'mvp-development',
-    title: 'MVP Development',
-    subtitle: 'Fast, focused product builds for startups and businesses that need to validate an idea.',
-    icon: 'ri-rocket-line',
-    intro: 'We build MVPs that focus on the core product idea, so you can launch faster, collect feedback, and improve with less waste.',
-    benefits: [
-      'Launches your idea faster with core features',
-      'Reduces upfront development cost',
-      'Helps validate market demand early',
-      'Creates a base for future product scaling'
-    ],
-    deliverables: ['Feature planning', 'Prototype UI', 'Core product build', 'Admin basics', 'Testing', 'Launch roadmap']
-  },
-  {
-    slug: 'recruitment-services',
-    title: 'Recruitment Services',
-    subtitle: 'Hiring support for technology, operations, sales, and digital roles as your business scales.',
-    icon: 'ri-user-search-line',
-    intro: 'We help businesses identify and shortlist suitable talent for key roles so teams can scale with less hiring friction.',
-    benefits: [
-      'Saves time in candidate sourcing',
-      'Improves shortlist quality',
-      'Supports business expansion with the right people',
-      'Reduces hiring coordination load on founders'
-    ],
-    deliverables: ['Role understanding', 'Candidate sourcing', 'Profile screening', 'Shortlisting', 'Interview coordination', 'Hiring support']
   }
 ];
 

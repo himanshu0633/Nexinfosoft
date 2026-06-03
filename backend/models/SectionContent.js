@@ -21,6 +21,19 @@ const sectionContentSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  page: {
+    type: String,
+    default: 'home',
+    trim: true
+  },
+  visible: {
+    type: Boolean,
+    default: true
+  },
+  order: {
+    type: Number,
+    default: 0
+  },
   metadata: {
     type: mongoose.Schema.Types.Mixed,
     default: {}

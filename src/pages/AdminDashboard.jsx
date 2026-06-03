@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Hero from '../components/home/Hero';
-import Stats from '../components/home/Stats';
 import CoreServices from '../components/home/CoreServices';
 import WhyChooseUs from '../components/home/WhyChooseUs';
+import Technologies from '../components/home/Technologies';
+import Industries from '../components/home/Industries';
+import Process from '../components/home/Process';
+import PortfolioPreview from '../components/home/PortfolioPreview';
 
 const AdminDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,8 +35,13 @@ const AdminDashboard = () => {
   const [showCustomCategory, setShowCustomCategory] = useState(false);
   const [customCategory, setCustomCategory] = useState('');
   const [leadFilter, setLeadFilter] = useState('all');
+  const [managerPageFilter, setManagerPageFilter] = useState('all');
 
   const [editingId, setEditingId] = useState(null); // ID of item being updated
+  
+  // Custom section states
+  const [allSections, setAllSections] = useState([]);
+  const [customSectionForm, setCustomSectionForm] = useState({ _id: '', title: '', subtitle: '', description: '', image_url: '', page: 'home', order: 0, visible: true });
   
   // Loading & UI states
   const [loading, setLoading] = useState(false);
@@ -47,9 +55,13 @@ const AdminDashboard = () => {
   const getSectionLabel = () => {
     const labels = {
       hero: 'Home Hero Banner',
-      stats: 'Home Statistics',
       services: 'Core Services Header',
       whychooseus: 'Why Choose Us',
+      technologies: 'Home Technologies Stack',
+      industries: 'Home Verticals/Industries',
+      process: 'Home Process Blueprint',
+      portfoliopreview: 'Home Portfolio Preview',
+      sections_manager: 'Sections Manager',
       corporate_hero: 'Corporate Hero',
       corporate_about: 'Corporate About',
       corporate_mission: 'Corporate Mission & Vision',
@@ -85,20 +97,6 @@ const AdminDashboard = () => {
             { label: 'Digital projects', value: '100+' },
             { label: 'Business clients', value: '50+' },
             { label: 'Delivery health', value: '99%' }
-          ]
-        }
-      },
-      stats: {
-        _id: 'stats',
-        title: 'Trusted Delivery Metrics',
-        subtitle: 'Company Stats',
-        description: 'Performance numbers that summarize our delivery record.',
-        metadata: {
-          counters: [
-            { target: 100, suffix: '+', label: 'Projects Completed' },
-            { target: 50, suffix: '+', label: 'Happy Clients' },
-            { target: 5, suffix: '+', label: 'Years Experience' },
-            { target: 99, suffix: '%', label: 'Client Retention' }
           ]
         }
       },
@@ -228,6 +226,46 @@ const AdminDashboard = () => {
         subtitle: 'Enterprise Web & Software Solutions',
         description: 'Trusted technology partner for business and government organizations. We provide structured web, mobile, ERP, enterprise software, AI/ML and digital transformation services with clear documentation and measurable outcomes.',
         metadata: {}
+      },
+      technologies: {
+        _id: 'technologies',
+        title: 'Requirement-Based Technology Selection',
+        subtitle: 'Technology Stack',
+        description: 'We choose tools around business goals, integrations, performance requirements, and long-term maintainability.',
+        metadata: {}
+      },
+      industries: {
+        _id: 'industries',
+        title: 'Custom Ecosystems Built For Core Industries',
+        subtitle: 'Our Verticals',
+        description: 'We build purpose-driven architectures tailored for operational requirements across sectors.',
+        metadata: {
+          industries: [
+            { title: 'Healthcare', icon: 'ri-heart-pulse-line' },
+            { title: 'Real Estate', icon: 'ri-home-4-line' },
+            { title: 'Education', icon: 'ri-book-open-line' },
+            { title: 'E-commerce', icon: 'ri-shopping-cart-2-line' }
+          ]
+        }
+      },
+      process: {
+        _id: 'process',
+        title: 'Our Structured Software Creation Lifecycle',
+        subtitle: 'Workflow Blueprint',
+        description: 'We maintain transparent, structured development timelines to ensure projects are delivered on time and within scope.',
+        metadata: {
+          steps: [
+            { number: '01', name: 'Analysis', text: 'Understanding system flows and detailed scope.', tags: ['Scope Doc', 'Flowcharts'] },
+            { number: '02', name: 'UI/UX Design', text: 'Creating wireframes and interactive mockups.', tags: ['Figma UI', 'Wireframes'] }
+          ]
+        }
+      },
+      portfoliopreview: {
+        _id: 'portfoliopreview',
+        title: 'Digital Products Built For Real Operations',
+        subtitle: 'Recent Work',
+        description: 'A quick look at specialized software categories our team designs, builds, and maintains.',
+        metadata: {}
       }
     };
 
@@ -248,16 +286,28 @@ const AdminDashboard = () => {
       return <Hero previewData={sectionContent} />;
     }
 
-    if (activeSection === 'stats') {
-      return <Stats previewData={sectionContent} />;
-    }
-
     if (activeSection === 'services') {
       return <CoreServices previewData={sectionContent} />;
     }
 
     if (activeSection === 'whychooseus') {
       return <WhyChooseUs previewData={sectionContent} />;
+    }
+
+    if (activeSection === 'technologies') {
+      return <Technologies previewData={sectionContent} />;
+    }
+
+    if (activeSection === 'industries') {
+      return <Industries previewData={sectionContent} />;
+    }
+
+    if (activeSection === 'process') {
+      return <Process previewData={sectionContent} />;
+    }
+
+    if (activeSection === 'portfoliopreview') {
+      return <PortfolioPreview previewData={sectionContent} />;
     }
 
     const title = sectionContent.title || 'Preview title';
@@ -495,7 +545,175 @@ const AdminDashboard = () => {
     }
   }, [token, navigate]);
 
+  const loadAllSections = async () => {
+    try {
+      const res = await fetch('/api/content');
+      if (res.ok) {
+        const data = await res.json();
+        setAllSections(data);
+      }
+    } catch (e) {}
+  };
+
+  const handleAutoFixSections = async () => {
+    if (!window.confirm('This will automatically fix incorrect page category assignments (e.g., moving Corporate sections to "corporate" page) and set correct display orders for all homepage sections in the database. Proceed?')) return;
+    setLoading(true);
+    setError('');
+    setMessage('');
+    try {
+      const fixes = [
+        { id: 'hero', page: 'home', order: 0 },
+        { id: 'services', page: 'home', order: 1 },
+        { id: 'whychooseus', page: 'home', order: 2 },
+        { id: 'technologies', page: 'home', order: 3 },
+        { id: 'industries', page: 'home', order: 4 },
+        { id: 'process', page: 'home', order: 5 },
+        { id: 'portfoliopreview', page: 'home', order: 6 },
+        { id: 'corporate_hero', page: 'corporate', order: 0 },
+        { id: 'corporate_about', page: 'corporate', order: 1 },
+        { id: 'corporate_mission', page: 'corporate', order: 2 },
+        { id: 'footer_links', page: 'global', order: 0 },
+        { id: 'privacy_policy', page: 'policy', order: 0 },
+        { id: 'terms_conditions', page: 'policy', order: 0 },
+        { id: 'company_profile_hero', page: 'company_profile', order: 0 },
+        { id: 'company_profile_overview', page: 'company_profile', order: 1 },
+        { id: 'company_profile_capabilities', page: 'company_profile', order: 2 },
+        { id: 'company_profile_services', page: 'company_profile', order: 3 },
+        { id: 'company_profile_strengths', page: 'company_profile', order: 4 },
+        { id: 'company_profile_process', page: 'company_profile', order: 5 },
+        { id: 'company_profile_tech', page: 'company_profile', order: 6 },
+        { id: 'company_profile_quality', page: 'company_profile', order: 7 },
+        { id: 'company_profile_contact', page: 'company_profile', order: 8 }
+      ];
+
+      let successCount = 0;
+      for (const fix of fixes) {
+        const sec = allSections.find(s => s._id === fix.id);
+        if (sec) {
+          const updatedSec = { ...sec, page: fix.page, order: fix.order };
+          const res = await fetch(`/api/content/${fix.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedSec)
+          });
+          if (res.ok) {
+            successCount++;
+          }
+        }
+      }
+      
+      setMessage(`Successfully fixed ${successCount} database sections! Your Hero section and homepage layout flow are restored.`);
+      loadAllSections();
+    } catch (err) {
+      setError('Auto-fix failed: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleSectionVisibility = async (sec) => {
+    try {
+      const updatedSec = { ...sec, visible: !sec.visible };
+      const res = await fetch(`/api/content/${sec._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updatedSec)
+      });
+      if (res.ok) {
+        loadAllSections();
+        setMessage('Section visibility updated successfully.');
+      } else {
+        const errData = await res.json();
+        setError(errData.error || 'Failed to update section visibility.');
+      }
+    } catch (err) {
+      setError('Server error.');
+    }
+  };
+
+  const handleUpdateSectionOrder = async (sec, newOrder) => {
+    try {
+      const updatedSec = { ...sec, order: parseInt(newOrder, 10) || 0 };
+      const res = await fetch(`/api/content/${sec._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updatedSec)
+      });
+      if (res.ok) {
+        loadAllSections();
+        setMessage('Section order updated successfully.');
+      } else {
+        const errData = await res.json();
+        setError(errData.error || 'Failed to update section order.');
+      }
+    } catch (err) {
+      setError('Server error.');
+    }
+  };
+
+  const handleDeleteSection = async (id) => {
+    if (!window.confirm(`Are you sure you want to delete the section "${id}"?`)) return;
+    try {
+      const res = await fetch(`/api/content/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        loadAllSections();
+        setMessage('Section deleted successfully.');
+      } else {
+        const errData = await res.json();
+        setError(errData.error || 'Failed to delete section.');
+      }
+    } catch (err) {
+      setError('Server error.');
+    }
+  };
+
+  const handleAddCustomSection = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setMessage('');
+    try {
+      const res = await fetch('/api/content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(customSectionForm)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to create custom section.');
+      
+      setMessage('Custom section successfully created!');
+      setCustomSectionForm({ _id: '', title: '', subtitle: '', description: '', image_url: '', page: 'home', order: 0, visible: true });
+      loadAllSections();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetch data depending on active tab
+  useEffect(() => {
+    if (!token) return;
+    if (activeTab === 'sections' || activeTab === 'corporate' || activeTab === 'pages') {
+      loadAllSections();
+    }
+  }, [activeTab, token]);
+
   useEffect(() => {
     if (!token) return;
 
@@ -523,7 +741,7 @@ const AdminDashboard = () => {
       }
     };
 
-    if (activeTab === 'sections' || activeTab === 'corporate' || activeTab === 'pages') {
+    if ((activeTab === 'sections' || activeTab === 'corporate' || activeTab === 'pages') && activeSection !== 'sections_manager') {
       fetchSection();
     }
   }, [activeSection, activeTab, token]);
@@ -1101,14 +1319,26 @@ const AdminDashboard = () => {
                     <button onClick={() => setActiveSection('hero')} className={`tech-tab ${activeSection === 'hero' ? 'active' : ''}`}>
                       <i className="ri-home-line"></i> Hero Banner
                     </button>
-                    <button onClick={() => setActiveSection('stats')} className={`tech-tab ${activeSection === 'stats' ? 'active' : ''}`}>
-                      <i className="ri-bar-chart-box-line"></i> Statistics
-                    </button>
                     <button onClick={() => setActiveSection('services')} className={`tech-tab ${activeSection === 'services' ? 'active' : ''}`}>
                       <i className="ri-database-2-line"></i> Core Services Header
                     </button>
                     <button onClick={() => setActiveSection('whychooseus')} className={`tech-tab ${activeSection === 'whychooseus' ? 'active' : ''}`}>
                       <i className="ri-star-line"></i> Why Choose Us
+                    </button>
+                    <button onClick={() => setActiveSection('technologies')} className={`tech-tab ${activeSection === 'technologies' ? 'active' : ''}`}>
+                      <i className="ri-cpu-line"></i> Technologies Stack
+                    </button>
+                    <button onClick={() => setActiveSection('industries')} className={`tech-tab ${activeSection === 'industries' ? 'active' : ''}`}>
+                      <i className="ri-building-4-line"></i> Verticals/Industries
+                    </button>
+                    <button onClick={() => setActiveSection('process')} className={`tech-tab ${activeSection === 'process' ? 'active' : ''}`}>
+                      <i className="ri-route-line"></i> Process Blueprint
+                    </button>
+                    <button onClick={() => setActiveSection('portfoliopreview')} className={`tech-tab ${activeSection === 'portfoliopreview' ? 'active' : ''}`}>
+                      <i className="ri-briefcase-line"></i> Portfolio Preview Header
+                    </button>
+                    <button onClick={() => setActiveSection('sections_manager')} className={`tech-tab ${activeSection === 'sections_manager' ? 'active' : ''}`} style={{ borderLeft: '2px solid var(--accent)' }}>
+                      <i className="ri-settings-line"></i> Section Manager
                     </button>
                   </>
                 ) : activeTab === 'corporate' ? (
@@ -1221,6 +1451,46 @@ const AdminDashboard = () => {
                   <textarea className="form-control" style={{ minHeight: '100px' }} value={sectionContent.description || ''} onChange={(e) => handleInputChange('description', e.target.value)} />
                 </div>
 
+                {/* Section settings: Page, Order, Visibility */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '18px', background: 'rgba(255,255,255,0.01)', padding: '20px', borderRadius: '10px', border: '1px solid var(--border)' }}>
+                  <div className="form-group">
+                    <label className="form-label">Page Category *</label>
+                    <select 
+                      className="form-control" 
+                      value={sectionContent.page || 'home'} 
+                      onChange={(e) => handleInputChange('page', e.target.value)}
+                      style={{ background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '6px', height: '42px', padding: '0 12px' }}
+                      required
+                    >
+                      <option value="home">Home Page (home)</option>
+                      <option value="corporate">Corporate Page (corporate)</option>
+                      <option value="policy">Policies Page (policy)</option>
+                      <option value="global">Global / Footer (global)</option>
+                      <option value="company_profile">Company Profile (company_profile)</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Display Order</label>
+                    <input 
+                      className="form-control" 
+                      type="number" 
+                      value={sectionContent.order !== undefined ? sectionContent.order : 0} 
+                      onChange={(e) => handleInputChange('order', parseInt(e.target.value, 10) || 0)}
+                      style={{ background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '6px', height: '42px', padding: '0 12px' }}
+                    />
+                  </div>
+                  <div className="form-group" style={{ display: 'flex', alignItems: 'center', height: '42px', marginTop: '28px' }}>
+                    <input 
+                      type="checkbox" 
+                      id="sectionVisibleInput" 
+                      checked={sectionContent.visible !== false} 
+                      onChange={(e) => handleInputChange('visible', e.target.checked)} 
+                      style={{ width: '18px', height: '18px', marginRight: '8px', cursor: 'pointer' }}
+                    />
+                    <label htmlFor="sectionVisibleInput" style={{ cursor: 'pointer', fontSize: '13px', color: 'var(--text-main)', fontWeight: 'bold' }}>Visible on Website</label>
+                  </div>
+                </div>
+
                 {/* Section Image Uploader (Editable for all photo sections!) */}
                 {['hero', 'corporate_hero', 'corporate_about', 'corporate_mission'].includes(activeSection) && (
                   <div className="form-group" style={{ background: 'rgba(255,255,255,0.01)', padding: '20px', borderRadius: '10px', border: '1px dashed var(--border)' }}>
@@ -1269,38 +1539,85 @@ const AdminDashboard = () => {
                   </div>
                 )}
 
-                {/* Metadata counter items for stats */}
-                {activeSection === 'stats' && sectionContent.metadata && (
+                {/* Metadata vertical industries for industries section */}
+                {activeSection === 'industries' && sectionContent.metadata && (
                   <div style={{ display: 'grid', gap: '18px', borderTop: '1px solid var(--border)', paddingTop: '22px' }}>
-                    <h4 style={{ fontSize: '15px', fontWeight: 700 }}>Stats Counters</h4>
-                    {(sectionContent.metadata.counters || []).map((counter, idx) => (
-                      <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '14px', borderRadius: '8px', border: '1px solid var(--border)', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                        <div>
-                          <label className="form-label" style={{ fontSize: '11px' }}>Label</label>
-                          <input className="form-control" type="text" value={counter.label || ''} onChange={(e) => {
-                            const counters = [...sectionContent.metadata.counters];
-                            counters[idx].label = e.target.value;
-                            handleMetadataChange('counters', counters);
-                          }} />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ fontSize: '15px', fontWeight: 700, margin: 0 }}>Vertical Industries List</h4>
+                      <button type="button" className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px', margin: 0 }} onClick={() => addMetadataArrayObject('industries', { title: 'New Industry', icon: 'ri-tools-line' })}>
+                        <i className="ri-add-line"></i> Add Industry
+                      </button>
+                    </div>
+                    
+                    <div style={{ display: 'grid', gap: '12px' }}>
+                      {(sectionContent.metadata.industries || []).map((industry, idx) => (
+                        <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: '10px', alignItems: 'center' }}>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Industry Title *</label>
+                            <input className="form-control" type="text" value={industry.title || ''} onChange={(e) => updateMetadataArrayObject('industries', idx, 'title', e.target.value)} required />
+                          </div>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Remixicon Icon Class</label>
+                            <input className="form-control" type="text" value={industry.icon || 'ri-tools-line'} onChange={(e) => updateMetadataArrayObject('industries', idx, 'icon', e.target.value)} />
+                          </div>
+                          <button type="button" onClick={() => removeMetadataArrayObject('industries', idx)} className="btn btn-secondary" style={{ padding: 0, height: '48px', marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }} title="Remove Industry">
+                            <i className="ri-delete-bin-line"></i>
+                          </button>
                         </div>
-                        <div>
-                          <label className="form-label" style={{ fontSize: '11px' }}>Target</label>
-                          <input className="form-control" type="number" value={counter.target || 0} onChange={(e) => {
-                            const counters = [...sectionContent.metadata.counters];
-                            counters[idx].target = parseInt(e.target.value, 10) || 0;
-                            handleMetadataChange('counters', counters);
-                          }} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Metadata steps for process section */}
+                {activeSection === 'process' && sectionContent.metadata && (
+                  <div style={{ display: 'grid', gap: '18px', borderTop: '1px solid var(--border)', paddingTop: '22px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ fontSize: '15px', fontWeight: 700, margin: 0 }}>Development Lifecycle Steps</h4>
+                      <button type="button" className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px', margin: 0 }} onClick={() => addMetadataArrayObject('steps', { number: '', name: 'New Step', text: '', tags: [] })}>
+                        <i className="ri-add-line"></i> Add Step
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'grid', gap: '16px' }}>
+                      {(sectionContent.metadata.steps || []).map((step, idx) => (
+                        <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border)', display: 'grid', gap: '12px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <strong style={{ fontSize: '13px' }}>Step #{idx + 1}</strong>
+                            <button type="button" onClick={() => removeMetadataArrayObject('steps', idx)} className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px', margin: 0, color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }} title="Remove Step">
+                              <i className="ri-delete-bin-line"></i> Remove
+                            </button>
+                          </div>
+                          
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '12px' }}>
+                            <div>
+                              <label className="form-label" style={{ fontSize: '11px' }}>Step Number</label>
+                              <input className="form-control" type="text" placeholder="e.g. 01" value={step.number || ''} onChange={(e) => updateMetadataArrayObject('steps', idx, 'number', e.target.value)} />
+                            </div>
+                            <div>
+                              <label className="form-label" style={{ fontSize: '11px' }}>Step Name *</label>
+                              <input className="form-control" type="text" placeholder="e.g. Analysis" value={step.name || ''} onChange={(e) => updateMetadataArrayObject('steps', idx, 'name', e.target.value)} required />
+                            </div>
+                          </div>
+
+                          <div className="form-group">
+                            <label className="form-label" style={{ fontSize: '11px' }}>Step Description</label>
+                            <input className="form-control" type="text" placeholder="Explain the phase..." value={step.text || ''} onChange={(e) => updateMetadataArrayObject('steps', idx, 'text', e.target.value)} />
+                          </div>
+
+                          <div className="form-group">
+                            <label className="form-label" style={{ fontSize: '11px' }}>Checklist Tags (comma-separated)</label>
+                            <input 
+                              className="form-control" 
+                              type="text" 
+                              placeholder="Scope Doc, Wireframes, Figma" 
+                              value={Array.isArray(step.tags) ? step.tags.join(', ') : (step.tags || '')} 
+                              onChange={(e) => updateMetadataArrayObject('steps', idx, 'tags', e.target.value.split(',').map(t => t.trim()).filter(Boolean))} 
+                            />
+                          </div>
                         </div>
-                        <div>
-                          <label className="form-label" style={{ fontSize: '11px' }}>Suffix</label>
-                          <input className="form-control" type="text" value={counter.suffix || ''} onChange={(e) => {
-                            const counters = [...sectionContent.metadata.counters];
-                            counters[idx].suffix = e.target.value;
-                            handleMetadataChange('counters', counters);
-                          }} />
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 )}
 
@@ -1409,6 +1726,209 @@ const AdminDashboard = () => {
                   <i className="ri-save-line"></i>
                 </button>
               </form>
+            )}
+
+            {/* =========================================================
+                SECTION MANAGER TAB
+                ========================================================= */}
+            {activeTab === 'sections' && activeSection === 'sections_manager' && (
+              <div>
+                <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '20px' }}>Master Section Manager</h2>
+                <div className="admin-lead-filter-panel" style={{ display: 'block', padding: '20px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border)', borderRadius: '8px', marginBottom: '24px' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px', borderBottom: '1px solid var(--border)', paddingBottom: '16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <label style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-muted)' }}>Filter by Page:</label>
+                      <select 
+                        value={managerPageFilter} 
+                        onChange={(e) => setManagerPageFilter(e.target.value)}
+                        style={{ height: '38px', padding: '0 12px', background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '13px' }}
+                      >
+                        <option value="all">All Pages</option>
+                        <option value="home">Home Page (home)</option>
+                        <option value="corporate">Corporate Page (corporate)</option>
+                        <option value="policy">Policies Page (policy)</option>
+                        <option value="global">Global (global)</option>
+                        <option value="company_profile">Company Profile (company_profile)</option>
+                      </select>
+                    </div>
+
+                    <button 
+                      onClick={handleAutoFixSections} 
+                      className="btn btn-secondary" 
+                      style={{ height: '38px', margin: 0, padding: '0 16px', background: 'rgba(20, 184, 166, 0.15)', color: 'var(--accent)', borderColor: 'rgba(20, 184, 166, 0.3)' }}
+                    >
+                      <i className="ri-magic-line"></i> Auto-Fix Database Sections
+                    </button>
+                  </div>
+
+                  <p style={{ fontSize: '13px', margin: '0 0 16px 0', color: 'var(--text-muted)' }}>
+                    Here you can view, add, hide/show, delete, and reorder sections for all pages. Toggle a section's visibility checkbox or change its order input to save changes immediately.
+                  </p>
+                  
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid var(--border)', textAlign: 'left' }}>
+                          <th style={{ padding: '12px' }}>ID / Type</th>
+                          <th style={{ padding: '12px' }}>Title</th>
+                          <th style={{ padding: '12px' }}>Page</th>
+                          <th style={{ padding: '12px', width: '100px' }}>Order</th>
+                          <th style={{ padding: '12px', width: '100px' }}>Visible</th>
+                          <th style={{ padding: '12px', width: '160px', textAlign: 'right' }}>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {allSections
+                          .filter(sec => managerPageFilter === 'all' || sec.page === managerPageFilter)
+                          .sort((a,b) => {
+                            if (a.page !== b.page) {
+                              return a.page.localeCompare(b.page);
+                            }
+                            return (a.order || 0) - (b.order || 0);
+                          })
+                          .map((sec) => (
+                            <tr key={sec._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                              <td style={{ padding: '12px' }}>
+                                <strong>{sec._id}</strong>
+                              </td>
+                              <td style={{ padding: '12px' }}>{sec.title || <span style={{ color: 'var(--text-muted)' }}>No title</span>}</td>
+                              <td style={{ padding: '12px' }}><span className="section-tag" style={{ display: 'inline-block', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', fontSize: '11px' }}>{sec.page}</span></td>
+                              <td style={{ padding: '12px' }}>
+                                <input 
+                                  type="number" 
+                                  className="form-control" 
+                                  value={sec.order !== undefined ? sec.order : 0} 
+                                  onChange={(e) => handleUpdateSectionOrder(sec, e.target.value)}
+                                  style={{ width: '70px', height: '34px', padding: '0 8px', margin: 0, background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '6px' }}
+                                />
+                              </td>
+                              <td style={{ padding: '12px' }}>
+                                <input 
+                                  type="checkbox" 
+                                  checked={sec.visible !== false} 
+                                  onChange={() => handleToggleSectionVisibility(sec)}
+                                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                                />
+                              </td>
+                              <td style={{ padding: '12px', textAlign: 'right' }}>
+                                <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                                  <button 
+                                    onClick={() => setActiveSection(sec._id)} 
+                                    className="btn btn-secondary" 
+                                    style={{ padding: '4px 10px', fontSize: '11px', height: '30px', margin: 0 }}
+                                  >
+                                    Edit Content
+                                  </button>
+                                  {!['hero', 'services', 'whychooseus', 'technologies', 'industries', 'process', 'portfoliopreview'].includes(sec._id) && (
+                                    <button 
+                                      onClick={() => handleDeleteSection(sec._id)} 
+                                      className="btn btn-secondary" 
+                                      style={{ padding: '4px 10px', fontSize: '11px', height: '30px', margin: 0, background: 'rgba(239,68,68,0.1)', color: '#ef4444', borderColor: 'rgba(239,68,68,0.2)' }}
+                                    >
+                                      Delete
+                                    </button>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <h3 style={{ fontSize: '18px', fontWeight: 800, marginBottom: '16px' }}>Add New Custom Section</h3>
+                <form onSubmit={handleAddCustomSection} style={{ display: 'grid', gap: '18px', background: 'rgba(255,255,255,0.01)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+                    <div className="form-group">
+                      <label className="form-label">Section ID (Unique, lowercase URL key) *</label>
+                      <input 
+                        className="form-control" 
+                        type="text" 
+                        placeholder="e.g. features-banner" 
+                        value={customSectionForm._id} 
+                        onChange={(e) => setCustomSectionForm(prev => ({ ...prev, _id: e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, '') }))} 
+                        required 
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Title / Heading *</label>
+                      <input 
+                        className="form-control" 
+                        type="text" 
+                        placeholder="e.g. Scalable Tech Infrastructure" 
+                        value={customSectionForm.title} 
+                        onChange={(e) => setCustomSectionForm(prev => ({ ...prev, title: e.target.value }))} 
+                        required 
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+                    <div className="form-group">
+                      <label className="form-label">Subtitle / Badge</label>
+                      <input 
+                        className="form-control" 
+                        type="text" 
+                        placeholder="e.g. ADVANCED CAPABILITIES" 
+                        value={customSectionForm.subtitle} 
+                        onChange={(e) => setCustomSectionForm(prev => ({ ...prev, subtitle: e.target.value }))} 
+                      />
+                    </div>
+                    <div className="form-group" style={{ background: 'rgba(255,255,255,0.01)', padding: '20px', borderRadius: '10px', border: '1px dashed var(--border)' }}>
+                      <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Section Artwork / Photo (Image upload)</label>
+                      {customSectionForm.image_url && (
+                        <div style={{ marginBottom: '14px' }}>
+                          <code style={{ display: 'block', fontSize: '11px', background: 'rgba(0,0,0,0.2)', padding: '6px', margin: '4px 0', borderRadius: '4px' }}>{customSectionForm.image_url}</code>
+                        </div>
+                      )}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'image_url', setCustomSectionForm, true)} style={{ display: 'none' }} id="customSectionImageUpload" />
+                        <label htmlFor="customSectionImageUpload" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13px', margin: 0, cursor: 'pointer' }}>
+                          <i className="ri-upload-cloud-line"></i> <span>{uploading ? 'Uploading...' : 'Upload Image'}</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Description Text</label>
+                    <textarea 
+                      className="form-control" 
+                      style={{ minHeight: '80px' }} 
+                      placeholder="Enter the body copy for this custom section..."
+                      value={customSectionForm.description} 
+                      onChange={(e) => setCustomSectionForm(prev => ({ ...prev, description: e.target.value }))} 
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+                    <div className="form-group">
+                      <label className="form-label">Display Order</label>
+                      <input 
+                        className="form-control" 
+                        type="number" 
+                        value={customSectionForm.order} 
+                        onChange={(e) => setCustomSectionForm(prev => ({ ...prev, order: parseInt(e.target.value, 10) || 0 }))} 
+                      />
+                    </div>
+                    <div className="form-group" style={{ display: 'flex', alignItems: 'center', height: '48px', marginTop: '28px' }}>
+                      <input 
+                        type="checkbox" 
+                        id="customVisible" 
+                        checked={customSectionForm.visible} 
+                        onChange={(e) => setCustomSectionForm(prev => ({ ...prev, visible: e.target.checked }))} 
+                        style={{ width: '18px', height: '18px', marginRight: '8px', cursor: 'pointer' }}
+                      />
+                      <label htmlFor="customVisible" style={{ cursor: 'pointer', fontSize: '13px' }}>Visible instantly on Website</label>
+                    </div>
+                  </div>
+
+                  <button type="submit" className="btn btn-primary" style={{ padding: '12px 30px', border: 'none', height: '48px' }}>
+                    <span>Add Custom Section</span>
+                  </button>
+                </form>
+              </div>
             )}
 
             {/* =========================================================

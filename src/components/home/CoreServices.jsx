@@ -18,107 +18,7 @@ const CoreServices = ({ previewData = null }) => {
     }
   });
 
-  useEffect(() => {
-    if (previewData) {
-      setData(previewData);
-      return;
-    }
-
-    const fetchServicesContent = async () => {
-      try {
-        const res = await fetch('/api/content/services');
-        if (res.ok) {
-          const json = await res.json();
-          setData(json);
-        }
-      } catch (err) {
-        // Fallback is already handled by default state
-      }
-    };
-    fetchServicesContent();
-  }, [previewData]);
-
-  useEffect(() => {
-    const scroller = serviceScrollerRef.current;
-    const mobileQuery = window.matchMedia('(max-width: 768px)');
-    let frameId;
-    let lastTime = 0;
-    let resumeTimer;
-
-    const stopAutoScroll = () => {
-      cancelAnimationFrame(frameId);
-      clearTimeout(resumeTimer);
-    };
-
-    const startAutoScroll = () => {
-      stopAutoScroll();
-
-      const step = (time) => {
-        if (!mobileQuery.matches || !scroller) return;
-
-        if (time - lastTime > 24) {
-          const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-          scroller.scrollLeft = scroller.scrollLeft >= maxScroll - 2 ? 0 : scroller.scrollLeft + 0.7;
-          lastTime = time;
-        }
-
-        frameId = requestAnimationFrame(step);
-      };
-
-      frameId = requestAnimationFrame(step);
-    };
-
-    const pauseThenResume = () => {
-      stopAutoScroll();
-      resumeTimer = setTimeout(startAutoScroll, 2200);
-    };
-
-    if (scroller && mobileQuery.matches) {
-      startAutoScroll();
-      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
-    }
-
-    mobileQuery.addEventListener('change', startAutoScroll);
-
-    return () => {
-      stopAutoScroll();
-      mobileQuery.removeEventListener('change', startAutoScroll);
-      if (scroller) {
-        scroller.removeEventListener('touchstart', pauseThenResume);
-      }
-    };
-  }, []);
-
-  const handleMouseMove = (event, element) => {
-    if (!element) return;
-    const rect = element.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
-    
-    element.style.setProperty('--mx', `${event.clientX - rect.left}px`);
-    element.style.setProperty('--my', `${event.clientY - rect.top}px`);
-    element.style.transform = `perspective(1100px) rotateX(${y * -5}deg) rotateY(${x * 5}deg) translateY(-4px)`;
-  };
-
-  const handleMouseLeave = (element) => {
-    if (!element) return;
-    element.style.transform = '';
-  };
-
-  const dashboardStats = [
-    { value: '128+', label: 'Projects', icon: 'ri-rocket-line' },
-    { value: '87+', label: 'Clients', icon: 'ri-team-line' },
-    { value: '99%', label: 'Success Rate', icon: 'ri-shield-check-line' },
-    { value: '24/7', label: 'Support', icon: 'ri-customer-service-2-line' }
-  ];
-
-  const floatingBadges = [
-    { label: 'Enterprise Ready', icon: 'ri-checkbox-circle-fill', className: 'badge-enterprise' },
-    { label: 'AI Powered', icon: 'ri-sparkling-2-fill', className: 'badge-ai' },
-    { label: 'Secure Infrastructure', icon: 'ri-shield-keyhole-fill', className: 'badge-secure' }
-  ];
-
-  const services = [
+  const [services, setServices] = useState([
     {
       title: 'Web Applications',
       description: 'Scalable web apps for modern teams.',
@@ -183,9 +83,144 @@ const CoreServices = ({ previewData = null }) => {
       to: '/service/custom-web-development',
       size: 'compact'
     }
+  ]);
+
+  useEffect(() => {
+    if (previewData) {
+      setData(previewData);
+      return;
+    }
+
+    const fetchServicesContent = async () => {
+      try {
+        const res = await fetch('/api/content/services');
+        if (res.ok) {
+          const json = await res.json();
+          setData(json);
+        }
+      } catch (err) {
+        // Fallback is already handled by default state
+      }
+    };
+
+    const fetchServicesList = async () => {
+      try {
+        const res = await fetch('/api/services');
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.length > 0) {
+            const mapped = json
+              .filter(item => item.slug !== 'recruitment-services')
+              .map(item => ({
+                title: item.title,
+                description: item.subtitle || item.intro,
+                count: 'Active Service',
+                icon: item.icon || 'ri-window-line',
+                to: `/service/${item.slug}`,
+                size: 'compact'
+              }));
+            setServices(mapped);
+          }
+        }
+      } catch (err) {
+        // Fallback is already default state
+      }
+    };
+
+    fetchServicesContent();
+    fetchServicesList();
+  }, [previewData]);
+
+  useEffect(() => {
+    const scroller = serviceScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let frameId;
+    let lastTime = 0;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      cancelAnimationFrame(frameId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+
+      const step = (time) => {
+        if (!mobileQuery.matches || !scroller) return;
+
+        if (time - lastTime > 24) {
+          const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+          scroller.scrollLeft = scroller.scrollLeft >= maxScroll - 2 ? 0 : scroller.scrollLeft + 0.7;
+          lastTime = time;
+        }
+
+        frameId = requestAnimationFrame(step);
+      };
+
+      frameId = requestAnimationFrame(step);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    const pauseAutoScroll = () => stopAutoScroll();
+    const resumeAutoScroll = () => startAutoScroll();
+
+    if (scroller && mobileQuery.matches) {
+      startAutoScroll();
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+      scroller.addEventListener('mouseenter', pauseAutoScroll);
+      scroller.addEventListener('focusin', pauseAutoScroll);
+      scroller.addEventListener('mouseleave', resumeAutoScroll);
+      scroller.addEventListener('focusout', resumeAutoScroll);
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+        scroller.removeEventListener('mouseenter', pauseAutoScroll);
+        scroller.removeEventListener('focusin', pauseAutoScroll);
+        scroller.removeEventListener('mouseleave', resumeAutoScroll);
+        scroller.removeEventListener('focusout', resumeAutoScroll);
+      }
+    };
+  }, []);
+
+  const handleMouseMove = (event, element) => {
+    if (!element) return;
+    const rect = element.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    
+    element.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+    element.style.setProperty('--my', `${event.clientY - rect.top}px`);
+    element.style.transform = `perspective(1100px) rotateX(${y * -5}deg) rotateY(${x * 5}deg) translateY(-4px)`;
+  };
+
+  const handleMouseLeave = (element) => {
+    if (!element) return;
+    element.style.transform = '';
+  };
+
+  const dashboardStats = [
+    { value: '128+', label: 'Projects', icon: 'ri-rocket-line' },
+    { value: '87+', label: 'Clients', icon: 'ri-team-line' },
+    { value: '99%', label: 'Success Rate', icon: 'ri-shield-check-line' },
+    { value: '24/7', label: 'Support', icon: 'ri-customer-service-2-line' }
   ];
 
-  const sectionDescription = 'From web applications to AI automation, we deliver secure and scalable digital solutions that help businesses grow faster and operate smarter.';
+  const floatingBadges = [
+    { label: 'Enterprise Ready', icon: 'ri-checkbox-circle-fill', className: 'badge-enterprise' },
+    { label: 'AI Powered', icon: 'ri-sparkling-2-fill', className: 'badge-ai' },
+    { label: 'Secure Infrastructure', icon: 'ri-shield-keyhole-fill', className: 'badge-secure' }
+  ];
 
   return (
     <section id="services" className="core-services-premium">
@@ -207,7 +242,7 @@ const CoreServices = ({ previewData = null }) => {
             <span>{data.subtitle}</span>
           </h2>
           <p className="section-desc core-services-desc">
-            {sectionDescription}
+            {data.description}
           </p>
         </div>
 

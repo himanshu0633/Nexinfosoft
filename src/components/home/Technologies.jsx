@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Technologies = () => {
+const Technologies = ({ previewData = null }) => {
   const navigate = useNavigate();
+  const [data, setData] = useState({
+    title: 'Requirement-Based Technology Selection',
+    subtitle: 'Technology Stack',
+    description: 'We choose tools around business goals, integrations, performance requirements, and long-term maintainability.'
+  });
 
-  const row1 = [
+  const [row1, setRow1] = useState([
     { name: 'ReactJS', icon: 'ri-reactjs-line', color: '#61dafb' },
     { name: 'Angular', icon: 'ri-angularjs-line', color: '#dd0031' },
     { name: 'Vue.js', icon: 'ri-vuejs-line', color: '#42b883' },
@@ -15,9 +20,9 @@ const Technologies = () => {
     { name: 'CSS3', icon: 'ri-css3-line', color: '#1572b6' },
     { name: 'Tailwind CSS', icon: 'ri-tailwind-css-line', color: '#38bdf8' },
     { name: 'Bootstrap', icon: 'ri-bootstrap-line', color: '#7952b3' },
-  ];
+  ]);
 
-  const row2 = [
+  const [row2, setRow2] = useState([
     { name: 'Node.js', icon: 'ri-nodejs-line', color: '#68a063' },
     { name: 'PHP', icon: 'ri-code-box-line', color: '#777bb4' },
     { name: 'Laravel', icon: 'ri-code-box-line', color: '#ff2d20' },
@@ -28,9 +33,9 @@ const Technologies = () => {
     { name: 'PostgreSQL', icon: 'ri-database-2-line', color: '#336791' },
     { name: 'MongoDB', icon: 'ri-database-line', color: '#4db33d' },
     { name: 'Firebase', icon: 'ri-fire-line', color: '#ffca28' },
-  ];
+  ]);
 
-  const row3 = [
+  const [row3, setRow3] = useState([
     { name: 'Flutter', icon: 'ri-smartphone-line', color: '#02569b' },
     { name: 'React Native', icon: 'ri-reactjs-line', color: '#61dafb' },
     { name: 'iOS Apps', icon: 'ri-apple-line', color: '#000000' },
@@ -41,12 +46,64 @@ const Technologies = () => {
     { name: 'Jenkins / CI-CD', icon: 'ri-settings-5-line', color: '#d24939' },
     { name: 'AI / ML / LLMs', icon: 'ri-brain-line', color: '#8b5cf6' },
     { name: 'Power BI', icon: 'ri-bar-chart-box-line', color: '#f2c811' },
-  ];
+  ]);
+
+  useEffect(() => {
+    if (previewData) {
+      setData(previewData);
+      return;
+    }
+
+    const fetchTechContent = async () => {
+      try {
+        const res = await fetch('/api/content/technologies');
+        if (res.ok) {
+          const json = await res.json();
+          setData(json);
+        }
+      } catch (err) {
+        // Fallback handled by default state
+      }
+    };
+
+    const fetchTechItems = async () => {
+      try {
+        const res = await fetch('/api/techstack');
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.length > 0) {
+            const r1 = [];
+            const r2 = [];
+            const r3 = [];
+            json.forEach((item, idx) => {
+              const formattedItem = {
+                name: item.name,
+                icon: item.icon || 'ri-code-line',
+                color: item.color || 'var(--accent)'
+              };
+              if (idx % 3 === 0) r1.push(formattedItem);
+              else if (idx % 3 === 1) r2.push(formattedItem);
+              else r3.push(formattedItem);
+            });
+            setRow1(r1);
+            setRow2(r2);
+            setRow3(r3);
+          }
+        }
+      } catch (err) {
+        // Fallback handled by default state
+      }
+    };
+
+    fetchTechContent();
+    fetchTechItems();
+  }, [previewData]);
 
   // Map technologies to their respective categories and highlight card text on the Tech Stack page
   const handleTechClick = (techName) => {
     const mapping = {
       'ReactJS': { tab: 'frontend', highlight: 'ReactJS' },
+      'React': { tab: 'frontend', highlight: 'React' },
       'Angular': { tab: 'frontend', highlight: 'Angular' },
       'Vue.js': { tab: 'frontend', highlight: 'Vue.js' },
       'Next.js': { tab: 'frontend', highlight: 'ReactJS' },
@@ -91,69 +148,74 @@ const Technologies = () => {
     }
   };
 
-  // Duplicate list elements to ensure continuous smooth infinite scrolling
   const duplicateList = (list) => [...list, ...list, ...list];
 
   return (
     <section className="technologies">
       <div className="container">
         <div className="section-header reveal slide-up active">
-          <span className="section-tag">Technology Stack</span>
-          <h2 className="section-title">Requirement-Based Technology Selection</h2>
-          <p className="section-desc">We choose tools around business goals, integrations, performance requirements, and long-term maintainability.</p>
+          <span className="section-tag">{data.subtitle || 'Technology Stack'}</span>
+          <h2 className="section-title">{data.title}</h2>
+          <p className="section-desc">{data.description}</p>
         </div>
 
         <div className="tech-marquee-stack reveal slide-up delay-100 active">
           {/* Row 1: Right to Left */}
-          <div className="marquee-container">
-            <div className="marquee-content marquee-rtl">
-              {duplicateList(row1).map((tech, idx) => (
-                <div 
-                  key={`row1-${idx}`} 
-                  className="tech-logo-card"
-                  onClick={() => handleTechClick(tech.name)}
-                  style={{ '--hover-color': tech.color }}
-                >
-                  <i className={tech.icon} style={{ color: tech.color }}></i>
-                  <span>{tech.name}</span>
-                </div>
-              ))}
+          {row1.length > 0 && (
+            <div className="marquee-container">
+              <div className="marquee-content marquee-rtl">
+                {duplicateList(row1).map((tech, idx) => (
+                  <div 
+                    key={`row1-${idx}`} 
+                    className="tech-logo-card"
+                    onClick={() => handleTechClick(tech.name)}
+                    style={{ '--hover-color': tech.color }}
+                  >
+                    <i className={tech.icon} style={{ color: tech.color }}></i>
+                    <span>{tech.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Row 2: Left to Right */}
-          <div className="marquee-container">
-            <div className="marquee-content marquee-ltr">
-              {duplicateList(row2).map((tech, idx) => (
-                <div 
-                  key={`row2-${idx}`} 
-                  className="tech-logo-card"
-                  onClick={() => handleTechClick(tech.name)}
-                  style={{ '--hover-color': tech.color }}
-                >
-                  <i className={tech.icon} style={{ color: tech.color }}></i>
-                  <span>{tech.name}</span>
-                </div>
-              ))}
+          {row2.length > 0 && (
+            <div className="marquee-container">
+              <div className="marquee-content marquee-ltr">
+                {duplicateList(row2).map((tech, idx) => (
+                  <div 
+                    key={`row2-${idx}`} 
+                    className="tech-logo-card"
+                    onClick={() => handleTechClick(tech.name)}
+                    style={{ '--hover-color': tech.color }}
+                  >
+                    <i className={tech.icon} style={{ color: tech.color }}></i>
+                    <span>{tech.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Row 3: Right to Left */}
-          <div className="marquee-container">
-            <div className="marquee-content marquee-rtl">
-              {duplicateList(row3).map((tech, idx) => (
-                <div 
-                  key={`row3-${idx}`} 
-                  className="tech-logo-card"
-                  onClick={() => handleTechClick(tech.name)}
-                  style={{ '--hover-color': tech.color }}
-                >
-                  <i className={tech.icon} style={{ color: tech.color }}></i>
-                  <span>{tech.name}</span>
-                </div>
-              ))}
+          {row3.length > 0 && (
+            <div className="marquee-container">
+              <div className="marquee-content marquee-rtl">
+                {duplicateList(row3).map((tech, idx) => (
+                  <div 
+                    key={`row3-${idx}`} 
+                    className="tech-logo-card"
+                    onClick={() => handleTechClick(tech.name)}
+                    style={{ '--hover-color': tech.color }}
+                  >
+                    <i className={tech.icon} style={{ color: tech.color }}></i>
+                    <span>{tech.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
       </div>
