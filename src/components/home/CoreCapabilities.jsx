@@ -1,6 +1,61 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const CoreCapabilities = () => {
+  const capabilitiesScrollerRef = useRef(null);
+
+  useEffect(() => {
+    const scroller = capabilitiesScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.capability-item');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
   return (
     <section className="core-capabilities">
       <div className="container">
@@ -10,7 +65,7 @@ const CoreCapabilities = () => {
           <p className="section-desc">From product design to secure cloud deployment, our team covers the full software delivery lifecycle.</p>
         </div>
 
-        <div className="capabilities-grid reveal slide-up delay-100 active">
+        <div ref={capabilitiesScrollerRef} className="capabilities-grid reveal slide-up delay-100 active">
           <div className="capability-item"><i className="ri-window-line"></i><span>Web Applications</span></div>
           <div className="capability-item"><i className="ri-smartphone-line"></i><span>Mobile Solutions</span></div>
           <div className="capability-item"><i className="ri-database-2-line"></i><span>ERP Development</span></div>

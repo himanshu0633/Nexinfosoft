@@ -1,9 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
 // Initialize database connection
-require('./config/db');
+const db = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -17,14 +18,29 @@ app.use(express.urlencoded({ extended: true }));
 const authRoutes = require('./routes/auth');
 const contentRoutes = require('./routes/content');
 const uploadRoutes = require('./routes/upload');
+const servicesRoutes = require('./routes/services');
+const projectsRoutes = require('./routes/projects');
+const techstackRoutes = require('./routes/techstack');
+const contactRoutes = require('./routes/contact');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/services', servicesRoutes);
+app.use('/api/projects', projectsRoutes);
+app.use('/api/techstack', techstackRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Simple backend status route
 app.get('/api/status', (req, res) => {
-  res.json({ status: 'active', message: 'Nexinfosoft Express backend is running smoothly.' });
+  res.json({
+    status: 'active',
+    database: {
+      connected: db.readyState === 1,
+      state: ['disconnected', 'connected', 'connecting', 'disconnecting'][db.readyState] || 'unknown'
+    },
+    message: 'Nexinfosoft Express backend is running.'
+  });
 });
 
 // Start Express server
@@ -32,5 +48,6 @@ app.listen(PORT, () => {
   console.log(`==================================================`);
   console.log(`  NEXINFOSOFT BACKEND SERVER IS RUNNING`);
   console.log(`  Local Address: http://localhost:${PORT}`);
+  console.log(`  MongoDB: configured (${db.readyState === 1 ? 'connected' : 'connecting'})`);
   console.log(`==================================================`);
 });

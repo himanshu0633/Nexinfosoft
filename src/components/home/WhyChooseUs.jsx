@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-const WhyChooseUs = () => {
+const WhyChooseUs = ({ previewData = null }) => {
   const valueStageRef = useRef(null);
   const [data, setData] = useState({
     title: 'Why Global Businesses Choose',
@@ -10,20 +10,20 @@ const WhyChooseUs = () => {
     metadata: {
       badge: 'Value Proposition',
       checklist: [
-        'Gurugram-based Dedicated In-House Team',
+        'Dedicated In-House Team',
         'Post-Deployment Support & Documentation',
         'Agile Iterations & 100% Code Ownership'
       ],
-      metrics: [
-        { label: 'Projects Delivered', value: '50+', icon: 'ri-briefcase-4-line' },
-        { label: 'Client Satisfaction', value: '99%', icon: 'ri-emotion-happy-line' },
-        { label: 'Support Available', value: '24/7', icon: 'ri-customer-service-2-line' },
-        { label: 'Code Ownership', value: '100%', icon: 'ri-code-s-slash-line' }
-      ]
+
     }
   });
 
   useEffect(() => {
+    if (previewData) {
+      setData(previewData);
+      return;
+    }
+
     const fetchWhyChooseUsContent = async () => {
       try {
         const res = await fetch('/api/content/whychooseus');
@@ -36,7 +36,7 @@ const WhyChooseUs = () => {
       }
     };
     fetchWhyChooseUsContent();
-  }, []);
+  }, [previewData]);
 
   const handleMouseMove = (event, stageEl) => {
     if (!stageEl) return;
@@ -82,28 +82,14 @@ const WhyChooseUs = () => {
             ))}
           </div>
 
-          <div className="value-metrics">
-            {data.metadata?.metrics?.map((metric, idx) => (
-              <div key={idx}>
-                <i className={metric.icon || 'ri-checkbox-blank-circle-line'}></i>
-                <strong>{metric.value}</strong>
-                <span>{metric.label}</span>
-              </div>
-            ))}
-          </div>
+       
 
           <div className="value-actions">
             <Link to="/contact" className="btn btn-primary"><span>Start Your Project</span> <i className="ri-arrow-right-line"></i></Link>
-            <Link to="/free-consultation" className="btn btn-secondary"><span>Book Free Consultation</span> <i className="ri-calendar-line"></i></Link>
+            <Link to="/contact" className="btn btn-secondary"><span>Book Free Consultation</span> <i className="ri-calendar-line"></i></Link>
           </div>
 
-          <div className="value-timeline" aria-label="Delivery process timeline">
-            <div><i className="ri-lightbulb-flash-line"></i><b>01</b><span>Plan</span></div>
-            <div><i className="ri-pencil-ruler-2-line"></i><b>02</b><span>Design</span></div>
-            <div><i className="ri-code-s-slash-line"></i><b>03</b><span>Develop</span></div>
-            <div><i className="ri-rocket-line"></i><b>04</b><span>Deploy</span></div>
-            <div><i className="ri-customer-service-2-line"></i><b>05</b><span>Support</span></div>
-          </div>
+   
         </div>
 
         <div 

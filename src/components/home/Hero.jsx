@@ -1,22 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-const Hero = () => {
-  const [rotatingWord] = useState('CRM Solutions');
+const Hero = ({ previewData = null }) => {
+  const [keywordIndex, setKeywordIndex] = useState(0);
   const [data, setData] = useState({
     title: 'Build Scalable',
     subtitle: 'For Modern Teams',
     description: 'Nexinfosoft designs high-performance SaaS platforms, ERP systems, mobile apps, CRM workflows, and AI automation tools that help modern businesses move faster, reduce manual work, and unlock measurable growth.',
-    image_url: '/assets/images/web_dev_poster.png',
+    image_url: '/assets/images/herobanner.png',
     metadata: {
       tag: 'AI Powered Digital Transformation Studio',
-      rotatingKeywords: ['CRM Solutions'],
-      trustPills: ['Secure Architecture', 'Fast Delivery', 'Growth Focused'],
-      stats: [
-        { label: 'Digital projects', value: '100+' },
-        { label: 'Business clients', value: '50+' },
-        { label: 'Delivery health', value: '99%' }
-      ]
+      rotatingKeywords: ['CRM Solutions', 'ERP Systems',],
     }
   });
 
@@ -24,6 +18,12 @@ const Hero = () => {
 
   // Fetch Hero content from database API
   useEffect(() => {
+    if (previewData) {
+      setData(previewData);
+      setKeywordIndex(0);
+      return;
+    }
+
     const fetchHeroContent = async () => {
       try {
         const res = await fetch('/api/content/hero');
@@ -36,7 +36,19 @@ const Hero = () => {
       }
     };
     fetchHeroContent();
-  }, []);
+  }, [previewData]);
+
+  // Interval loop for rotating keywords
+  useEffect(() => {
+    const keywords = data.metadata?.rotatingKeywords || ['CRM Solutions'];
+    if (keywords.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setKeywordIndex((prev) => (prev + 1) % keywords.length);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [data.metadata?.rotatingKeywords]);
 
   const handleMouseMove = (event, element) => {
     if (!element) return;
@@ -54,7 +66,9 @@ const Hero = () => {
     element.style.transform = '';
   };
 
-  const bgImage = data.image_url || '/assets/images/web_dev_poster.png';
+  const bgImage = data.image_url || '/assets/images/herobanner.png';
+  const activeKeywords = data.metadata?.rotatingKeywords || ['CRM Solutions'];
+  const activeKeyword = activeKeywords[keywordIndex % activeKeywords.length] || 'CRM Solutions';
 
   return (
     <section className="hero" style={{
@@ -76,7 +90,7 @@ const Hero = () => {
           </div>
           <h1 className="hero-title">
             <span className="hero-title-line">{data.title}</span>
-            <span className="gradient-text-accent rotating-keyword">{rotatingWord}</span>
+            <span className="gradient-text-accent rotating-keyword">{activeKeyword}</span>
             <span className="hero-title-line">{data.subtitle}</span>
           </h1>
           <p className="hero-desc">{data.description}</p>
@@ -90,21 +104,11 @@ const Hero = () => {
               <i className="ri-arrow-right-s-line"></i>
             </Link>
           </div>
-          <div className="hero-trust-row">
-            {data.metadata?.trustPills?.map((pill, idx) => {
-              const icons = ['ri-shield-check-line', 'ri-flashlight-line', 'ri-line-chart-line'];
-              return (
-                <div key={idx} className="trust-pill">
-                  <i className={icons[idx] || 'ri-shield-check-line'}></i> {pill}
-                </div>
-              );
-            })}
+          <div className="hero-trusted-line">
+            Trusted by Startups &amp; Enterprises
           </div>
-          <div className="hero-stats-row">
-            {data.metadata?.stats?.map((stat, idx) => (
-              <div key={idx}><strong>{stat.value}</strong><span>{stat.label}</span></div>
-            ))}
-          </div>
+       
+         
         </div>
         
         <div className="hero-visual reveal slide-right delay-200 active">

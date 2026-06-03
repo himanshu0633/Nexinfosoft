@@ -1,8 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [footerData, setFooterData] = useState({
+    description: 'Nexinfosoft is a certified software development agency committed to engineering highly responsive websites, apps, ERP integrations, and CRM software ecosystems.',
+    metadata: {
+      services: [
+        { label: 'Web Development', url: '/service/custom-web-development' },
+        { label: 'Mobile Applications', url: '/service/mobile-applications' },
+        { label: 'ERP Systems', url: '/service/erp-development' },
+        { label: 'CRM Software', url: '/service/custom-crm-development' },
+        { label: 'UI/UX Design', url: '/service/branding-graphic-design' }
+      ],
+      links: [
+        { label: 'About Us', url: '/about' },
+        { label: 'Client Projects', url: '/portfolio' },
+        { label: 'Detailed Services', url: '/services' },
+        { label: 'Technology Stack', url: '/technology-stack' },
+        { label: 'Get in Touch', url: '/contact' },
+        { label: 'Privacy Policy', url: '/privacy-policy' }
+      ],
+      bottomLinks: [
+        { label: 'Terms & Conditions', url: '/terms-conditions' },
+        { label: 'Privacy Policy', url: '/privacy-policy' }
+      ]
+    }
+  });
+
+  useEffect(() => {
+    const fetchFooterLinks = async () => {
+      try {
+        const res = await fetch('/api/content/footer_links');
+        if (res.ok) {
+          const data = await res.json();
+          setFooterData(prev => ({ ...prev, ...data, metadata: { ...prev.metadata, ...data.metadata } }));
+        }
+      } catch (err) {
+        // Static footer fallback remains available.
+      }
+    };
+
+    fetchFooterLinks();
+  }, []);
+
+  const renderFooterLink = (link) => (
+    <li key={`${link.label}-${link.url}`}>
+      <Link to={link.url || '/'} className="footer-link">{link.label}</Link>
+    </li>
+  );
 
   return (
     <footer className="footer">
@@ -12,7 +58,7 @@ const Footer = () => {
             <img src="/assets/nex-infotech-logo.png" alt="Nexinfosoft IT Solutions" className="logo-img" />
           </Link>
           <p className="footer-desc">
-            Nexinfosoft is a certified software development agency committed to engineering highly responsive websites, apps, ERP integrations, and CRM software ecosystems.
+            {footerData.description}
           </p>
           <div className="social-links">
             <a href="#" className="social-link" aria-label="Facebook"><i className="ri-facebook-fill"></i></a>
@@ -25,23 +71,14 @@ const Footer = () => {
         <div>
           <h4 className="footer-title">Services</h4>
           <ul className="footer-links">
-            <li><Link to="/service/custom-web-development" className="footer-link">Web Development</Link></li>
-            <li><Link to="/service/mobile-applications" className="footer-link">Mobile Applications</Link></li>
-            <li><Link to="/service/erp-development" className="footer-link">ERP Systems</Link></li>
-            <li><Link to="/service/custom-crm-development" className="footer-link">CRM Software</Link></li>
-            <li><Link to="/service/branding-graphic-design" className="footer-link">UI/UX Design</Link></li>
+            {(footerData.metadata?.services || []).map(renderFooterLink)}
           </ul>
         </div>
 
         <div>
           <h4 className="footer-title">Links</h4>
           <ul className="footer-links">
-            <li><Link to="/about" className="footer-link">About Us</Link></li>
-            <li><Link to="/portfolio" className="footer-link">Client Projects</Link></li>
-            <li><Link to="/services" className="footer-link">Detailed Services</Link></li>
-            <li><Link to="/technology-stack" className="footer-link">Technology Stack</Link></li>
-            <li><Link to="/contact" className="footer-link">Get in Touch</Link></li>
-            <li><Link to="/privacy-policy" className="footer-link">Privacy Policy</Link></li>
+            {(footerData.metadata?.links || []).map(renderFooterLink)}
           </ul>
         </div>
 
@@ -69,8 +106,9 @@ const Footer = () => {
           &copy; {currentYear} Nexinfosoft. All rights reserved.
         </div>
         <div className="footer-bottom-links">
-          <Link to="/terms-conditions">Terms & Conditions</Link>
-          <Link to="/privacy-policy">Privacy Policy</Link>
+          {(footerData.metadata?.bottomLinks || []).map(link => (
+            <Link to={link.url || '/'} key={`${link.label}-${link.url}`}>{link.label}</Link>
+          ))}
         </div>
       </div>
     </footer>

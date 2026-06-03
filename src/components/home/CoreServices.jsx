@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-const CoreServices = () => {
+const CoreServices = ({ previewData = null }) => {
   const capabilityRef = useRef(null);
+  const serviceScrollerRef = useRef(null);
   const [data, setData] = useState({
     title: 'Everything Your Business Needs To Build,',
     subtitle: 'Scale & Automate',
-    description: 'From web apps to AI automation, we deliver secure and scalable digital solutions that help your business grow faster, operate smarter, and launch with confidence.',
+    description: 'From web applications to AI automation, we deliver secure and scalable digital solutions that help businesses grow faster and operate smarter.',
     metadata: {
       badge: 'Core Services',
       capabilityStack: {
@@ -18,6 +19,11 @@ const CoreServices = () => {
   });
 
   useEffect(() => {
+    if (previewData) {
+      setData(previewData);
+      return;
+    }
+
     const fetchServicesContent = async () => {
       try {
         const res = await fetch('/api/content/services');
@@ -30,6 +36,57 @@ const CoreServices = () => {
       }
     };
     fetchServicesContent();
+  }, [previewData]);
+
+  useEffect(() => {
+    const scroller = serviceScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let frameId;
+    let lastTime = 0;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      cancelAnimationFrame(frameId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+
+      const step = (time) => {
+        if (!mobileQuery.matches || !scroller) return;
+
+        if (time - lastTime > 24) {
+          const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+          scroller.scrollLeft = scroller.scrollLeft >= maxScroll - 2 ? 0 : scroller.scrollLeft + 0.7;
+          lastTime = time;
+        }
+
+        frameId = requestAnimationFrame(step);
+      };
+
+      frameId = requestAnimationFrame(step);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    if (scroller && mobileQuery.matches) {
+      startAutoScroll();
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
   }, []);
 
   const handleMouseMove = (event, element) => {
@@ -48,6 +105,88 @@ const CoreServices = () => {
     element.style.transform = '';
   };
 
+  const dashboardStats = [
+    { value: '128+', label: 'Projects', icon: 'ri-rocket-line' },
+    { value: '87+', label: 'Clients', icon: 'ri-team-line' },
+    { value: '99%', label: 'Success Rate', icon: 'ri-shield-check-line' },
+    { value: '24/7', label: 'Support', icon: 'ri-customer-service-2-line' }
+  ];
+
+  const floatingBadges = [
+    { label: 'Enterprise Ready', icon: 'ri-checkbox-circle-fill', className: 'badge-enterprise' },
+    { label: 'AI Powered', icon: 'ri-sparkling-2-fill', className: 'badge-ai' },
+    { label: 'Secure Infrastructure', icon: 'ri-shield-keyhole-fill', className: 'badge-secure' }
+  ];
+
+  const services = [
+    {
+      title: 'Web Applications',
+      description: 'Scalable web apps for modern teams.',
+      count: '20+ Projects Delivered',
+      icon: 'ri-global-line',
+      to: '/service/custom-web-development',
+      size: 'compact'
+    },
+    {
+      title: 'Mobile Solutions',
+      description: 'Native and cross-platform mobile apps.',
+      count: '18+ Apps Launched',
+      icon: 'ri-smartphone-line',
+      to: '/service/mobile-applications',
+      size: 'compact'
+    },
+    {
+      title: 'ERP Development',
+      description: 'Custom ERP systems for operations.',
+      count: '15+ Enterprise Systems',
+      icon: 'ri-database-2-line',
+      to: '/service/erp-development',
+      size: 'compact'
+    },
+    {
+      title: 'Cloud Integration',
+      description: 'Cloud-ready scalable infrastructure.',
+      count: '10+ Deployments',
+      icon: 'ri-cloud-line',
+      to: '/service/custom-web-development',
+      size: 'compact'
+    },
+    {
+      title: 'API Development',
+      description: 'Secure APIs and integrations.',
+      count: '30+ Integrations',
+      icon: 'ri-node-tree',
+      to: '/service/custom-web-development',
+      size: 'compact'
+    },
+    {
+      title: 'UI/UX Design',
+      description: 'Clean interfaces users understand.',
+      count: '25+ Interfaces',
+      icon: 'ri-pencil-ruler-2-line',
+      to: '/service/branding-graphic-design',
+      size: 'compact'
+    },
+    {
+      title: 'AI Solutions',
+      description: 'Automation and practical intelligence.',
+      count: '12+ Automations Built',
+      icon: 'ri-brain-line',
+      to: '/service/custom-web-development',
+      size: 'compact'
+    },
+    {
+      title: 'DevOps Support',
+      description: 'CI/CD, deployment and monitoring.',
+      count: '16+ Pipelines',
+      icon: 'ri-infinity-line',
+      to: '/service/custom-web-development',
+      size: 'compact'
+    }
+  ];
+
+  const sectionDescription = 'From web applications to AI automation, we deliver secure and scalable digital solutions that help businesses grow faster and operate smarter.';
+
   return (
     <section id="services" className="core-services-premium">
       <div className="core-services-bg" aria-hidden="true">
@@ -56,17 +195,19 @@ const CoreServices = () => {
         <span className="core-particle core-particle-one"></span>
         <span className="core-particle core-particle-two"></span>
         <span className="core-particle core-particle-three"></span>
+        <span className="core-particle core-particle-four"></span>
+        <span className="core-particle core-particle-five"></span>
       </div>
 
       <div className="container">
         <div className="section-header core-services-header reveal slide-up active">
-          <span className="section-tag core-services-badge">{data.metadata?.badge || 'Core Services'}</span>
+          <span className="section-tag core-services-badge">CORE SERVICES</span>
           <h2 className="section-title core-services-title">
             {data.title}
             <span>{data.subtitle}</span>
           </h2>
           <p className="section-desc core-services-desc">
-            {data.description}
+            {sectionDescription}
           </p>
         </div>
 
@@ -78,10 +219,19 @@ const CoreServices = () => {
             onMouseLeave={() => handleMouseLeave(capabilityRef.current)}
           >
             <div className="capability-glow"></div>
+
             <div className="capability-copy">
-              <span className="capability-kicker">{data.metadata?.capabilityStack?.kicker || 'Digital Capability Stack'}</span>
-              <h3>{data.metadata?.capabilityStack?.title || 'Enterprise delivery console for modern product teams'}</h3>
-              <p>{data.metadata?.capabilityStack?.description || 'End-to-end planning, design, development, cloud deployment, QA, security and optimization under one reliable delivery system.'}</p>
+              <span className="capability-kicker">Live Analytics Dashboard</span>
+              <h3>Interactive delivery console for ambitious software teams</h3>
+              <p>Track active projects, client health, revenue movement, delivery velocity and release progress from one premium operating layer.</p>
+            </div>
+            <div className="delivery-badge-row">
+              {floatingBadges.map((badge) => (
+                <span className="delivery-floating-badge" key={badge.label}>
+                  <i className={badge.icon}></i>
+                  {badge.label}
+                </span>
+              ))}
             </div>
 
             <div className="capability-dashboard">
@@ -97,25 +247,31 @@ const CoreServices = () => {
               <div className="capability-panel">
                 <div className="capability-panel-top">
                   <div>
-                    <strong>Dashboard</strong>
+                    <strong>Nexinfosoft OS</strong>
                     <span>Live delivery health</span>
                   </div>
-                  <div className="capability-users">
-                    <i className="ri-user-3-line"></i>
-                    <i className="ri-user-star-line"></i>
+                  <div className="success-indicator">
+                    <span></span>
+                    99% Success
                   </div>
                 </div>
 
                 <div className="capability-mini-stats">
-                  <div><span>Projects</span><strong>128+</strong></div>
-                  <div><span>Clients</span><strong>87+</strong></div>
-                  <div><span>Success</span><strong>99%</strong></div>
-                  <div><span>Support</span><strong>24/7</strong></div>
+                  {dashboardStats.map((stat) => (
+                    <div key={stat.label}>
+                      <i className={stat.icon}></i>
+                      <span>{stat.label}</span>
+                      <strong>{stat.value}</strong>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="capability-graph-row">
                   <div className="capability-chart">
-                    <div className="capability-chart-title">Performance Overview</div>
+                    <div className="capability-chart-title">
+                      <span>Revenue Chart</span>
+                      <strong>+42%</strong>
+                    </div>
                     <svg viewBox="0 0 360 180" aria-hidden="true">
                       <defs>
                         <linearGradient id="coreChartGradient" x1="0" y1="0" x2="1" y2="0">
@@ -129,110 +285,28 @@ const CoreServices = () => {
                       <line x1="0" y1="160" x2="360" y2="160" />
                       <path className="capability-chart-shadow" d="M10 150 C48 116, 72 132, 104 94 S158 52, 198 82 S256 144, 304 92 S334 54, 352 38" />
                       <path className="capability-chart-line" d="M10 150 C48 116, 72 132, 104 94 S158 52, 198 82 S256 144, 304 92 S334 54, 352 38" />
+                      <path className="capability-chart-line-secondary" d="M10 132 C52 126, 86 98, 126 112 S196 126, 234 78 S304 52, 352 64" />
                       <circle cx="304" cy="92" r="6" />
                     </svg>
-                  </div>
-
-                  <div className="capability-activity">
-                    <strong>Recent Activities</strong>
-                    <span><i className="ri-checkbox-circle-fill"></i> New project created</span>
-                    <span><i className="ri-checkbox-circle-fill"></i> UI/UX sprint completed</span>
-                    <span><i className="ri-checkbox-circle-fill"></i> API integration done</span>
-                    <span><i className="ri-checkbox-circle-fill"></i> Deployment successful</span>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div className="capability-stat-strip">
-              <div><i className="ri-time-line"></i><strong>99%</strong><span>On-time Delivery</span></div>
-              <div><i className="ri-flashlight-line"></i><strong>98/100</strong><span>Speed Score</span></div>
-              <div><i className="ri-shield-check-line"></i><strong>Secure</strong><span>Architecture</span></div>
-              <div><i className="ri-cloud-line"></i><strong>Cloud</strong><span>Ready</span></div>
-            </div>
           </article>
 
-          <div className="core-service-grid">
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '0ms' }}>
-              <span className="core-icon"><i className="ri-global-line"></i></span>
-              <h3>Web Applications</h3>
-              <p>Scalable, secure and high-performance web applications for modern teams.</p>
-            </Link>
-            <Link to="/service/mobile-applications" className="core-service-card reveal slide-up active" style={{ '--delay': '45ms' }}>
-              <span className="core-icon"><i className="ri-smartphone-line"></i></span>
-              <h3>Mobile Solutions</h3>
-              <p>Android, iOS and cross-platform apps designed to engage users.</p>
-            </Link>
-            <Link to="/service/erp-development" className="core-service-card reveal slide-up active" style={{ '--delay': '90ms' }}>
-              <span className="core-icon"><i className="ri-database-2-line"></i></span>
-              <h3>ERP Development</h3>
-              <p>Custom ERP systems for streamlined business operations.</p>
-            </Link>
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '135ms' }}>
-              <span className="core-icon"><i className="ri-cloud-line"></i></span>
-              <h3>Cloud Integration</h3>
-              <p>Cloud-ready solutions for storage, backup and scalability.</p>
-            </Link>
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '180ms' }}>
-              <span className="core-icon"><i className="ri-node-tree"></i></span>
-              <h3>API Development</h3>
-              <p>Secure APIs and third-party integrations for seamless connectivity.</p>
-            </Link>
-            <Link to="/service/branding-graphic-design" className="core-service-card reveal slide-up active" style={{ '--delay': '225ms' }}>
-              <span className="core-icon"><i className="ri-pencil-ruler-2-line"></i></span>
-              <h3>UI/UX Design</h3>
-              <p>User-focused designs that create smooth and delightful experiences.</p>
-            </Link>
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '270ms' }}>
-              <span className="core-icon"><i className="ri-brain-line"></i></span>
-              <h3>AI Solutions</h3>
-              <p>AI automation, smart analytics and practical business intelligence.</p>
-            </Link>
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '315ms' }}>
-              <span className="core-icon"><i className="ri-infinity-line"></i></span>
-              <h3>DevOps Support</h3>
-              <p>CI/CD, deployment, monitoring and infrastructure management.</p>
-            </Link>
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '360ms' }}>
-              <span className="core-icon"><i className="ri-window-line"></i></span>
-              <h3>SaaS Platforms</h3>
-              <p>Custom multi-tenant cloud software with billing and subscriptions.</p>
-            </Link>
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '405ms' }}>
-              <span className="core-icon"><i className="ri-shield-flash-line"></i></span>
-              <h3>QA &amp; Automation</h3>
-              <p>Comprehensive automated testing, unit tests, and performance validation.</p>
-            </Link>
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '450ms' }}>
-              <span className="core-icon"><i className="ri-lock-password-line"></i></span>
-              <h3>Cybersecurity</h3>
-              <p>Vulnerability audits, secure auth, encryption, and access controls.</p>
-            </Link>
-            <Link to="/service/ecommerce-website" className="core-service-card reveal slide-up active" style={{ '--delay': '495ms' }}>
-              <span className="core-icon"><i className="ri-shopping-cart-2-line"></i></span>
-              <h3>E-commerce Systems</h3>
-              <p>Multi-vendor marketplaces, payment gateways, inventory and analytics.</p>
-            </Link>
-            <Link to="/service/custom-crm-development" className="core-service-card reveal slide-up active" style={{ '--delay': '540ms' }}>
-              <span className="core-icon"><i className="ri-user-shared-line"></i></span>
-              <h3>CRM Development</h3>
-              <p>Custom CRM tools, sales pipelines, integrations, and lead tracking.</p>
-            </Link>
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '585ms' }}>
-              <span className="core-icon"><i className="ri-server-fill"></i></span>
-              <h3>Data Warehousing</h3>
-              <p>Relational schema designs, large-scale migrations, and query speedups.</p>
-            </Link>
-            <Link to="/service/custom-web-development" className="core-service-card reveal slide-up active" style={{ '--delay': '630ms' }}>
-              <span className="core-icon"><i className="ri-cpu-line"></i></span>
-              <h3>IoT Solutions</h3>
-              <p>Smart telemetry boards, real-time message pipelines, and IoT APIs.</p>
-            </Link>
-            <Link to="/service/digital-marketing" className="core-service-card reveal slide-up active" style={{ '--delay': '675ms' }}>
-              <span className="core-icon"><i className="ri-bubble-chart-line"></i></span>
-              <h3>Digital Growth</h3>
-              <p>Search engine indexing optimizations and digital growth dashboard setups.</p>
-            </Link>
+          <div ref={serviceScrollerRef} className="core-service-grid">
+            {services.map((service, index) => (
+              <Link
+                to={service.to}
+                className={`core-service-card core-service-card-${service.size} reveal slide-up active`}
+                style={{ '--delay': `${index * 45}ms` }}
+                key={service.title}
+              >
+                <span className="core-icon"><i className={service.icon}></i></span>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

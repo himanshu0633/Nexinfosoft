@@ -53,12 +53,28 @@ const AnimatedCounter = ({ value, duration = 1500 }) => {
   return <span ref={ref}>{count}</span>;
 };
 
+const StarRating = ({ rating }) => {
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+    if (i <= rating) {
+      stars.push(<i key={i} className="ri-star-fill star-active"></i>);
+    } else {
+      stars.push(<i key={i} className="ri-star-line star-inactive"></i>);
+    }
+  }
+  return <div className="comparison-stars">{stars}</div>;
+};
+
 const Portfolio = () => {
   const [filter, setFilter] = useState('all');
+  const [data, setData] = useState(portfolioData);
 
   // Refs for tilt parallax
   const heroIllustrationRef = useRef(null);
   const ctaIllustrationRef = useRef(null);
+  const successMetricsScrollerRef = useRef(null);
+  const portfolioIndustriesScrollerRef = useRef(null);
+  const portfolioProcessScrollerRef = useRef(null);
 
   // Filter Pills mapping
   const filterPills = [
@@ -101,9 +117,191 @@ const Portfolio = () => {
     window.scrollTo(0, 0);
   }, [filter]);
 
+  useEffect(() => {
+    const fetchDynamicProjects = async () => {
+      try {
+        const res = await fetch('/api/projects');
+        if (res.ok) {
+          const dbProjects = await res.json();
+          if (dbProjects && dbProjects.length > 0) {
+            setData(prev => ({
+              ...prev,
+              projects: [
+                ...dbProjects,
+                ...prev.projects.filter(staticProject => !dbProjects.some(dbProject => dbProject.slug === staticProject.slug || dbProject.name === staticProject.name))
+              ]
+            }));
+          }
+        }
+      } catch (err) {
+        // Fallback active
+      }
+    };
+    fetchDynamicProjects();
+  }, []);
+
+  useEffect(() => {
+    const scroller = successMetricsScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.metric-premium-box');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const scroller = portfolioIndustriesScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.industry-icon-card');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const scroller = portfolioProcessScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.portfolio-timeline-node-card');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
   const filteredProjects = filter === 'all' 
-    ? portfolioData.projects 
-    : portfolioData.projects.filter(p => p.category === filter);
+    ? data.projects 
+    : data.projects.filter(p => p.category === filter);
 
   return (
     <div className="portfolio-page-wrapper">
@@ -133,7 +331,7 @@ const Portfolio = () => {
                   <span>View Projects</span>
                   <i className="ri-arrow-down-line"></i>
                 </a>
-                <Link to="/free-consultation" className="btn btn-secondary">
+                <Link to="/contact" className="btn btn-secondary">
                   <span>Book Consultation</span>
                   <i className="ri-calendar-event-line"></i>
                 </Link>
@@ -231,10 +429,10 @@ const Portfolio = () => {
             <div className="featured-case-study-sec reveal slide-up delay-100">
               <span className="featured-case-badge">FEATURED CASE STUDY</span>
               
-              <div className="featured-case-grid" style={{ background: portfolioData.featuredCaseStudy.bg }}>
+              <div className="featured-case-grid" style={{ background: data.featuredCaseStudy.bg }}>
                 <div className="featured-case-left">
                   <div className="featured-case-illustration">
-                    <i className={portfolioData.featuredCaseStudy.icon}></i>
+                    <i className={data.featuredCaseStudy.icon}></i>
                     <div className="featured-pulsing-rings">
                       <span></span><span></span>
                     </div>
@@ -242,24 +440,24 @@ const Portfolio = () => {
                 </div>
 
                 <div className="featured-case-right">
-                  <span className="featured-industry-tag">{portfolioData.featuredCaseStudy.industry}</span>
-                  <h2>{portfolioData.featuredCaseStudy.name}</h2>
+                  <span className="featured-industry-tag">{data.featuredCaseStudy.industry}</span>
+                  <h2>{data.featuredCaseStudy.name}</h2>
                   
                   <div className="featured-case-specs">
                     <div className="spec-block">
                       <strong>Problem Statement:</strong>
-                      <p>{portfolioData.featuredCaseStudy.problem}</p>
+                      <p>{data.featuredCaseStudy.problem}</p>
                     </div>
                     
                     <div className="spec-block">
                       <strong>Our Solution:</strong>
-                      <p>{portfolioData.featuredCaseStudy.solution}</p>
+                      <p>{data.featuredCaseStudy.solution}</p>
                     </div>
-
+                    
                     <div className="spec-block">
                       <strong>Technology Stack:</strong>
                       <div className="featured-tech-chips">
-                        {portfolioData.featuredCaseStudy.techStack.map((tech, idx) => (
+                        {data.featuredCaseStudy.techStack.map((tech, idx) => (
                           <span key={idx} className="tech-chip-item">{tech}</span>
                         ))}
                       </div>
@@ -268,7 +466,7 @@ const Portfolio = () => {
 
                   {/* Results achieved metrics */}
                   <div className="featured-case-metrics">
-                    {portfolioData.featuredCaseStudy.metrics.map((metric, idx) => (
+                    {data.featuredCaseStudy.metrics.map((metric, idx) => (
                       <div key={idx} className="featured-metric-box">
                         <h3>{metric.value}</h3>
                         <span>{metric.label}</span>
@@ -289,30 +487,34 @@ const Portfolio = () => {
              SECTION 4: PROJECT GRID
              ========================================================================== */}
           <div className="portfolio-grid-premium">
-            {filteredProjects.map((project) => {
+            {filteredProjects.map((project, idx) => {
               let cardRef = null;
               return (
                 <div 
-                  key={project.id}
+                  key={project._id || idx}
                   ref={el => cardRef = el}
-                  className="portfolio-premium-card reveal slide-up"
+                  className="portfolio-premium-card reveal slide-up active"
                   onMouseMove={(e) => handleCardMouseMove(e, cardRef)}
                   onMouseLeave={() => handleCardMouseLeave(cardRef)}
                 >
                   <div className="portfolio-img-sandbox">
-                    <div className="portfolio-glass-icon-wrapper">
-                      <i className={project.icon}></i>
-                    </div>
+                    {project.image_url ? (
+                      <img src={project.image_url} alt={project.name} className="portfolio-screenshot-img" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
+                    ) : (
+                      <div className="portfolio-glass-icon-wrapper">
+                        <i className={project.icon || 'ri-briefcase-4-line'}></i>
+                      </div>
+                    )}
                     <div className="portfolio-img-overlay-glow"></div>
                   </div>
 
                   <div className="portfolio-card-info">
-                    <span className="portfolio-card-industry">{project.tag}</span>
+                    <span className="portfolio-card-industry">{project.tag || project.category.toUpperCase()}</span>
                     <h3>{project.name}</h3>
                     <p>{project.desc}</p>
                     
                     <div className="portfolio-card-techs">
-                      {project.techs.map((tech, tIdx) => (
+                      {(project.techs || []).map((tech, tIdx) => (
                         <span key={tIdx} className="card-tech-chip">{tech}</span>
                       ))}
                     </div>
@@ -346,7 +548,7 @@ const Portfolio = () => {
 
           {/* Floating technology logos */}
           <div className="portfolio-techs-floating-row reveal slide-up delay-100">
-            {portfolioData.technologies.map((tech, idx) => (
+            {data.technologies.map((tech, idx) => (
               <div key={idx} className="floating-tech-logo-card">
                 <i className={tech.icon} style={{ color: tech.color }}></i>
                 <span>{tech.name}</span>
@@ -371,8 +573,8 @@ const Portfolio = () => {
             </p>
           </div>
 
-          <div className="success-metrics-grid">
-            {portfolioData.successMetrics.map((met, idx) => (
+          <div ref={successMetricsScrollerRef} className="success-metrics-grid">
+            {data.successMetrics.map((met, idx) => (
               <div key={idx} className="metric-premium-box reveal slide-up" style={{ '--delay': `${idx * 100}ms` }}>
                 <h3><AnimatedCounter value={met.value} /></h3>
                 <span>{met.label}</span>
@@ -401,8 +603,8 @@ const Portfolio = () => {
           <div className="portfolio-timeline-wrapper reveal slide-up">
             <div className="timeline-connector-line"></div>
 
-            <div className="timeline-process-grid">
-              {portfolioData.timeline.map((step, idx) => (
+            <div ref={portfolioProcessScrollerRef} className="timeline-process-grid portfolio-process-grid-mobile">
+              {data.timeline.map((step, idx) => (
                 <div key={idx} className="portfolio-timeline-node-card">
                   <div className="node-icon-circle-wrap">
                     <div className="node-badge-outer">
@@ -434,7 +636,7 @@ const Portfolio = () => {
           </div>
 
           <div className="testimonials-glass-grid">
-            {portfolioData.testimonials.map((test, idx) => (
+            {data.testimonials.map((test, idx) => (
               <div key={idx} className="testimonial-glass-card reveal slide-up" style={{ '--delay': `${idx * 150}ms` }}>
                 <div className="test-card-head">
                   <div className="test-avatar">
@@ -474,8 +676,8 @@ const Portfolio = () => {
             </p>
           </div>
 
-          <div className="industries-icon-grid">
-            {portfolioData.industries.map((ind, idx) => (
+          <div ref={portfolioIndustriesScrollerRef} className="industries-icon-grid portfolio-industries-grid">
+            {data.industries.map((ind, idx) => (
               <div key={idx} className="industry-icon-card reveal slide-up" style={{ '--delay': `${idx * 80}ms` }}>
                 <div className="industry-icon-badge" style={{ background: ind.color }}>
                   <i className={ind.icon}></i>
@@ -510,7 +712,7 @@ const Portfolio = () => {
                     <span>Start Your Project</span>
                     <i className="ri-magic-line"></i>
                   </Link>
-                  <Link to="/free-consultation" className="btn btn-secondary">
+                  <Link to="/contact" className="btn btn-secondary">
                     <span>Book Consultation</span>
                     <i className="ri-chat-voice-line"></i>
                   </Link>

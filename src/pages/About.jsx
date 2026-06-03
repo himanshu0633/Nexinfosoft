@@ -57,6 +57,8 @@ const About = () => {
   const partnerStageRef = useRef(null);
   const qaDashboardRef = useRef(null);
   const rocketRef = useRef(null);
+  const deliveryStrengthsScrollerRef = useRef(null);
+  const lifecycleScrollerRef = useRef(null);
 
   // Parallax Tilt Effects
   const handleMouseMove = (event, element, intensity = 8) => {
@@ -82,6 +84,112 @@ const About = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    const scroller = deliveryStrengthsScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.why-premium-card');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const scroller = lifecycleScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.timeline-node-card');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
   return (
     <div className="about-page-wrapper">
       {/* ==========================================================================
@@ -100,9 +208,11 @@ const About = () => {
                 We build enterprise-grade software architectures, premium web systems, and custom workflow automations designed to scale operations and unlock new market values.
               </p>
               <div className="hero-cta-btns">
-                <Link to="/contact" className="btn btn-primary">
+                 {/* <a href="#contact-methods" className="btn btn-secondary">
                   <span>Book Free Consultation</span>
-                </Link>
+               </a> */}
+                
+           
                 <Link to="/services" className="btn btn-secondary">
                   <span>View Services</span>
                 </Link>
@@ -416,7 +526,7 @@ const About = () => {
             </p>
           </div>
 
-          <div className="why-premium-grid">
+          <div ref={deliveryStrengthsScrollerRef} className="why-premium-grid">
             <div className="why-premium-card reveal slide-up delay-100">
               <div className="card-hover-border"></div>
               <div className="why-icon-wrap" style={{ background: 'rgba(20, 184, 166, 0.1)', color: 'var(--accent)' }}>
@@ -494,7 +604,7 @@ const About = () => {
               <div className="timeline-progress-line-active"></div>
             </div>
 
-            <div className="timeline-nodes-horizontal">
+            <div ref={lifecycleScrollerRef} className="timeline-nodes-horizontal">
               <div className="timeline-node-card">
                 <div className="node-icon-circle">
                   <i className="ri-search-line"></i>

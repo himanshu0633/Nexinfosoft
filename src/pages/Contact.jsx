@@ -68,9 +68,32 @@ const Contact = () => {
   const [modalActive, setModalActive] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
 
+  // Captcha states
+  const [captchaSvg, setCaptchaSvg] = useState('');
+  const [captchaKey, setCaptchaKey] = useState('');
+  const [captchaValue, setCaptchaValue] = useState('');
+
   // Refs for tilt parallax
   const heroIllustrationRef = useRef(null);
   const ctaIllustrationRef = useRef(null);
+  const contactMethodsScrollerRef = useRef(null);
+  const contactWhyScrollerRef = useRef(null);
+  const contactProcessScrollerRef = useRef(null);
+
+  // Fetch new visual captcha from Express server
+  const fetchNewCaptcha = async () => {
+    try {
+      const res = await fetch('/api/contact/captcha');
+      const data = await res.json();
+      if (res.ok) {
+        setCaptchaSvg(data.captchaSvg);
+        setCaptchaKey(data.captchaKey);
+        setCaptchaValue(''); // clear previous input
+      }
+    } catch (err) {
+      console.error('Error fetching captcha:', err);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -80,16 +103,50 @@ const Contact = () => {
     }));
   };
 
-  const handleFormSubmit = (e) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError('');
+
     if (
-      formData.fullName.trim() &&
-      formData.email.trim() &&
-      formData.phone.trim().length === 10 &&
-      formData.service &&
-      formData.budget &&
-      formData.details.trim()
+      !formData.fullName.trim() ||
+      !formData.email.trim() ||
+      formData.phone.trim().length !== 10 ||
+      !formData.service ||
+      !formData.budget ||
+      !formData.details.trim()
     ) {
+      setSubmitError('Please fill out all fields correctly.');
+      return;
+    }
+
+    if (!captchaValue.trim()) {
+      setSubmitError('Please fill out the security verification.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          captchaKey,
+          captchaValue
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        fetchNewCaptcha(); // Reset captcha on wrong submission to prevent reuse
+        throw new Error(data.error || 'Failed to submit form.');
+      }
+
       setModalActive(true);
       setFormData({
         fullName: '',
@@ -100,6 +157,12 @@ const Contact = () => {
         budget: '',
         details: ''
       });
+      setCaptchaValue('');
+      fetchNewCaptcha(); // Load new captcha for next use
+    } catch (err) {
+      setSubmitError(err.message || 'Server error. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -132,6 +195,77 @@ const Contact = () => {
     const revealElements = document.querySelectorAll('.reveal');
     revealElements.forEach(el => el.classList.add('active'));
     window.scrollTo(0, 0);
+    fetchNewCaptcha();
+  }, []);
+
+  useEffect(() => {
+    const scrollers = [
+      { ref: contactMethodsScrollerRef, itemSelector: '.contact-method-card' },
+      { ref: contactWhyScrollerRef, itemSelector: '.why-glass-card' },
+      { ref: contactProcessScrollerRef, itemSelector: '.contact-timeline-node-card' }
+    ];
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    const timers = [];
+    const resumeTimers = [];
+
+    const stopAutoScroll = () => {
+      timers.splice(0).forEach(clearInterval);
+      resumeTimers.splice(0).forEach(clearTimeout);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!mobileQuery.matches) return;
+
+      scrollers.forEach(({ ref, itemSelector }) => {
+        const scroller = ref.current;
+        if (!scroller) return;
+
+        const timer = setInterval(() => {
+          const firstItem = scroller.querySelector(itemSelector);
+          if (!firstItem) return;
+
+          const cardWidth = firstItem.getBoundingClientRect().width;
+          const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+          const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+          const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+          scroller.scrollTo({
+            left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+            behavior: 'smooth'
+          });
+        }, 1000);
+
+        timers.push(timer);
+      });
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimers.push(setTimeout(startAutoScroll, 2200));
+    };
+
+    startAutoScroll();
+
+    scrollers.forEach(({ ref }) => {
+      const scroller = ref.current;
+      if (scroller) {
+        scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+      }
+    });
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      scrollers.forEach(({ ref }) => {
+        const scroller = ref.current;
+        if (scroller) {
+          scroller.removeEventListener('touchstart', pauseThenResume);
+        }
+      });
+    };
   }, []);
 
   return (
@@ -158,10 +292,11 @@ const Contact = () => {
 
               {/* Action Buttons */}
               <div className="contact-hero-btns">
-                <Link to="/free-consultation" className="btn btn-primary">
+             
+                <a href="#contact-methods" className="btn btn-secondary">
                   <span>Book Free Consultation</span>
                   <i className="ri-chat-smile-2-line"></i>
-                </Link>
+                </a>
                 <a href="#contact-methods" className="btn btn-secondary">
                   <span>Schedule Call</span>
                   <i className="ri-phone-line"></i>
@@ -233,7 +368,7 @@ const Contact = () => {
          ========================================================================== */}
       <section id="contact-methods" className="contact-methods-sec">
         <div className="container">
-          <div className="contact-methods-grid">
+          <div ref={contactMethodsScrollerRef} className="contact-methods-grid contact-methods-mobile-scroll">
             {contactData.contactMethods.map((method, idx) => (
               <a 
                 href={method.link} 
@@ -357,8 +492,46 @@ const Contact = () => {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="btn btn-primary form-submit-btn">
-                  <span>🚀 Get Free Consultation</span>
+                {captchaSvg && (
+                  <div className="form-group captcha-group animate-fade-in">
+                    <label htmlFor="captchaValue">Security Verification *</label>
+                    <div className="captcha-container-row">
+                      <div 
+                        className="captcha-image-wrapper"
+                        dangerouslySetInnerHTML={{ __html: captchaSvg }}
+                        onClick={fetchNewCaptcha}
+                        title="Click to refresh captcha"
+                      />
+                      <button 
+                        type="button" 
+                        className="btn-captcha-refresh" 
+                        onClick={fetchNewCaptcha}
+                        title="Refresh Captcha"
+                      >
+                        <i className="ri-refresh-line"></i>
+                      </button>
+                      <input 
+                        type="text" 
+                        id="captchaValue" 
+                        placeholder="Enter captcha code" 
+                        value={captchaValue} 
+                        onChange={(e) => setCaptchaValue(e.target.value)} 
+                        required 
+                        maxLength="6"
+                        autoComplete="off"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {submitError && (
+                  <div style={{ color: '#ef4444', fontSize: '13px', marginBottom: '14px', background: 'rgba(239, 68, 68, 0.05)', padding: '10px', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.1)' }}>
+                    <i className="ri-error-warning-line" style={{ marginRight: '6px' }}></i> {submitError}
+                  </div>
+                )}
+
+                <button type="submit" className="btn btn-primary form-submit-btn" disabled={submitting}>
+                  <span>{submitting ? '🚀 Submitting...' : '🚀 Get Free Consultation'}</span>
                 </button>
               </form>
             </div>
@@ -434,7 +607,7 @@ const Contact = () => {
             </p>
           </div>
 
-          <div className="why-choose-glass-grid">
+          <div ref={contactWhyScrollerRef} className="why-choose-glass-grid contact-why-mobile-scroll">
             {contactData.whyChoose.map((item, idx) => (
               <div key={idx} className="why-glass-card reveal slide-up" style={{ '--delay': `${idx * 80}ms` }}>
                 <div className="why-icon-badge">
@@ -467,7 +640,7 @@ const Contact = () => {
           <div className="contact-timeline-wrapper reveal slide-up">
             <div className="timeline-connector-line"></div>
 
-            <div className="timeline-process-grid">
+            <div ref={contactProcessScrollerRef} className="timeline-process-grid contact-process-mobile-scroll">
               {contactData.processTimeline.map((step, idx) => (
                 <div key={idx} className="contact-timeline-node-card">
                   <div className="node-icon-circle-wrap">
@@ -545,7 +718,7 @@ const Contact = () => {
                 </p>
 
                 <div className="final-cta-buttons">
-                  <Link to="/free-consultation" className="btn btn-primary">
+                  <Link to="/contact" className="btn btn-primary">
                     <span>Book Consultation</span>
                     <i className="ri-magic-line"></i>
                   </Link>

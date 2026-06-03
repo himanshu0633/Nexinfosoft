@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import servicesData from '../data/servicesData';
 
 const Header = () => {
@@ -8,6 +8,17 @@ const Header = () => {
   const [techMenuOpen, setTechMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const isAdminPage = location.pathname === '/admin/dashboard';
+  const searchParams = new URLSearchParams(location.search);
+  const activeTab = searchParams.get('tab') || 'sections';
+
+  const handleAdminLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    navigate('/admin-login');
+  };
 
   // Close menus on page navigation
   useEffect(() => {
@@ -95,140 +106,222 @@ const Header = () => {
           <img src="/assets/nex-infotech-logo.png" alt="Nexinfosoft IT Solutions" className="logo-img" />
         </Link>
         
-        <ul className={`nav-menu ${mobileMenuOpen ? 'active' : ''}`}>
-          <li className="nav-item">
-            <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} end>
-              Home
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              About
-            </NavLink>
-          </li>
-          
-          {/* Services Mega Menu Item */}
-          <li 
-            className={`nav-item has-mega-menu ${megaMenuOpen ? 'mega-open' : ''}`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onFocus={handleMouseEnter}
-            onBlur={handleMouseLeave}
-          >
-            <Link 
-              to="/services" 
-              className={`nav-link ${isServicesActive ? 'active' : ''}`}
-              onClick={handleServicesClick}
+        {isAdminPage ? (
+          <ul className={`nav-menu ${mobileMenuOpen ? 'active' : ''}`}>
+            <li className="nav-item">
+              <Link 
+                to="/admin/dashboard?tab=sections&section=hero" 
+                className={`nav-link ${activeTab === 'sections' ? 'active' : ''}`}
+              >
+                Home Sections
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link 
+                to="/admin/dashboard?tab=corporate&section=corporate_hero" 
+                className={`nav-link ${activeTab === 'corporate' ? 'active' : ''}`}
+              >
+                Corporate Sections
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link 
+                to="/admin/dashboard?tab=services" 
+                className={`nav-link ${activeTab === 'services' ? 'active' : ''}`}
+              >
+                Manage Services
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link 
+                to="/admin/dashboard?tab=projects" 
+                className={`nav-link ${activeTab === 'projects' ? 'active' : ''}`}
+              >
+                Manage Projects/Portfolio
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link 
+                to="/admin/dashboard?tab=techstack" 
+                className={`nav-link ${activeTab === 'techstack' ? 'active' : ''}`}
+              >
+                Manage Tech Stack
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link 
+                to="/admin/dashboard?tab=leads" 
+                className={`nav-link ${activeTab === 'leads' ? 'active' : ''}`}
+              >
+                Manage Leads
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link 
+                to="/admin/dashboard?tab=pages&section=footer_links" 
+                className={`nav-link ${activeTab === 'pages' ? 'active' : ''}`}
+              >
+                Site Pages
+              </Link>
+            </li>
+            {/* Mobile-Only Log out Option */}
+            <li className="nav-item nav-mobile-only" style={{ width: '100%', marginTop: '16px' }}>
+              <button 
+                onClick={handleAdminLogout} 
+                className="btn btn-secondary nav-btn" 
+                style={{ width: '100%', justifyContent: 'center', boxSizing: 'border-box', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+              >
+                <i className="ri-logout-box-r-line" style={{ marginRight: '6px' }}></i> Log out
+              </button>
+            </li>
+          </ul>
+        ) : (
+          <ul className={`nav-menu ${mobileMenuOpen ? 'active' : ''}`}>
+            <li className="nav-item">
+              <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} end>
+                Home
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                About
+              </NavLink>
+            </li>
+            
+            {/* Services Mega Menu Item */}
+            <li 
+              className={`nav-item has-mega-menu ${megaMenuOpen ? 'mega-open' : ''}`}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onFocus={handleMouseEnter}
+              onBlur={handleMouseLeave}
             >
-              Services <i className="ri-arrow-down-s-line" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '2px', fontSize: '12px', transform: megaMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }}></i>
-            </Link>
-            <div className="services-mega-menu">
-              <div className="mega-menu-head">
-                <div>
-                  <h3>Our Services</h3>
-                  <p>Everything we build for your business</p>
+              <Link 
+                to="/services" 
+                className={`nav-link ${isServicesActive ? 'active' : ''}`}
+                onClick={handleServicesClick}
+              >
+                Services <i className="ri-arrow-down-s-line" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '2px', fontSize: '12px', transform: megaMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }}></i>
+              </Link>
+              <div className="services-mega-menu">
+                <div className="mega-menu-head">
+                  <div>
+                    <h3>Our Services</h3>
+                    <p>Everything we build for your business</p>
+                  </div>
+                  <Link to="/services" className="mega-view-all">View all <i className="ri-arrow-right-s-line"></i></Link>
                 </div>
-                <Link to="/services" className="mega-view-all">View all <i className="ri-arrow-right-s-line"></i></Link>
+                <div className="mega-services-grid">
+                  {servicesData.map((service) => (
+                    <Link 
+                      key={service.slug}
+                      to={`/service/${service.slug}`} 
+                      className="mega-service-link"
+                    >
+                      <span></span>
+                      {service.title}
+                    </Link>
+                  ))}
+                </div>
+                <div className="mega-menu-foot">
+                  <span></span>
+                  <p>Not sure which service you need?</p>
+                  <Link to="/contact">Get in touch <i className="ri-arrow-right-line"></i></Link>
+                </div>
               </div>
-              <div className="mega-services-grid">
-                {servicesData.map((service) => (
-                  <Link 
-                    key={service.slug}
-                    to={`/service/${service.slug}`} 
-                    className="mega-service-link"
-                  >
-                    <span></span>
-                    {service.title}
-                  </Link>
-                ))}
-              </div>
-              <div className="mega-menu-foot">
-                <span></span>
-                <p>Not sure which service you need?</p>
-                <Link to="/contact">Get in touch <i className="ri-arrow-right-line"></i></Link>
-              </div>
-            </div>
-          </li>
+            </li>
 
-          {/* Tech Stack Mega Menu Item */}
-          <li 
-            className={`nav-item has-mega-menu ${techMenuOpen ? 'mega-open' : ''}`}
-            onMouseEnter={handleTechMouseEnter}
-            onMouseLeave={handleTechMouseLeave}
-            onFocus={handleTechMouseEnter}
-            onBlur={handleTechMouseLeave}
-          >
-            <Link 
-              to="/technology-stack" 
-              className={`nav-link ${location.pathname === '/technology-stack' ? 'active' : ''}`}
-              onClick={handleTechClick}
+            {/* Tech Stack Mega Menu Item */}
+            <li 
+              className={`nav-item has-mega-menu ${techMenuOpen ? 'mega-open' : ''}`}
+              onMouseEnter={handleTechMouseEnter}
+              onMouseLeave={handleTechMouseLeave}
+              onFocus={handleTechMouseEnter}
+              onBlur={handleTechMouseLeave}
             >
-              Tech Stack <i className="ri-arrow-down-s-line" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '2px', fontSize: '12px', transform: techMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }}></i>
-            </Link>
-            <div className="services-mega-menu">
-              <div className="mega-menu-head">
-                <div>
-                  <h3>Technology Stack</h3>
-                  <p>Our tools &amp; frameworks catalog</p>
+              <Link 
+                to="/technology-stack" 
+                className={`nav-link ${location.pathname === '/technology-stack' ? 'active' : ''}`}
+                onClick={handleTechClick}
+              >
+                Tech Stack <i className="ri-arrow-down-s-line" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '2px', fontSize: '12px', transform: techMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }}></i>
+              </Link>
+              <div className="services-mega-menu">
+                <div className="mega-menu-head">
+                  <div>
+                    <h3>Technology Stack</h3>
+                    <p>Our tools &amp; frameworks catalog</p>
+                  </div>
+                  <Link to="/technology-stack" className="mega-view-all">View all <i className="ri-arrow-right-s-line"></i></Link>
                 </div>
-                <Link to="/technology-stack" className="mega-view-all">View all <i className="ri-arrow-right-s-line"></i></Link>
+                <div className="mega-services-grid">
+                  <Link to="/technology-stack?tab=frontend" className="mega-service-link">
+                    <span></span>
+                    Frontend Tech
+                  </Link>
+                  <Link to="/technology-stack?tab=backend" className="mega-service-link">
+                    <span></span>
+                    Backend Tech
+                  </Link>
+                  <Link to="/technology-stack?tab=mobile" className="mega-service-link">
+                    <span></span>
+                    Mobile Solutions
+                  </Link>
+                  <Link to="/technology-stack?tab=database" className="mega-service-link">
+                    <span></span>
+                    Database Systems
+                  </Link>
+                  <Link to="/technology-stack?tab=cloud" className="mega-service-link">
+                    <span></span>
+                    Cloud &amp; DevOps
+                  </Link>
+                  <Link to="/technology-stack?tab=ai" className="mega-service-link">
+                    <span></span>
+                    AI &amp; Analytics
+                  </Link>
+                </div>
+                <div className="mega-menu-foot">
+                  <span></span>
+                  <p>Need custom architecture consultation?</p>
+                  <Link to="/contact">Discuss stack <i className="ri-arrow-right-line"></i></Link>
+                </div>
               </div>
-              <div className="mega-services-grid">
-                <Link to="/technology-stack?tab=frontend" className="mega-service-link">
-                  <span></span>
-                  Frontend Tech
-                </Link>
-                <Link to="/technology-stack?tab=backend" className="mega-service-link">
-                  <span></span>
-                  Backend Tech
-                </Link>
-                <Link to="/technology-stack?tab=mobile" className="mega-service-link">
-                  <span></span>
-                  Mobile Solutions
-                </Link>
-                <Link to="/technology-stack?tab=database" className="mega-service-link">
-                  <span></span>
-                  Database Systems
-                </Link>
-                <Link to="/technology-stack?tab=cloud" className="mega-service-link">
-                  <span></span>
-                  Cloud &amp; DevOps
-                </Link>
-                <Link to="/technology-stack?tab=ai" className="mega-service-link">
-                  <span></span>
-                  AI &amp; Analytics
-                </Link>
-              </div>
-              <div className="mega-menu-foot">
-                <span></span>
-                <p>Need custom architecture consultation?</p>
-                <Link to="/contact">Discuss stack <i className="ri-arrow-right-line"></i></Link>
-              </div>
-            </div>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/portfolio" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              Portfolio
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              Contact
-            </NavLink>
-          </li>
-          {/* Mobile-Only Direct Call Trigger */}
-          <li className="nav-item nav-mobile-only" style={{ width: '100%', marginTop: '16px' }}>
-            <a href="tel:+919999530797" className="btn btn-primary nav-btn" style={{ width: '100%', justifyContent: 'center', boxSizing: 'border-box' }}>
-              <i className="ri-phone-fill" style={{ marginRight: '6px' }}></i> Call Now
-            </a>
-          </li>
-        </ul>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/portfolio" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                Portfolio
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                Contact
+              </NavLink>
+            </li>
+            {/* Mobile-Only Direct Call Trigger */}
+            <li className="nav-item nav-mobile-only" style={{ width: '100%', marginTop: '16px' }}>
+              <a href="tel:+919999530797" className="btn btn-primary nav-btn" style={{ width: '100%', justifyContent: 'center', boxSizing: 'border-box' }}>
+                <i className="ri-phone-fill" style={{ marginRight: '6px' }}></i> Call Now
+              </a>
+            </li>
+          </ul>
+        )}
 
         <div className="nav-actions">
-          <Link to="/contact" className="btn btn-primary nav-btn">
-            <span>Get Started</span>
-            <i className="ri-arrow-right-line"></i>
-          </Link>
+          {isAdminPage ? (
+            <button 
+              onClick={handleAdminLogout} 
+              className="btn btn-secondary nav-btn"
+              style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+            >
+              <span>Log out</span>
+              <i className="ri-logout-box-r-line" style={{ marginLeft: '6px' }}></i>
+            </button>
+          ) : (
+            <Link to="/contact" className="btn btn-primary nav-btn">
+              <span>Call Now</span>
+              <i className="ri-arrow-right-line"></i>
+            </Link>
+          )}
         </div>
 
         <button 
@@ -242,6 +335,36 @@ const Header = () => {
           <span></span>
         </button>
       </div>
+
+      {/* Mobile Bottom Navigation Dock */}
+      {!isAdminPage && (
+        <div className="mobile-bottom-nav">
+          <NavLink to="/" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`} end>
+            <i className="ri-home-5-line"></i>
+            <span>Home</span>
+          </NavLink>
+          <NavLink to="/about" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+            <i className="ri-information-line"></i>
+            <span>About</span>
+          </NavLink>
+          <NavLink to="/services" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+            <i className="ri-server-line"></i>
+            <span>Services</span>
+          </NavLink>
+          <NavLink to="/technology-stack" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+            <i className="ri-cpu-line"></i>
+            <span>Tech Stack</span>
+          </NavLink>
+          <NavLink to="/portfolio" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+            <i className="ri-briefcase-line"></i>
+            <span>Portfolio</span>
+          </NavLink>
+          <NavLink to="/contact" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+            <i className="ri-chat-3-line"></i>
+            <span>Contact</span>
+          </NavLink>
+        </div>
+      )}
     </header>
   );
 };

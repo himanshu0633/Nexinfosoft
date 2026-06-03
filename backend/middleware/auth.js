@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = 'nexinfosoft_jwt_super_secret_key_2026'; // Simple local JWT secret key
+const JWT_SECRET = process.env.JWT_SECRET || 'nexinfosoft_jwt_super_secret_key_2026'; // Simple local JWT secret key
 
 module.exports = (req, res, next) => {
   const authHeader = req.headers['authorization'];

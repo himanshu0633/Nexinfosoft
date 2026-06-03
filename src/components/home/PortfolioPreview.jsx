@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const PortfolioPreview = () => {
-  const projects = [
+  const portfolioScrollerRef = useRef(null);
+  
+  const [projects, setProjects] = useState([
     {
       tag: 'E-Commerce Platform',
       title: 'Multi-Vendor Marketplace Storefront',
@@ -38,7 +41,88 @@ const PortfolioPreview = () => {
       desc: 'Real-time database visualization, automated report generation, and predictive business intelligence widgets.',
       img: '/assets/images/analytics_mockup.png'
     }
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchDynamicProjects = async () => {
+      try {
+        const res = await fetch('/api/projects');
+        if (res.ok) {
+          const dbProjects = await res.json();
+          if (dbProjects && dbProjects.length > 0) {
+            // Map Mongoose schema fields to the expected preview layout keys
+            const mapped = dbProjects.map(proj => ({
+              tag: proj.tag || proj.category.toUpperCase(),
+              title: proj.name,
+              desc: proj.desc,
+              img: proj.image_url || '/assets/images/analytics_mockup.png'
+            }));
+            setProjects(mapped);
+          }
+        }
+      } catch (err) {
+        // Fallback active
+      }
+    };
+
+    fetchDynamicProjects();
+  }, []);
+
+  useEffect(() => {
+    const scroller = portfolioScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.portfolio-card');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
+  const visibleProjects = projects.slice(0, 2);
+  const hasMoreProjects = projects.length > 2;
 
   return (
     <section className="portfolio">
@@ -49,14 +133,14 @@ const PortfolioPreview = () => {
           <p className="section-desc">A quick look at specialized software categories our team designs, builds, and maintains.</p>
         </div>
 
-        <div className="portfolio-grid">
-          {projects.map((project, idx) => (
+        <div ref={portfolioScrollerRef} className="portfolio-grid">
+          {visibleProjects.map((project, idx) => (
             <div 
               key={idx} 
               className={`portfolio-card reveal slide-up delay-${(idx + 1) * 100} active`}
             >
-              <div className="portfolio-img-box">
-                <img src={project.img} alt={project.title} loading="lazy" />
+              <div className="portfolio-img-box" style={{ background: 'rgba(255,255,255,0.01)' }}>
+                <img src={project.img} alt={project.title} loading="lazy" style={{ objectFit: 'cover' }} />
               </div>
               <div className="portfolio-content">
                 <span className="portfolio-tag">{project.tag}</span>
@@ -65,6 +149,14 @@ const PortfolioPreview = () => {
               </div>
             </div>
           ))}
+          {hasMoreProjects && (
+            <div className="portfolio-view-more-card reveal slide-up active">
+              <Link to="/portfolio" className="btn btn-secondary portfolio-view-more-btn">
+                View More
+                <i className="fa-solid fa-arrow-right"></i>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </section>

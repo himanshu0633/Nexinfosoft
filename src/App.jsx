@@ -15,6 +15,8 @@ import Services from './pages/Services';
 import TechStack from './pages/TechStack';
 import Portfolio from './pages/Portfolio';
 import Contact from './pages/Contact';
+import CompanyProfile from './pages/CompanyProfile';
+import Corporate from './pages/Corporate';
 import FreeConsultation from './pages/FreeConsultation';
 import Faqs from './pages/Faqs';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -43,6 +45,8 @@ const App = () => {
           <Route path="/technology-stack" element={<TechStack />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/company-profile" element={<CompanyProfile />} />
+          <Route path="/corporate" element={<Corporate />} />
           <Route path="/free-consultation" element={<FreeConsultation />} />
           <Route path="/faqs" element={<Faqs />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -58,6 +62,8 @@ const App = () => {
           <Route path="/technology-stack.html" element={<TechStack />} />
           <Route path="/portfolio.html" element={<Portfolio />} />
           <Route path="/contact.html" element={<Contact />} />
+          <Route path="/company-profile.html" element={<CompanyProfile />} />
+          <Route path="/corporate.html" element={<Corporate />} />
           <Route path="/free-consultation.html" element={<FreeConsultation />} />
           <Route path="/faqs.html" element={<Faqs />} />
           <Route path="/privacy-policy.html" element={<PrivacyPolicy />} />

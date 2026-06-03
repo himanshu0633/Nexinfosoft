@@ -55,6 +55,138 @@ const AnimatedCounter = ({ value, duration = 1500 }) => {
 const Services = () => {
   const heroMockupRef = useRef(null);
   const ctaRocketRef = useRef(null);
+  const servicesProcessScrollerRef = useRef(null);
+
+  const [services, setServices] = useState([
+    {
+      slug: 'business-website',
+      title: 'Business Website',
+      subtitle: 'A refined, trust-building website for service businesses.',
+      icon: 'ri-window-line',
+      intro: 'Modern, responsive websites that build trust and grow your business online.',
+      benefits: ['Responsive Design', 'Fast & Secure', 'SEO Friendly'],
+      deliverables: ['Responsive pages', 'Lead enquiry forms', 'Service sections']
+    },
+    {
+      slug: 'ecommerce-website',
+      title: 'E-Commerce Website',
+      subtitle: 'Online stores built for product discovery and checkout.',
+      icon: 'ri-shopping-bag-3-line',
+      intro: 'Secure, scalable and feature-rich eCommerce solutions that drive sales and conversions.',
+      benefits: ['Product Management', 'Secure Checkout', 'Order Tracking'],
+      deliverables: ['Product catalog', 'Cart and checkout', 'Payment gateway']
+    },
+    {
+      slug: 'custom-web-development',
+      title: 'Custom Web Development',
+      subtitle: 'Tailored web platforms for unique business requirements.',
+      icon: 'ri-code-s-slash-line',
+      intro: 'Custom websites and web apps built for performance, scalability and unique business needs.',
+      benefits: ['Tailored Solutions', 'Dashboard & Portals', 'API Integrations'],
+      deliverables: ['Custom UI', 'Backend APIs', 'Admin panel']
+    },
+    {
+      slug: 'mobile-applications',
+      title: 'Mobile Applications',
+      subtitle: 'Android, iOS, and cross-platform mobile apps.',
+      icon: 'ri-smartphone-line',
+      intro: 'Cross-platform mobile apps for iOS and Android that engage users and grow your brand.',
+      benefits: ['Native Performance', 'User Friendly UI', 'Push Notifications'],
+      deliverables: ['App UI/UX', 'Android/iOS build', 'API integration']
+    },
+    {
+      slug: 'branding-graphic-design',
+      title: 'Branding & Design',
+      subtitle: 'Identity, social creatives, and visual systems.',
+      icon: 'ri-palette-line',
+      intro: 'Creative branding and graphic design that helps your business stand out and connect.',
+      benefits: ['Logo & Identity', 'UI/UX Design', 'Visual Consistency'],
+      deliverables: ['Logo support', 'Brand colors', 'Social posts']
+    },
+    {
+      slug: 'digital-marketing',
+      title: 'Digital Marketing',
+      subtitle: 'SEO, campaigns, content, and lead generation.',
+      icon: 'ri-megaphone-line',
+      intro: 'Data-driven marketing strategies to increase visibility, leads and business growth.',
+      benefits: ['SEO & SEM', 'Social Media', 'Lead Generation'],
+      deliverables: ['SEO planning', 'Campaign setup', 'Content calendar']
+    },
+    {
+      slug: 'erp-development',
+      title: 'ERP Development',
+      subtitle: 'Custom ERP systems for inventory, HR, and operations.',
+      icon: 'ri-database-2-line',
+      intro: 'Custom ERP systems to manage your operations, HR, finance and inventory efficiently.',
+      benefits: ['HR Management', 'Inventory Control', 'Reports & Analytics'],
+      deliverables: ['ERP modules', 'Role access', 'Inventory flow']
+    },
+    {
+      slug: 'custom-crm-development',
+      title: 'CRM Development',
+      subtitle: 'Lead, sales, follow-up, and reporting CRM.',
+      icon: 'ri-user-shared-line',
+      intro: 'CRM solutions to manage leads, sales, customer support and strengthen relationships.',
+      benefits: ['Lead Management', 'Sales Pipeline', 'Reports & Insights'],
+      deliverables: ['Lead dashboard', 'Follow-up reminders', 'Customer records']
+    },
+    {
+      slug: 'video-editing-promotional-content',
+      title: 'Video & Promotional Content',
+      subtitle: 'Reels, promotional videos, and product explainers.',
+      icon: 'ri-video-chat-line',
+      intro: 'Engaging videos and content that tell your brand story and drive more engagement.',
+      benefits: ['Promotional Videos', 'Explainer Videos', 'Social Media Reels'],
+      deliverables: ['Reels editing', 'Promo videos', 'Motion text']
+    },
+    {
+      slug: 'mvp-development',
+      title: 'MVP Development',
+      subtitle: 'Rapid prototyping and focused MVP launches.',
+      icon: 'ri-lightbulb-line',
+      intro: 'Quick MVP development for startups to validate ideas and launch faster.',
+      benefits: ['Rapid Prototyping', 'Feature Prioritization', 'Scalable Architecture'],
+      deliverables: ['Feature planning', 'Prototype UI', 'Core product build']
+    }
+  ]);
+
+  const [projects, setProjects] = useState([
+    {
+      name: 'Clinic Management System',
+      category: 'healthcare',
+      tag: 'Web Application',
+      desc: 'A complete solution for managing appointments, patients and billing efficiently.',
+      image_url: '/assets/images/analytics_mockup.png'
+    },
+    {
+      name: 'ERP System',
+      category: 'erp',
+      tag: 'Web Application',
+      desc: 'Custom ERP platform to manage inventory, HR, finance and operations.',
+      image_url: '/assets/images/erp_mockup.png'
+    },
+    {
+      name: 'Real Estate Platform',
+      category: 'real-estate',
+      tag: 'Web Platform',
+      desc: 'Property listing database featuring advanced search and agent controls.',
+      image_url: '/assets/images/portal_mockup.png'
+    },
+    {
+      name: 'E-Commerce Solution',
+      category: 'ecommerce',
+      tag: 'Web Application',
+      desc: 'Full-featured eCommerce engine equipped with secure checkouts and metrics.',
+      image_url: '/assets/images/ecommerce_mockup.png'
+    },
+    {
+      name: 'Mobile Application',
+      category: 'mobile',
+      tag: 'Mobile App',
+      desc: 'Cross-platform mobile application providing biometric setups and unified sync.',
+      image_url: '/assets/images/mobile_mockup.png'
+    }
+  ]);
 
   // Parallax mouse tilt handler
   const handleMouseMove = (event, element, intensity = 6) => {
@@ -76,7 +208,119 @@ const Services = () => {
     const revealElements = document.querySelectorAll('.reveal');
     revealElements.forEach(el => el.classList.add('active'));
     window.scrollTo(0, 0);
+
+    const fetchDynamicData = async () => {
+      // Fetch dynamic services
+      try {
+        const res = await fetch('/api/services');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            setServices(data);
+          }
+        }
+      } catch (err) {
+        // Safe fallback active
+      }
+
+      // Fetch dynamic projects
+      try {
+        const res = await fetch('/api/projects');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            setProjects(data.slice(0, 5));
+          }
+        }
+      } catch (err) {
+        // Safe fallback active
+      }
+    };
+
+    fetchDynamicData();
   }, []);
+
+  useEffect(() => {
+    const scroller = servicesProcessScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.timeline-node-card');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
+  // Helper arrays for aesthetic styling
+  const getBentoColors = (index) => {
+    const colors = [
+      { bg: 'rgba(20, 184, 166, 0.1)', text: 'var(--accent)', border: '' },
+      { bg: 'rgba(139, 92, 246, 0.1)', text: 'var(--secondary)', border: 'accent-purple' },
+      { bg: 'rgba(59, 130, 246, 0.1)', text: 'var(--primary)', border: 'accent-blue' },
+      { bg: 'rgba(143, 184, 74, 0.1)', text: '#8fba4a', border: 'accent-green' },
+      { bg: 'rgba(245, 158, 11, 0.1)', text: '#f59e0b', border: 'accent-yellow' },
+      { bg: 'rgba(236, 72, 153, 0.1)', text: '#ec4899', border: 'accent-pink' }
+    ];
+    return colors[index % colors.length];
+  };
+
+  const getBentoSize = (index) => {
+    const sizes = [
+      'card-size-small',
+      'card-size-small',
+      'card-size-small',
+      'card-size-medium',
+      'card-size-small',
+      'card-size-small',
+      'card-size-medium',
+      'card-size-medium',
+      'card-size-small',
+      'card-size-large'
+    ];
+    return sizes[index % sizes.length];
+  };
 
   return (
     <div className="services-page-wrapper">
@@ -246,195 +490,29 @@ const Services = () => {
           </div>
 
           <div className="services-bento-grid">
-            {/* Card 1: Business Website */}
-            <div className="bento-card card-size-small reveal slide-up delay-100">
-              <div className="bento-top-accent"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(20, 184, 166, 0.1)', color: 'var(--accent)' }}>
-                <i className="ri-window-line"></i>
-              </div>
-              <h3>Business Website</h3>
-              <p>Modern, responsive websites that build trust and grow your business online.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> Responsive Design</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Fast & Secure</li>
-                <li><i className="ri-checkbox-circle-fill"></i> SEO Friendly</li>
-              </ul>
-              <Link to="/service/business-website" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
-
-            {/* Card 2: E-Commerce Website */}
-            <div className="bento-card card-size-small reveal slide-up delay-200">
-              <div className="bento-top-accent accent-purple"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(139, 92, 246, 0.1)', color: 'var(--secondary)' }}>
-                <i className="ri-shopping-bag-3-line"></i>
-              </div>
-              <h3>E-Commerce Website</h3>
-              <p>Secure, scalable and feature-rich eCommerce solutions that drive sales and conversions.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> Product Management</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Secure Checkout</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Order Tracking</li>
-              </ul>
-              <Link to="/service/ecommerce-website" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
-
-            {/* Card 3: Custom Web Development */}
-            <div className="bento-card card-size-medium reveal slide-up delay-300">
-              <div className="bento-top-accent accent-blue"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(59, 130, 246, 0.1)', color: 'var(--primary)' }}>
-                <i className="ri-code-s-slash-line"></i>
-              </div>
-              <h3>Custom Web Development</h3>
-              <p>Custom websites and web apps built for performance, scalability and unique business needs.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> Tailored Solutions</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Dashboard & Portals</li>
-                <li><i className="ri-checkbox-circle-fill"></i> API Integrations</li>
-              </ul>
-              <Link to="/service/custom-web-development" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
-
-            {/* Card 4: Mobile Applications */}
-            <div className="bento-card card-size-medium reveal slide-up delay-100">
-              <div className="bento-top-accent accent-green"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(143, 184, 74, 0.1)', color: '#8fba4a' }}>
-                <i className="ri-smartphone-line"></i>
-              </div>
-              <h3>Mobile Applications</h3>
-              <p>Cross-platform mobile apps for iOS and Android that engage users and grow your brand.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> Native Performance</li>
-                <li><i className="ri-checkbox-circle-fill"></i> User Friendly UI</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Push Notifications</li>
-              </ul>
-              <Link to="/service/mobile-applications" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
-
-            {/* Card 5: Branding & Design */}
-            <div className="bento-card card-size-small reveal slide-up delay-200">
-              <div className="bento-top-accent accent-yellow"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
-                <i className="ri-palette-line"></i>
-              </div>
-              <h3>Branding & Design</h3>
-              <p>Creative branding and graphic design that helps your business stand out and connect.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> Logo & Identity</li>
-                <li><i className="ri-checkbox-circle-fill"></i> UI/UX Design</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Visual Consistency</li>
-              </ul>
-              <Link to="/service/branding-graphic-design" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
-
-            {/* Card 6: Digital Marketing */}
-            <div className="bento-card card-size-small reveal slide-up delay-300">
-              <div className="bento-top-accent accent-pink"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(236, 72, 153, 0.1)', color: '#ec4899' }}>
-                <i className="ri-megaphone-line"></i>
-              </div>
-              <h3>Digital Marketing</h3>
-              <p>Data-driven marketing strategies to increase visibility, leads and business growth.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> SEO & SEM</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Social Media</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Lead Generation</li>
-              </ul>
-              <Link to="/service/digital-marketing" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
-
-            {/* Card 7: ERP Development */}
-            <div className="bento-card card-size-medium reveal slide-up delay-100">
-              <div className="bento-top-accent"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(20, 184, 166, 0.1)', color: 'var(--accent)' }}>
-                <i className="ri-database-2-line"></i>
-              </div>
-              <h3>ERP Development</h3>
-              <p>Custom ERP systems to manage your operations, HR, finance and inventory efficiently.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> HR Management</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Inventory Control</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Reports & Analytics</li>
-              </ul>
-              <Link to="/service/erp-development" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
-
-            {/* Card 8: CRM Development */}
-            <div className="bento-card card-size-medium reveal slide-up delay-200">
-              <div className="bento-top-accent accent-purple"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(139, 92, 246, 0.1)', color: 'var(--secondary)' }}>
-                <i className="ri-user-shared-line"></i>
-              </div>
-              <h3>CRM Development</h3>
-              <p>CRM solutions to manage leads, sales, customer support and strengthen relationships.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> Lead Management</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Sales Pipeline</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Reports & Insights</li>
-              </ul>
-              <Link to="/service/custom-crm-development" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
-
-            {/* Card 9: Video Editing & Promotional Content */}
-            <div className="bento-card card-size-small reveal slide-up delay-300">
-              <div className="bento-top-accent accent-blue"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(59, 130, 246, 0.1)', color: 'var(--primary)' }}>
-                <i className="ri-video-chat-line"></i>
-              </div>
-              <h3>Video & Promotional Content</h3>
-              <p>Engaging videos and content that tell your brand story and drive more engagement.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> Promotional Videos</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Explainer Videos</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Social Media Reels</li>
-              </ul>
-              <Link to="/service/video-editing-promotional-content" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
-
-            {/* Card 10: MVP Development */}
-            <div className="bento-card card-size-small reveal slide-up delay-100">
-              <div className="bento-top-accent accent-green"></div>
-              <div className="bento-icon-wrap" style={{ background: 'rgba(143, 184, 74, 0.1)', color: '#8fba4a' }}>
-                <i className="ri-lightbulb-line"></i>
-              </div>
-              <h3>MVP Development</h3>
-              <p>Quick MVP development for startups to validate ideas and launch faster.</p>
-              <ul className="bento-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> Rapid Prototyping</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Feature Prioritization</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Scalable Architecture</li>
-              </ul>
-              <Link to="/service/mvp-development" className="bento-learn-btn">
-                <span>Learn More</span>
-                <i className="ri-arrow-right-line"></i>
-              </Link>
-            </div>
+            {services.map((service, index) => {
+              const styles = getBentoColors(index);
+              const cardSize = getBentoSize(index);
+              return (
+                <div key={service.slug || index} className={`bento-card ${cardSize} reveal slide-up`}>
+                  <div className={`bento-top-accent ${styles.border}`}></div>
+                  <div className="bento-icon-wrap" style={{ background: styles.bg, color: styles.text }}>
+                    <i className={service.icon || 'ri-window-line'}></i>
+                  </div>
+                  <h3>{service.title}</h3>
+                  <p>{service.intro || service.subtitle}</p>
+                  <ul className="bento-checklist">
+                    {(service.benefits && service.benefits.length > 0 ? service.benefits : service.deliverables).slice(0, 3).map((item, idx) => (
+                      <li key={idx}><i className="ri-checkbox-circle-fill"></i> {item}</li>
+                    ))}
+                  </ul>
+                  <Link to={`/service/${service.slug}`} className="bento-learn-btn">
+                    <span>Learn More</span>
+                    <i className="ri-arrow-right-line"></i>
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -535,7 +613,7 @@ const Services = () => {
               <div className="timeline-progress-line-active"></div>
             </div>
 
-            <div className="timeline-nodes-horizontal">
+            <div className="timeline-nodes-horizontal services-process-mobile-scroll" ref={servicesProcessScrollerRef}>
               <div className="timeline-node-card">
                 <div className="node-icon-circle">
                   <i className="ri-chat-voice-line"></i>
@@ -676,90 +754,33 @@ const Services = () => {
           </div>
 
           <div className="portfolio-showcase-grid">
-            {/* Project 1: Clinic Management System */}
-            <div className="portfolio-glass-card reveal slide-up delay-100">
-              <div className="portfolio-mockup-screen background-clinic">
-                <div className="window-decor-dots"><span></span><span></span><span></span></div>
-                <i className="ri-heart-pulse-line big-decor-icon"></i>
-              </div>
-              <div className="portfolio-card-desc">
-                <span className="proj-cat-pill">Web Application</span>
-                <h3>Clinic Management System</h3>
-                <p>A complete solution for managing appointments, patients and billing efficiently.</p>
-                <Link to="/portfolio" className="btn-view-project">
-                  <span>View Project</span>
-                  <i className="ri-arrow-right-line"></i>
-                </Link>
-              </div>
-            </div>
-
-            {/* Project 2: ERP System */}
-            <div className="portfolio-glass-card reveal slide-up delay-200">
-              <div className="portfolio-mockup-screen background-erp-mock">
-                <div className="window-decor-dots"><span></span><span></span><span></span></div>
-                <i className="ri-cpu-line big-decor-icon"></i>
-              </div>
-              <div className="portfolio-card-desc">
-                <span className="proj-cat-pill">Web Application</span>
-                <h3>ERP System</h3>
-                <p>Custom ERP platform to manage inventory, HR, finance and operations.</p>
-                <Link to="/portfolio" className="btn-view-project">
-                  <span>View Project</span>
-                  <i className="ri-arrow-right-line"></i>
-                </Link>
-              </div>
-            </div>
-
-            {/* Project 3: Real Estate Platform */}
-            <div className="portfolio-glass-card reveal slide-up delay-300">
-              <div className="portfolio-mockup-screen background-re">
-                <div className="window-decor-dots"><span></span><span></span><span></span></div>
-                <i className="ri-home-4-line big-decor-icon"></i>
-              </div>
-              <div className="portfolio-card-desc">
-                <span className="proj-cat-pill">Web Platform</span>
-                <h3>Real Estate Platform</h3>
-                <p>Property listing database featuring advanced search and agent controls.</p>
-                <Link to="/portfolio" className="btn-view-project">
-                  <span>View Project</span>
-                  <i className="ri-arrow-right-line"></i>
-                </Link>
-              </div>
-            </div>
-
-            {/* Project 4: E-Commerce Solution */}
-            <div className="portfolio-glass-card reveal slide-up delay-100">
-              <div className="portfolio-mockup-screen background-ecom">
-                <div className="window-decor-dots"><span></span><span></span><span></span></div>
-                <i className="ri-shopping-cart-2-line big-decor-icon"></i>
-              </div>
-              <div className="portfolio-card-desc">
-                <span className="proj-cat-pill">Web Application</span>
-                <h3>E-Commerce Solution</h3>
-                <p>Full-featured eCommerce engine equipped with secure checkouts and metrics.</p>
-                <Link to="/portfolio" className="btn-view-project">
-                  <span>View Project</span>
-                  <i className="ri-arrow-right-line"></i>
-                </Link>
-              </div>
-            </div>
-
-            {/* Project 5: Mobile Application */}
-            <div className="portfolio-glass-card reveal slide-up delay-200">
-              <div className="portfolio-mockup-screen background-mobile-mock">
-                <div className="window-decor-dots"><span></span><span></span><span></span></div>
-                <i className="ri-smartphone-line big-decor-icon"></i>
-              </div>
-              <div className="portfolio-card-desc">
-                <span className="proj-cat-pill">Mobile App</span>
-                <h3>Mobile Application</h3>
-                <p>Cross-platform mobile application providing biometric setups and unified sync.</p>
-                <Link to="/portfolio" className="btn-view-project">
-                  <span>View Project</span>
-                  <i className="ri-arrow-right-line"></i>
-                </Link>
-              </div>
-            </div>
+            {projects.map((project, index) => {
+              const bgClasses = ['background-clinic', 'background-erp-mock', 'background-re', 'background-ecom', 'background-mobile-mock'];
+              const bgClass = bgClasses[index % bgClasses.length];
+              return (
+                <div key={project.name || index} className="portfolio-glass-card reveal slide-up">
+                  <div className={`portfolio-mockup-screen ${bgClass}`}>
+                    <div className="window-decor-dots"><span></span><span></span><span></span></div>
+                    {project.image_url ? (
+                      <img src={project.image_url} alt={project.name} className="portfolio-screenshot-img" />
+                    ) : (
+                      <div className="portfolio-mockup-placeholder" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.01)', color: 'var(--text-muted)' }}>
+                        <i className={`${project.icon || 'ri-briefcase-4-line'} style-24`} style={{ fontSize: '48px' }}></i>
+                      </div>
+                    )}
+                  </div>
+                  <div className="portfolio-card-desc">
+                    <span className="proj-cat-pill">{project.tag || project.category.toUpperCase()}</span>
+                    <h3>{project.name}</h3>
+                    <p>{project.desc}</p>
+                    <Link to="/portfolio" className="btn-view-project">
+                      <span>View Project</span>
+                      <i className="ri-arrow-right-line"></i>
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

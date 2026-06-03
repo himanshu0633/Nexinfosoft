@@ -151,7 +151,7 @@ const ServiceDetail = () => {
 
               {/* CTA Buttons */}
               <div className="service-hero-btns">
-                <Link to="/free-consultation" className="btn btn-primary">
+                <Link to="/contact" className="btn btn-primary">
                   <span>Get Free Consultation</span>
                   <i className="ri-chat-smile-2-line"></i>
                 </Link>
@@ -295,7 +295,7 @@ const ServiceDetail = () => {
                   ))}
                 </ul>
 
-                <Link to="/free-consultation" className="btn btn-primary sticky-card-cta">
+                <Link to="/contact" className="btn btn-primary sticky-card-cta">
                   <span>Get Free Consultation</span>
                   <i className="ri-arrow-right-line"></i>
                 </Link>
@@ -456,7 +456,7 @@ const ServiceDetail = () => {
 
                 <div className="pricing-card-footer">
                   <Link 
-                    to="/free-consultation" 
+                    to="/contact" 
                     className={`btn ${plan.recommended ? 'btn-primary' : 'btn-secondary'} pricing-cta-btn`}
                   >
                     <span>Get Started Now</span>
@@ -536,7 +536,7 @@ const ServiceDetail = () => {
                 </p>
 
                 <div className="final-cta-buttons">
-                  <Link to="/free-consultation" className="btn btn-primary">
+                  <Link to="/contact" className="btn btn-primary">
                     <span>Get Free Consultation</span>
                     <i className="ri-chat-smile-3-line"></i>
                   </Link>

@@ -42,7 +42,7 @@ const AnimatedCounter = ({ target, suffix }) => {
   );
 };
 
-const Stats = () => {
+const Stats = ({ previewData = null }) => {
   const [data, setData] = useState({
     metadata: {
       counters: [
@@ -55,6 +55,11 @@ const Stats = () => {
   });
 
   useEffect(() => {
+    if (previewData) {
+      setData(previewData);
+      return;
+    }
+
     const fetchStatsContent = async () => {
       try {
         const res = await fetch('/api/content/stats');
@@ -67,7 +72,7 @@ const Stats = () => {
       }
     };
     fetchStatsContent();
-  }, []);
+  }, [previewData]);
 
   return (
     <section className="stats">

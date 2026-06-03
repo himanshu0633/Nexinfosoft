@@ -69,15 +69,19 @@ const StarRating = ({ rating }) => {
 const TechStack = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('frontend');
+  const [data, setData] = useState(techStackData);
 
   // Refs for tilt parallax
   const heroIllustrationRef = useRef(null);
   const ctaIllustrationRef = useRef(null);
+  const stackSelectionScrollerRef = useRef(null);
+  const techProjectsScrollerRef = useRef(null);
+  const techMattersScrollerRef = useRef(null);
 
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['frontend', 'backend', 'mobile', 'database', 'cloud', 'ai'].includes(tab)) {
-      setActiveTab(tab);
+    if (tab) {
+      setActiveTab(tab.toLowerCase());
     }
   }, [searchParams]);
 
@@ -86,6 +90,225 @@ const TechStack = () => {
     revealElements.forEach(el => el.classList.add('active'));
     window.scrollTo(0, 0);
   }, [activeTab]);
+
+  useEffect(() => {
+    const fetchDynamicTechStack = async () => {
+      try {
+        const res = await fetch('/api/techstack');
+        if (res.ok) {
+          const dbItems = await res.json();
+          if (dbItems && dbItems.length > 0) {
+            // Clone default fallback
+            const base = JSON.parse(JSON.stringify(techStackData));
+            
+            // Build grouped mapping dynamically
+            const grouped = {};
+            
+            // Initialize with empty arrays for standard categories
+            const standardCats = ['frontend', 'backend', 'mobile', 'database', 'cloud', 'ai'];
+            standardCats.forEach(cat => {
+              grouped[cat] = [];
+            });
+
+            dbItems.forEach(item => {
+              const cat = item.category.toLowerCase().trim();
+              if (!grouped[cat]) {
+                grouped[cat] = [];
+              }
+              grouped[cat].push({
+                name: item.name,
+                icon: item.icon,
+                desc: item.desc,
+                color: item.color,
+                ...(item.metadata || {})
+              });
+            });
+
+            Object.keys(grouped).forEach(cat => {
+              if (grouped[cat].length > 0) {
+                if (!base.categories[cat]) {
+                  // Custom dynamic category header setup
+                  const formattedName = cat.charAt(0).toUpperCase() + cat.slice(1);
+                  base.categories[cat] = {
+                    title: `${formattedName} Solutions`,
+                    desc: `Explore our advanced ${cat} technologies and enterprise tools catalog.`,
+                    tag: `${cat.toUpperCase()} TECHNOLOGIES`,
+                    items: []
+                  };
+                }
+                base.categories[cat].items = grouped[cat];
+              }
+            });
+
+            setData(base);
+          }
+        }
+      } catch (err) {
+        // Fallback active
+      }
+    };
+
+    fetchDynamicTechStack();
+  }, []);
+
+  useEffect(() => {
+    const scroller = stackSelectionScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.tech-process-node-card');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const scroller = techProjectsScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.tech-project-showcase-card');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const scroller = techMattersScrollerRef.current;
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    let intervalId;
+    let resumeTimer;
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalId);
+      clearTimeout(resumeTimer);
+    };
+
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      if (!scroller || !mobileQuery.matches) return;
+
+      intervalId = setInterval(() => {
+        const firstItem = scroller.querySelector('.why-glass-card');
+        if (!firstItem) return;
+
+        const cardWidth = firstItem.getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const nextLeft = scroller.scrollLeft + cardWidth + gap;
+
+        scroller.scrollTo({
+          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+          behavior: 'smooth'
+        });
+      }, 1000);
+    };
+
+    const pauseThenResume = () => {
+      stopAutoScroll();
+      resumeTimer = setTimeout(startAutoScroll, 2200);
+    };
+
+    startAutoScroll();
+
+    if (scroller) {
+      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
+    }
+
+    mobileQuery.addEventListener('change', startAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      mobileQuery.removeEventListener('change', startAutoScroll);
+      if (scroller) {
+        scroller.removeEventListener('touchstart', pauseThenResume);
+      }
+    };
+  }, []);
 
   // Parallax mouse tilt handler
   const handleMouseMove = (event, element, intensity = 6) => {
@@ -130,7 +353,7 @@ const TechStack = () => {
                   <span>Explore Technologies</span>
                   <i className="ri-arrow-down-line"></i>
                 </a>
-                <Link to="/free-consultation" className="btn btn-secondary">
+                <Link to="/contact" className="btn btn-secondary">
                   <span>Book Consultation</span>
                   <i className="ri-calendar-event-line"></i>
                 </Link>
@@ -219,147 +442,50 @@ const TechStack = () => {
         <div className="container">
           <div className="tech-split-container">
             {/* Left Sidebar Menu */}
+            {/* Left Sidebar Menu */}
             <aside className="tech-sidebar reveal slide-left">
               <div className="tech-sidebar-sticky">
                 <span className="sidebar-title-tag">CATEGORIES</span>
                 <nav className="tech-sidebar-nav">
-                  <button 
-                    className={`sidebar-nav-btn ${activeTab === 'frontend' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('frontend')}
-                  >
-                    <i className="ri-layout-4-line"></i>
-                    <span>Frontend</span>
-                  </button>
-                  <button 
-                    className={`sidebar-nav-btn ${activeTab === 'backend' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('backend')}
-                  >
-                    <i className="ri-server-line"></i>
-                    <span>Backend</span>
-                  </button>
-                  <button 
-                    className={`sidebar-nav-btn ${activeTab === 'mobile' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('mobile')}
-                  >
-                    <i className="ri-smartphone-line"></i>
-                    <span>Mobile</span>
-                  </button>
-                  <button 
-                    className={`sidebar-nav-btn ${activeTab === 'database' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('database')}
-                  >
-                    <i className="ri-database-2-line"></i>
-                    <span>Database</span>
-                  </button>
-                  <button 
-                    className={`sidebar-nav-btn ${activeTab === 'cloud' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('cloud')}
-                  >
-                    <i className="ri-cloud-line"></i>
-                    <span>Cloud & DevOps</span>
-                  </button>
-                  <button 
-                    className={`sidebar-nav-btn ${activeTab === 'ai' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('ai')}
-                  >
-                    <i className="ri-brain-line"></i>
-                    <span>AI & Analytics</span>
-                  </button>
+                  {Object.keys(data.categories).map((catKey) => {
+                    const cat = data.categories[catKey];
+                    // Map default categories to their specific icons, or fall back to code icon
+                    const categoryIcons = {
+                      frontend: 'ri-layout-4-line',
+                      backend: 'ri-server-line',
+                      mobile: 'ri-smartphone-line',
+                      database: 'ri-database-2-line',
+                      cloud: 'ri-cloud-line',
+                      ai: 'ri-brain-line'
+                    };
+                    const iconClass = categoryIcons[catKey] || 'ri-shield-flash-line';
+                    const label = catKey.charAt(0).toUpperCase() + catKey.slice(1);
+                    return (
+                      <button 
+                        key={catKey}
+                        className={`sidebar-nav-btn ${activeTab === catKey ? 'active' : ''}`}
+                        onClick={() => setActiveTab(catKey)}
+                      >
+                        <i className={iconClass}></i>
+                        <span>{catKey === 'ai' ? 'AI & Analytics' : catKey === 'cloud' ? 'Cloud & DevOps' : label}</span>
+                      </button>
+                    );
+                  })}
                 </nav>
               </div>
             </aside>
 
             {/* Right Side Content (Dynamic Panels) */}
             <main className="tech-content-area reveal slide-right delay-100">
-              {/* Frontend Technologies Dynamic View */}
-              {activeTab === 'frontend' && (
+              {/* Specialized Mobile View */}
+              {activeTab === 'mobile' && data.categories.mobile && (
                 <div className="tech-panel-content">
-                  <span className="section-tag-premium">{techStackData.categories.frontend.tag}</span>
-                  <h2 className="tech-panel-heading">{techStackData.categories.frontend.title}</h2>
-                  <p className="tech-panel-desc">{techStackData.categories.frontend.desc}</p>
-
-                  <div className="tech-cards-grid">
-                    {techStackData.categories.frontend.items.map((tech, idx) => (
-                      <div key={idx} className="tech-detailed-card">
-                        <div className="tech-card-head">
-                          <div className="tech-icon-wrap" style={{ background: tech.color }}>
-                            <i className={tech.icon}></i>
-                          </div>
-                          <h3>{tech.name}</h3>
-                        </div>
-                        <p className="tech-card-desc">{tech.desc}</p>
-                        
-                        <div className="tech-card-meta">
-                          <div className="meta-row">
-                            <strong>Best For:</strong>
-                            <span>{tech.bestFor}</span>
-                          </div>
-                          <div className="meta-row">
-                            <strong>Projects:</strong>
-                            <span>{tech.projects}</span>
-                          </div>
-                          <div className="meta-row performance-row">
-                            <strong>Performance:</strong>
-                            <div className="perf-bar-outer">
-                              <div className="perf-bar-inner" style={{ width: tech.performance }}></div>
-                            </div>
-                            <span className="perf-number">{tech.performance}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-               
-                </div>
-              )}
-
-              {/* Backend Technologies Dynamic View */}
-              {activeTab === 'backend' && (
-                <div className="tech-panel-content">
-                  <span className="section-tag-premium">{techStackData.categories.backend.tag}</span>
-                  <h2 className="tech-panel-heading">{techStackData.categories.backend.title}</h2>
-                  <p className="tech-panel-desc">{techStackData.categories.backend.desc}</p>
-
-                  <div className="tech-cards-grid">
-                    {techStackData.categories.backend.items.map((tech, idx) => (
-                      <div key={idx} className="tech-detailed-card">
-                        <div className="tech-card-head">
-                          <div className="tech-icon-wrap" style={{ background: tech.color }}>
-                            <i className={tech.icon}></i>
-                          </div>
-                          <h3>{tech.name}</h3>
-                        </div>
-                        <p className="tech-card-desc">{tech.desc}</p>
-                        
-                        <div className="tech-card-meta">
-                          <div className="meta-row">
-                            <strong>API Performance:</strong>
-                            <span>{tech.apiPerf}</span>
-                          </div>
-                          <div className="meta-row">
-                            <strong>Scalability:</strong>
-                            <span>{tech.scalability}</span>
-                          </div>
-                          <div className="meta-row">
-                            <strong>Enterprise Readiness:</strong>
-                            <span>{tech.enterpriseReady}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Mobile Technologies Dynamic View */}
-              {activeTab === 'mobile' && (
-                <div className="tech-panel-content">
-                  <span className="section-tag-premium">{techStackData.categories.mobile.tag}</span>
-                  <h2 className="tech-panel-heading">{techStackData.categories.mobile.title}</h2>
-                  <p className="tech-panel-desc">{techStackData.categories.mobile.desc}</p>
+                  <span className="section-tag-premium">{data.categories.mobile.tag}</span>
+                  <h2 className="tech-panel-heading">{data.categories.mobile.title}</h2>
+                  <p className="tech-panel-desc">{data.categories.mobile.desc}</p>
 
                   <div className="tech-comparison-stack">
-                    {techStackData.categories.mobile.items.map((tech, idx) => (
+                    {data.categories.mobile.items.map((tech, idx) => (
                       <div key={idx} className="tech-mobile-comparison-card">
                         <div className="mobile-comp-left">
                           <div className="tech-icon-wrap">
@@ -371,22 +497,22 @@ const TechStack = () => {
                         <div className="mobile-comp-right">
                           <div className="comp-meta-item">
                             <strong>Pros:</strong>
-                            <p>{tech.pros}</p>
+                            <p>{tech.pros || 'Fast development, shared codebases.'}</p>
                           </div>
                           <div className="comp-meta-item">
                             <strong>Best Use Cases:</strong>
-                            <p>{tech.useCases}</p>
+                            <p>{tech.useCases || 'Startup apps, SaaS products.'}</p>
                           </div>
                           <div className="comp-meta-row-split">
                             <div className="comp-split-field">
                               <strong>Speed Rating:</strong>
                               <div className="perf-bar-outer">
-                                <div className="perf-bar-inner" style={{ width: tech.speed }}></div>
+                                <div className="perf-bar-inner" style={{ width: tech.speed || '90%' }}></div>
                               </div>
                             </div>
                             <div className="comp-split-field">
                               <strong>Maintenance:</strong>
-                              <span className="maintenance-level-badge">{tech.maintenance}</span>
+                              <span className="maintenance-level-badge">{tech.maintenance || 'Low Cost'}</span>
                             </div>
                           </div>
                         </div>
@@ -396,54 +522,12 @@ const TechStack = () => {
                 </div>
               )}
 
-              {/* Database Technologies Dynamic View */}
-              {activeTab === 'database' && (
+              {/* Specialized Cloud View */}
+              {activeTab === 'cloud' && data.categories.cloud && (
                 <div className="tech-panel-content">
-                  <span className="section-tag-premium">{techStackData.categories.database.tag}</span>
-                  <h2 className="tech-panel-heading">{techStackData.categories.database.title}</h2>
-                  <p className="tech-panel-desc">{techStackData.categories.database.desc}</p>
-
-                  <div className="tech-cards-grid">
-                    {techStackData.categories.database.items.map((tech, idx) => (
-                      <div key={idx} className="tech-detailed-card">
-                        <div className="tech-card-head">
-                          <div className="tech-icon-wrap">
-                            <i className={tech.icon}></i>
-                          </div>
-                          <h3>{tech.name}</h3>
-                        </div>
-                        <p className="tech-card-desc">{tech.desc}</p>
-                        
-                        <div className="tech-card-meta">
-                          <div className="meta-row">
-                            <strong>Best For:</strong>
-                            <span>{tech.bestFor}</span>
-                          </div>
-                          <div className="meta-row">
-                            <strong>Performance:</strong>
-                            <span>{tech.performance}</span>
-                          </div>
-                          <div className="meta-row">
-                            <strong>Scalability:</strong>
-                            <span>{tech.scalability}</span>
-                          </div>
-                          <div className="meta-row">
-                            <strong>Use Cases:</strong>
-                            <span>{tech.useCases}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Cloud & DevOps Technologies Dynamic View */}
-              {activeTab === 'cloud' && (
-                <div className="tech-panel-content">
-                  <span className="section-tag-premium">{techStackData.categories.cloud.tag}</span>
-                  <h2 className="tech-panel-heading">{techStackData.categories.cloud.title}</h2>
-                  <p className="tech-panel-desc">{techStackData.categories.cloud.desc}</p>
+                  <span className="section-tag-premium">{data.categories.cloud.tag}</span>
+                  <h2 className="tech-panel-heading">{data.categories.cloud.title}</h2>
+                  <p className="tech-panel-desc">{data.categories.cloud.desc}</p>
 
                   {/* Cloud Architecture Diagram Showcase */}
                   <div className="cloud-architecture-wrapper">
@@ -490,11 +574,11 @@ const TechStack = () => {
                   </div>
 
                   <div className="tech-cards-grid mt-4">
-                    {techStackData.categories.cloud.items.map((tech, idx) => (
+                    {data.categories.cloud.items.map((tech, idx) => (
                       <div key={idx} className="tech-detailed-card">
                         <div className="tech-card-head">
-                          <div className="tech-icon-wrap">
-                            <i className={tech.icon}></i>
+                          <div className="tech-icon-wrap" style={{ background: tech.color || 'rgba(255, 255, 255, 0.05)' }}>
+                            <i className={tech.icon || 'ri-cloud-line'}></i>
                           </div>
                           <h3>{tech.name}</h3>
                         </div>
@@ -505,52 +589,41 @@ const TechStack = () => {
                 </div>
               )}
 
-              {/* AI & Analytics Technologies Dynamic View */}
-              {activeTab === 'ai' && (
+              {/* Standard Dynamic Tab View (Frontend, Backend, Database, AI, & any Custom category) */}
+              {!['mobile', 'cloud'].includes(activeTab) && data.categories[activeTab] && (
                 <div className="tech-panel-content">
-                  <span className="section-tag-premium">{techStackData.categories.ai.tag}</span>
-                  <h2 className="tech-panel-heading">{techStackData.categories.ai.title}</h2>
-                  <p className="tech-panel-desc">{techStackData.categories.ai.desc}</p>
+                  <span className="section-tag-premium">{data.categories[activeTab].tag}</span>
+                  <h2 className="tech-panel-heading">{data.categories[activeTab].title}</h2>
+                  <p className="tech-panel-desc">{data.categories[activeTab].desc}</p>
 
-                  {/* Dashboard visualization SVGs */}
-                  <div className="ai-visualizations-grid">
-                    <div className="ai-vis-card">
-                      <span>Generative AI System Health</span>
-                      <div className="vis-gauge-container">
-                        <svg viewBox="0 0 100 50" width="100%" height="80">
-                          <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(15, 23, 42, 0.05)" strokeWidth="8" strokeLinecap="round" />
-                          <path d="M 10 50 A 40 40 0 0 1 82 22" fill="none" stroke="var(--accent)" strokeWidth="8" strokeLinecap="round" strokeDasharray="100" strokeDashoffset="20" />
-                        </svg>
-                        <strong className="vis-percentage">92% Optimal</strong>
-                      </div>
-                    </div>
-                    <div className="ai-vis-card">
-                      <span>Neural Predictive Training Logs</span>
-                      <div className="vis-charts-container">
-                        <svg viewBox="0 0 160 50" width="100%" height="80">
-                          <path d="M 0 45 Q 20 15, 40 35 T 80 10 T 120 30 T 160 5" fill="none" stroke="var(--accent)" strokeWidth="3" />
-                          <path d="M 0 45 Q 20 15, 40 35 T 80 10 T 120 30 T 160 5 L 160 50 L 0 50 Z" fill="url(#ai-grad)" opacity="0.08" />
-                          <defs>
-                            <linearGradient id="ai-grad" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stopColor="var(--accent)" />
-                              <stop offset="100%" stopColor="transparent" />
-                            </linearGradient>
-                          </defs>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="tech-cards-grid mt-4">
-                    {techStackData.categories.ai.items.map((tech, idx) => (
+                  <div className="tech-cards-grid">
+                    {data.categories[activeTab].items.map((tech, idx) => (
                       <div key={idx} className="tech-detailed-card">
                         <div className="tech-card-head">
-                          <div className="tech-icon-wrap">
-                            <i className={tech.icon}></i>
+                          <div className="tech-icon-wrap" style={{ background: tech.color || 'rgba(255, 255, 255, 0.05)' }}>
+                            <i className={tech.icon || 'ri-code-s-slash-line'}></i>
                           </div>
                           <h3>{tech.name}</h3>
                         </div>
                         <p className="tech-card-desc">{tech.desc}</p>
+                        
+                        <div className="tech-card-meta">
+                          <div className="meta-row">
+                            <strong>Best For:</strong>
+                            <span>{tech.bestFor || 'Custom Solutions'}</span>
+                          </div>
+                          <div className="meta-row">
+                            <strong>Projects:</strong>
+                            <span>{tech.projects || 'Enterprise Apps'}</span>
+                          </div>
+                          <div className="meta-row performance-row">
+                            <strong>Performance:</strong>
+                            <div className="perf-bar-outer">
+                              <div className="perf-bar-inner" style={{ width: tech.performance || '95%' }}></div>
+                            </div>
+                            <span className="perf-number">{tech.performance || '95%'}</span>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -579,8 +652,8 @@ const TechStack = () => {
           <div className="tech-process-timeline-wrap reveal slide-up">
             <div className="timeline-connector-line"></div>
             
-            <div className="timeline-process-grid">
-              {techStackData.selectionProcess.map((item, idx) => (
+            <div ref={stackSelectionScrollerRef} className="timeline-process-grid stack-selection-grid-mobile">
+              {data.selectionProcess.map((item, idx) => (
                 <div key={idx} className="tech-process-node-card">
                   <div className="node-icon-circle-wrap">
                     <div className="node-badge-outer">
@@ -626,7 +699,7 @@ const TechStack = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {techStackData.comparisonTable.map((row, idx) => (
+                  {data.comparisonTable.map((row, idx) => (
                     <tr key={idx}>
                       <td className="tech-td-bold">
                         <span>{row.tech}</span>
@@ -653,7 +726,7 @@ const TechStack = () => {
                 <li><i className="ri-checkbox-circle-fill"></i> Budget Friendly</li>
               </ul>
 
-              <Link to="/free-consultation" className="btn btn-primary sticky-comparison-cta">
+              <Link to="/contact" className="btn btn-primary sticky-comparison-cta">
                 <span>Get Free Consultation</span>
                 <i className="ri-chat-smile-2-line"></i>
               </Link>
@@ -677,8 +750,8 @@ const TechStack = () => {
             </p>
           </div>
 
-          <div className="tech-projects-grid">
-            {techStackData.projectsBuilt.map((proj, idx) => (
+          <div ref={techProjectsScrollerRef} className="tech-projects-grid">
+            {data.projectsBuilt.map((proj, idx) => (
               <div key={idx} className="tech-project-showcase-card reveal slide-up" style={{ '--delay': `${idx * 100}ms` }}>
                 <div className="proj-card-icon-banner">
                   <i className="ri-window-line"></i>
@@ -721,8 +794,8 @@ const TechStack = () => {
             </p>
           </div>
 
-          <div className="why-choose-glass-grid">
-            {techStackData.whyTechnologyMatters.map((item, idx) => (
+          <div ref={techMattersScrollerRef} className="why-choose-glass-grid tech-matters-grid">
+            {data.whyTechnologyMatters.map((item, idx) => (
               <div key={idx} className="why-glass-card reveal slide-up" style={{ '--delay': `${idx * 80}ms` }}>
                 <div className="why-icon-badge">
                   <i className={item.icon}></i>
@@ -754,7 +827,7 @@ const TechStack = () => {
                 </p>
 
                 <div className="final-cta-buttons">
-                  <Link to="/free-consultation" className="btn btn-primary">
+                  <Link to="/contact" className="btn btn-primary">
                     <span>Get Free Consultation</span>
                     <i className="ri-chat-smile-3-line"></i>
                   </Link>

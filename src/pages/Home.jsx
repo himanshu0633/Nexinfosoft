@@ -8,7 +8,6 @@ import Technologies from '../components/home/Technologies';
 import Industries from '../components/home/Industries';
 import Process from '../components/home/Process';
 import PortfolioPreview from '../components/home/PortfolioPreview';
-import FinalCTA from '../components/home/FinalCTA';
 
 const Home = () => {
   useEffect(() => {
@@ -21,15 +20,14 @@ const Home = () => {
   return (
     <>
       <Hero />
-      {/* <Stats /> */}
+
       <CoreServices />
       <WhyChooseUs />
-      <CoreCapabilities />
+    
       <Technologies />
       <Industries />
       <Process />
       <PortfolioPreview />
-      <FinalCTA />
     </>
   );
 };

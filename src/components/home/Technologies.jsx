@@ -154,6 +154,7 @@ const Technologies = () => {
               ))}
             </div>
           </div>
+
         </div>
       </div>
     </section>
