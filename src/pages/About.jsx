@@ -60,6 +60,128 @@ const About = () => {
   const deliveryStrengthsScrollerRef = useRef(null);
   const lifecycleScrollerRef = useRef(null);
 
+  const cardStyles = [
+    { borderClass: '', bg: 'rgba(20, 184, 166, 0.1)', color: 'var(--accent)' },
+    { borderClass: 'border-purple', bg: 'rgba(139, 92, 246, 0.1)', color: 'var(--secondary)' },
+    { borderClass: 'border-blue', bg: 'rgba(59, 130, 246, 0.1)', color: 'var(--primary)' },
+    { borderClass: 'border-green', bg: 'rgba(143, 184, 74, 0.1)', color: '#8fba4a' },
+    { borderClass: 'border-yellow', bg: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' },
+    { borderClass: 'border-pink', bg: 'rgba(236, 72, 153, 0.1)', color: '#ec4899' }
+  ];
+
+  const valueStyles = [
+    { glowClass: '', bg: 'rgba(20, 184, 166, 0.1)', color: 'var(--accent)' },
+    { glowClass: 'glowing-purple', bg: 'rgba(139, 92, 246, 0.1)', color: 'var(--secondary)' },
+    { glowClass: 'glowing-blue', bg: 'rgba(59, 130, 246, 0.1)', color: 'var(--primary)' }
+  ];
+
+  // Dynamic states with fallback defaults
+  const [hero, setHero] = useState({
+    title: 'Empowering Businesses Through Technology',
+    subtitle: 'ABOUT NEXINFOSOFT',
+    description: 'We build enterprise-grade software architectures, premium web systems, and custom workflow automations designed to scale operations and unlock new market values.'
+  });
+
+  const [overview, setOverview] = useState({
+    title: 'A Modern Technological Solutions Agency Built on Predictability',
+    subtitle: 'COMPANY OVERVIEW',
+    description: 'Nexinfosoft IT Solutions provides enterprise-grade technology services for organizations that require clear documentation, structured execution, and measurable outcomes. We support business and government teams with custom software development, mobile application deployment, ERP solutions, and digital transformation. Our approach merges agile developmental practices with rigorous quality assurance checks, ensuring your business platforms scale smoothly across critical performance spikes.',
+    metadata: {
+      stats: [
+        { label: 'Years Experience', value: '10+' },
+        { label: 'Projects Completed', value: '300+' },
+        { label: 'Happy Clients', value: '250+' },
+        { label: 'Experts In-house', value: '50+' }
+      ]
+    }
+  });
+
+  const [partner, setPartner] = useState({
+    title: 'A Unified Platform Built For Scaling Technology Assets',
+    subtitle: 'SOFTWARE DEVELOPMENT PARTNER',
+    description: 'We design and program customized digital ecosystems that streamline core business processes. Over the years, we have emerged as a trusted technology engineering partner.',
+    metadata: {
+      checklist: ['Web Apps', 'Mobile Apps', 'ERP Systems', 'Cloud Solutions', 'AI Automation']
+    }
+  });
+
+  const [why, setWhy] = useState({
+    title: 'Why Organizations Partner With Nexinfosoft',
+    subtitle: 'DELIVERY STRENGTHS',
+    description: 'Our delivery framework prioritizes structural predictability, complete security pipelines, and direct transparency.',
+    metadata: {
+      cards: [
+        { title: 'Agile Methodology', text: 'Continuous progress tracking, bi-weekly milestone evaluations, and flexible feature adjustments.', icon: 'ri-loop-left-line' },
+        { title: 'Sprint Delivery', text: 'Predictable deliverables every sprint, enabling complete validation and incremental product growth.', icon: 'ri-calendar-check-line' },
+        { title: 'Dedicated Team', text: 'Dedicated full-stack software engineers, QA technicians, and scrum leads assigned exclusively to your target scope.', icon: 'ri-team-line' },
+        { title: 'Deployment Support', text: 'Production infrastructure provisioning, CI/CD pipeline automation, and post-deployment handover documents.', icon: 'ri-rocket-line' },
+        { title: 'QA & Testing', text: 'Comprehensive unit, integration, and security checks covering every code deployment prior to delivery.', icon: 'ri-shield-check-line' },
+        { title: 'Reporting & Metrics', text: 'Weekly project updates, active velocity tracking reports, and total budget burn transparency dashboards.', icon: 'ri-bar-chart-grouped-line' }
+      ]
+    }
+  });
+
+  const [lifecycle, setLifecycle] = useState({
+    title: 'Structured Project Lifecycle',
+    subtitle: 'DEVELOPMENT PROCESS',
+    description: 'Our structured path maps out product design and system engineering milestones to maximize predictability.',
+    metadata: {
+      steps: [
+        { number: '1', title: 'Discovery', text: 'Stakeholder interviews, requirements extraction, and scope alignment.', icon: 'ri-search-line' },
+        { number: '2', title: 'Planning', text: 'Architectural drafting, technology selections, and SRS documentation.', icon: 'ri-file-list-3-line' },
+        { number: '3', title: 'UI/UX', text: 'Interactive wireframes, layout patterns, and brand designs.', icon: 'ri-palette-line' },
+        { number: '4', title: 'Development', text: 'Modular agile coding cycles, peer code audits, and sprint review demos.', icon: 'ri-code-box-line' },
+        { number: '5', title: 'Testing', text: 'Comprehensive functional verification, load tests, and security hardening.', icon: 'ri-shield-flash-line' },
+        { number: '6', title: 'Deployment', text: 'Automated server setup, CI/CD pipeline pushes, and system run logs.', icon: 'ri-ship-line' },
+        { number: '7', title: 'Support', text: 'System monitoring, standard upgrades, and post-delivery SLA desk.', icon: 'ri-customer-service-2-line' }
+      ]
+    }
+  });
+
+  const [qa, setQa] = useState({
+    title: 'Verification And Quality Assurance Framework',
+    subtitle: 'QUALITY CONTROL',
+    description: 'Every software build undergoes rigorous, automated and manual checks to ensure complete system performance and absolute security.',
+    metadata: {
+      cards: [
+        { title: 'Unit Testing', text: 'Validation of separate micro-modules to eliminate regression vulnerabilities.', icon: 'ri-checkbox-circle-line' },
+        { title: 'Integration Testing', text: 'Validation of system pipelines, API nodes, and database connections.', icon: 'ri-checkbox-circle-line' },
+        { title: 'Security Testing', text: 'Continuous secure code scans, threat checks, and vulnerability resolution.', icon: 'ri-checkbox-circle-line' },
+        { title: 'Performance Testing', text: 'Stress evaluations under simulated client traffic peaks to optimize latency.', icon: 'ri-checkbox-circle-line' },
+        { title: 'UAT (User Acceptance)', text: 'Collaborative beta rounds, client review sessions, and system sign-off.', icon: 'ri-checkbox-circle-line' }
+      ]
+    }
+  });
+
+  const [valuesSec, setValuesSec] = useState({
+    title: 'The Foundation Behind Every Line of Code',
+    subtitle: 'OUR VALUES',
+    description: 'Our decisions and structural engineering plans are driven by professional principles to ensure client success.',
+    metadata: {
+      cards: [
+        { title: 'Integrity', text: 'We commit to absolute intellectual property ownership, detailed contracts, and complete developmental transparency.', icon: 'ri-shield-keyhole-line' },
+        { title: 'Innovation', text: 'We consistently inject modern tools, cloud structures, and AI workflows to maximize product shelf life.', icon: 'ri-lightbulb-line' },
+        { title: 'Customer Success', text: 'Direct communication paths with scrum managers, weekly status presentations, and standard operations handover checklists.', icon: 'ri-user-heart-line' }
+      ]
+    }
+  });
+
+  const [achievementsSec, setAchievementsSec] = useState({
+    metadata: {
+      stats: [
+        { label: 'Projects Delivered', value: '100+' },
+        { label: 'International Clients', value: '50+' },
+        { label: 'Active Support Desk', value: '24/7' },
+        { label: 'Code Ownership', value: '100%' }
+      ]
+    }
+  });
+
+  const [ctaSec, setCtaSec] = useState({
+    title: 'Let\'s Build Something Amazing Together',
+    description: 'Discuss your technical layout, database design, or core system flow with a senior solutions architect today.'
+  });
+
   // Parallax Tilt Effects
   const handleMouseMove = (event, element, intensity = 8) => {
     if (!element) return;
@@ -82,6 +204,32 @@ const About = () => {
     const revealElements = document.querySelectorAll('.reveal');
     revealElements.forEach(el => el.classList.add('active'));
     window.scrollTo(0, 0);
+
+    // Fetch About Page content from backend Mongoose DB
+    const fetchAboutData = async () => {
+      const ids = ['about_hero', 'about_overview', 'about_partner', 'about_why', 'about_lifecycle', 'about_qa', 'about_values', 'about_achievements', 'about_cta'];
+      try {
+        const entries = await Promise.all(ids.map(async (id) => {
+          const res = await fetch(`/api/content/${id}`);
+          if (!res.ok) return null;
+          const data = await res.json();
+          return [id, data];
+        }));
+        const dataMap = Object.fromEntries(entries.filter(Boolean));
+        if (dataMap.about_hero) setHero(dataMap.about_hero);
+        if (dataMap.about_overview) setOverview(dataMap.about_overview);
+        if (dataMap.about_partner) setPartner(dataMap.about_partner);
+        if (dataMap.about_why) setWhy(dataMap.about_why);
+        if (dataMap.about_lifecycle) setLifecycle(dataMap.about_lifecycle);
+        if (dataMap.about_qa) setQa(dataMap.about_qa);
+        if (dataMap.about_values) setValuesSec(dataMap.about_values);
+        if (dataMap.about_achievements) setAchievementsSec(dataMap.about_achievements);
+        if (dataMap.about_cta) setCtaSec(dataMap.about_cta);
+      } catch (err) {
+        // Fallbacks are already configured in state
+      }
+    };
+    fetchAboutData();
   }, []);
 
   useEffect(() => {
@@ -221,20 +369,10 @@ const About = () => {
         <div className="container">
           <div className="about-hero-grid">
             <div className="about-hero-left reveal slide-left">
-              <span className="section-tag-premium">ABOUT NEXINFOSOFT</span>
-              <h1 className="hero-title-premium">
-                Empowering Businesses <br />
-                <span className="gradient-text-accent">Through Technology</span>
-              </h1>
-              <p className="hero-desc-premium">
-                We build enterprise-grade software architectures, premium web systems, and custom workflow automations designed to scale operations and unlock new market values.
-              </p>
+              <span className="section-tag-premium">{hero.subtitle}</span>
+              <h1 className="hero-title-premium">{hero.title}</h1>
+              <p className="hero-desc-premium">{hero.description}</p>
               <div className="hero-cta-btns">
-                 {/* <a href="#contact-methods" className="btn btn-secondary">
-                  <span>Book Free Consultation</span>
-               </a> */}
-                
-           
                 <Link to="/services" className="btn btn-secondary">
                   <span>View Services</span>
                 </Link>
@@ -330,63 +468,34 @@ const About = () => {
         <div className="container">
           <div className="about-overview-grid">
             <div className="about-overview-left reveal slide-left">
-              <span className="section-tag-premium">COMPANY OVERVIEW</span>
-              <h2 className="section-title-premium">
-                A Modern Technological Solutions Agency Built on Predictability
-              </h2>
-              <p className="overview-desc-premium">
-                Nexinfosoft IT Solutions provides enterprise-grade technology services for organizations that require clear documentation, structured execution, and measurable outcomes. We support business and government teams with custom software development, mobile application deployment, ERP solutions, and digital transformation.
-              </p>
-              <p className="overview-desc-premium">
-                Our approach merges agile developmental practices with rigorous quality assurance checks, ensuring your business platforms scale smoothly across critical performance spikes.
-              </p>
+              <span className="section-tag-premium">{overview.subtitle}</span>
+              <h2 className="section-title-premium">{overview.title}</h2>
+              <p className="overview-desc-premium">{overview.description}</p>
             </div>
 
             <div className="about-overview-right reveal slide-right delay-200">
               <div className="stats-glass-grid">
-                <div className="glass-stat-card">
-                  <div className="card-top-accent"></div>
-                  <div className="stat-icon-wrapper" style={{ background: 'rgba(20, 184, 166, 0.12)', color: 'var(--accent)' }}>
-                    <i className="ri-calendar-todo-line"></i>
-                  </div>
-                  <h3>
-                    <AnimatedCounter value="10+" />
-                  </h3>
-                  <p>Years Experience</p>
-                </div>
-
-                <div className="glass-stat-card">
-                  <div className="card-top-accent accent-purple"></div>
-                  <div className="stat-icon-wrapper" style={{ background: 'rgba(139, 92, 246, 0.12)', color: 'var(--secondary)' }}>
-                    <i className="ri-code-box-line"></i>
-                  </div>
-                  <h3>
-                    <AnimatedCounter value="300+" />
-                  </h3>
-                  <p>Projects Completed</p>
-                </div>
-
-                <div className="glass-stat-card">
-                  <div className="card-top-accent accent-blue"></div>
-                  <div className="stat-icon-wrapper" style={{ background: 'rgba(59, 130, 246, 0.12)', color: 'var(--primary)' }}>
-                    <i className="ri-user-smile-line"></i>
-                  </div>
-                  <h3>
-                    <AnimatedCounter value="250+" />
-                  </h3>
-                  <p>Happy Clients</p>
-                </div>
-
-                <div className="glass-stat-card">
-                  <div className="card-top-accent accent-green"></div>
-                  <div className="stat-icon-wrapper" style={{ background: 'rgba(143, 184, 74, 0.12)', color: '#8fba4a' }}>
-                    <i className="ri-team-line"></i>
-                  </div>
-                  <h3>
-                    <AnimatedCounter value="50+" />
-                  </h3>
-                  <p>Experts In-house</p>
-                </div>
+                {(overview.metadata?.stats || []).map((stat, idx) => {
+                  const colors = [
+                    { border: '', bg: 'rgba(20, 184, 166, 0.12)', text: 'var(--accent)', icon: 'ri-calendar-todo-line' },
+                    { border: 'accent-purple', bg: 'rgba(139, 92, 246, 0.12)', text: 'var(--secondary)', icon: 'ri-code-box-line' },
+                    { border: 'accent-blue', bg: 'rgba(59, 130, 246, 0.12)', text: 'var(--primary)', icon: 'ri-user-smile-line' },
+                    { border: 'accent-green', bg: 'rgba(143, 184, 74, 0.12)', text: '#8fba4a', icon: 'ri-team-line' }
+                  ];
+                  const style = colors[idx % colors.length] || colors[0];
+                  return (
+                    <div className="glass-stat-card" key={idx}>
+                      <div className={`card-top-accent ${style.border}`}></div>
+                      <div className="stat-icon-wrapper" style={{ background: style.bg, color: style.text }}>
+                        <i className={style.icon}></i>
+                      </div>
+                      <h3>
+                        <AnimatedCounter value={stat.value} />
+                      </h3>
+                      <p>{stat.label}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -400,35 +509,17 @@ const About = () => {
         <div className="container">
           <div className="about-partner-grid">
             <div className="about-partner-left reveal slide-left">
-              <span className="section-tag-premium">SOFTWARE DEVELOPMENT PARTNER</span>
-              <h2 className="section-title-premium">
-                A Unified Platform Built For Scaling Technology Assets
-              </h2>
-              <p className="partner-desc-premium">
-                We design and program customized digital ecosystems that streamline core business processes. Over the years, we have emerged as a trusted technology engineering partner.
-              </p>
+              <span className="section-tag-premium">{partner.subtitle}</span>
+              <h2 className="section-title-premium">{partner.title}</h2>
+              <p className="partner-desc-premium">{partner.description}</p>
               
               <div className="checklist-features-grid">
-                <div className="feature-item-pill">
-                  <i className="ri-checkbox-circle-fill"></i>
-                  <span>Web Apps</span>
-                </div>
-                <div className="feature-item-pill">
-                  <i className="ri-checkbox-circle-fill"></i>
-                  <span>Mobile Apps</span>
-                </div>
-                <div className="feature-item-pill">
-                  <i className="ri-checkbox-circle-fill"></i>
-                  <span>ERP Systems</span>
-                </div>
-                <div className="feature-item-pill">
-                  <i className="ri-checkbox-circle-fill"></i>
-                  <span>Cloud Solutions</span>
-                </div>
-                <div className="feature-item-pill">
-                  <i className="ri-checkbox-circle-fill"></i>
-                  <span>AI Automation</span>
-                </div>
+                {(partner.metadata?.checklist || []).map((item) => (
+                  <div className="feature-item-pill" key={item}>
+                    <i className="ri-checkbox-circle-fill"></i>
+                    <span>{item}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -539,69 +630,29 @@ const About = () => {
       <section className="about-why-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium">DELIVERY STRENGTHS</span>
+            <span className="section-tag-premium">{why.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Why Organizations Partner With Nexinfosoft
+              {why.title}
             </h2>
             <p className="section-desc-premium text-center">
-              Our delivery framework prioritizes structural predictability, complete security pipelines, and direct transparency.
+              {why.description}
             </p>
           </div>
 
           <div ref={deliveryStrengthsScrollerRef} className="why-premium-grid">
-            <div className="why-premium-card reveal slide-up delay-100">
-              <div className="card-hover-border"></div>
-              <div className="why-icon-wrap" style={{ background: 'rgba(20, 184, 166, 0.1)', color: 'var(--accent)' }}>
-                <i className="ri-loop-left-line"></i>
-              </div>
-              <h3>Agile Methodology</h3>
-              <p>Continuous progress tracking, bi-weekly milestone evaluations, and flexible feature adjustments.</p>
-            </div>
-
-            <div className="why-premium-card reveal slide-up delay-200">
-              <div className="card-hover-border border-purple"></div>
-              <div className="why-icon-wrap" style={{ background: 'rgba(139, 92, 246, 0.1)', color: 'var(--secondary)' }}>
-                <i className="ri-calendar-check-line"></i>
-              </div>
-              <h3>Sprint Delivery</h3>
-              <p>Predictable deliverables every sprint, enabling complete validation and incremental product growth.</p>
-            </div>
-
-            <div className="why-premium-card reveal slide-up delay-300">
-              <div className="card-hover-border border-blue"></div>
-              <div className="why-icon-wrap" style={{ background: 'rgba(59, 130, 246, 0.1)', color: 'var(--primary)' }}>
-                <i className="ri-team-line"></i>
-              </div>
-              <h3>Dedicated Team</h3>
-              <p>Dedicated full-stack software engineers, QA technicians, and scrum leads assigned exclusively to your target scope.</p>
-            </div>
-
-            <div className="why-premium-card reveal slide-up delay-100">
-              <div className="card-hover-border border-green"></div>
-              <div className="why-icon-wrap" style={{ background: 'rgba(143, 184, 74, 0.1)', color: '#8fba4a' }}>
-                <i className="ri-rocket-line"></i>
-              </div>
-              <h3>Deployment Support</h3>
-              <p>Production infrastructure provisioning, CI/CD pipeline automation, and post-deployment handover documents.</p>
-            </div>
-
-            <div className="why-premium-card reveal slide-up delay-200">
-              <div className="card-hover-border border-yellow"></div>
-              <div className="why-icon-wrap" style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
-                <i className="ri-shield-check-line"></i>
-              </div>
-              <h3>QA & Testing</h3>
-              <p>Comprehensive unit, integration, and security checks covering every code deployment prior to delivery.</p>
-            </div>
-
-            <div className="why-premium-card reveal slide-up delay-300">
-              <div className="card-hover-border border-pink"></div>
-              <div className="why-icon-wrap" style={{ background: 'rgba(236, 72, 153, 0.1)', color: '#ec4899' }}>
-                <i className="ri-bar-chart-grouped-line"></i>
-              </div>
-              <h3>Reporting & Metrics</h3>
-              <p>Weekly project updates, active velocity tracking reports, and total budget burn transparency dashboards.</p>
-            </div>
+            {(why.metadata?.cards || []).map((card, idx) => {
+              const style = cardStyles[idx % cardStyles.length];
+              return (
+                <div key={idx} className={`why-premium-card reveal slide-up delay-${((idx % 3) + 1) * 100}`}>
+                  <div className={`card-hover-border ${style.borderClass}`}></div>
+                  <div className="why-icon-wrap" style={{ background: style.bg, color: style.color }}>
+                    <i className={card.icon || 'ri-checkbox-circle-line'}></i>
+                  </div>
+                  <h3>{card.title}</h3>
+                  <p>{card.text}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -612,12 +663,12 @@ const About = () => {
       <section className="about-lifecycle-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium">DEVELOPMENT PROCESS</span>
+            <span className="section-tag-premium">{lifecycle.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Structured Project Lifecycle
+              {lifecycle.title}
             </h2>
             <p className="section-desc-premium text-center">
-              Our structured path maps out product design and system engineering milestones to maximize predictability.
+              {lifecycle.description}
             </p>
           </div>
 
@@ -627,68 +678,16 @@ const About = () => {
             </div>
 
             <div ref={lifecycleScrollerRef} className="timeline-nodes-horizontal">
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-search-line"></i>
-                  <span className="node-step-number">1</span>
+              {(lifecycle.metadata?.steps || []).map((step, idx) => (
+                <div className="timeline-node-card" key={idx}>
+                  <div className="node-icon-circle">
+                    <i className={step.icon || 'ri-checkbox-circle-line'}></i>
+                    <span className="node-step-number">{step.number}</span>
+                  </div>
+                  <h4>{step.title}</h4>
+                  <p>{step.text}</p>
                 </div>
-                <h4>Discovery</h4>
-                <p>Stakeholder interviews, requirements extraction, and scope alignment.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-file-list-3-line"></i>
-                  <span className="node-step-number">2</span>
-                </div>
-                <h4>Planning</h4>
-                <p>Architectural drafting, technology selections, and SRS documentation.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-palette-line"></i>
-                  <span className="node-step-number">3</span>
-                </div>
-                <h4>UI/UX</h4>
-                <p>Interactive wireframes, layout patterns, and brand designs.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-code-box-line"></i>
-                  <span className="node-step-number">4</span>
-                </div>
-                <h4>Development</h4>
-                <p>Modular agile coding cycles, peer code audits, and sprint review demos.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-shield-flash-line"></i>
-                  <span className="node-step-number">5</span>
-                </div>
-                <h4>Testing</h4>
-                <p>Comprehensive functional verification, load tests, and security hardening.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-ship-line"></i>
-                  <span className="node-step-number">6</span>
-                </div>
-                <h4>Deployment</h4>
-                <p>Automated server setup, CI/CD pipeline pushes, and system run logs.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-customer-service-2-line"></i>
-                  <span className="node-step-number">7</span>
-                </div>
-                <h4>Support</h4>
-                <p>System monitoring, standard upgrades, and post-delivery SLA desk.</p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -701,54 +700,24 @@ const About = () => {
         <div className="container">
           <div className="about-qa-grid">
             <div className="qa-left-content reveal slide-left">
-              <span className="section-tag-premium">QUALITY CONTROL</span>
+              <span className="section-tag-premium">{qa.subtitle}</span>
               <h2 className="section-title-premium">
-                Verification And Quality Assurance Framework
+                {qa.title}
               </h2>
               <p className="qa-desc-premium">
-                Every software build undergoes rigorous, automated and manual checks to ensure complete system performance and absolute security.
+                {qa.description}
               </p>
 
               <div className="qa-frosted-cards">
-                <div className="qa-frosted-card">
-                  <i className="ri-checkbox-circle-line card-check-green"></i>
-                  <div>
-                    <h4>Unit Testing</h4>
-                    <p>Validation of separate micro-modules to eliminate regression vulnerabilities.</p>
+                {(qa.metadata?.cards || []).map((card, idx) => (
+                  <div className="qa-frosted-card" key={idx}>
+                    <i className={`${card.icon || 'ri-checkbox-circle-line'} card-check-green`}></i>
+                    <div>
+                      <h4>{card.title}</h4>
+                      <p>{card.text}</p>
+                    </div>
                   </div>
-                </div>
-
-                <div className="qa-frosted-card">
-                  <i className="ri-checkbox-circle-line card-check-green"></i>
-                  <div>
-                    <h4>Integration Testing</h4>
-                    <p>Validation of system pipelines, API nodes, and database connections.</p>
-                  </div>
-                </div>
-
-                <div className="qa-frosted-card">
-                  <i className="ri-checkbox-circle-line card-check-green"></i>
-                  <div>
-                    <h4>Security Testing</h4>
-                    <p>Continuous secure code scans, threat checks, and vulnerability resolution.</p>
-                  </div>
-                </div>
-
-                <div className="qa-frosted-card">
-                  <i className="ri-checkbox-circle-line card-check-green"></i>
-                  <div>
-                    <h4>Performance Testing</h4>
-                    <p>Stress evaluations under simulated client traffic peaks to optimize latency.</p>
-                  </div>
-                </div>
-
-                <div className="qa-frosted-card">
-                  <i className="ri-checkbox-circle-line card-check-green"></i>
-                  <div>
-                    <h4>UAT (User Acceptance)</h4>
-                    <p>Collaborative beta rounds, client review sessions, and system sign-off.</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -842,45 +811,30 @@ const About = () => {
       <section className="about-values-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium">OUR VALUES</span>
+            <span className="section-tag-premium">{valuesSec.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              The Foundation Behind Every Line of Code
+              {valuesSec.title}
             </h2>
             <p className="section-desc-premium text-center">
-              Our decisions and structural engineering plans are driven by professional principles to ensure client success.
+              {valuesSec.description}
             </p>
           </div>
 
           <div className="values-premium-grid">
-            <div className="value-premium-card reveal slide-up delay-100">
-              <div className="value-gradient-glow"></div>
-              <div className="value-pattern-bg"></div>
-              <div className="value-icon-circle" style={{ background: 'rgba(20, 184, 166, 0.1)', color: 'var(--accent)' }}>
-                <i className="ri-shield-keyhole-line"></i>
-              </div>
-              <h3>Integrity</h3>
-              <p>We commit to absolute intellectual property ownership, detailed contracts, and complete developmental transparency.</p>
-            </div>
-
-            <div className="value-premium-card reveal slide-up delay-200">
-              <div className="value-gradient-glow glowing-purple"></div>
-              <div className="value-pattern-bg"></div>
-              <div className="value-icon-circle" style={{ background: 'rgba(139, 92, 246, 0.1)', color: 'var(--secondary)' }}>
-                <i className="ri-lightbulb-line"></i>
-              </div>
-              <h3>Innovation</h3>
-              <p>We consistently inject modern tools, cloud structures, and AI workflows to maximize product shelf life.</p>
-            </div>
-
-            <div className="value-premium-card reveal slide-up delay-300">
-              <div className="value-gradient-glow glowing-blue"></div>
-              <div className="value-pattern-bg"></div>
-              <div className="value-icon-circle" style={{ background: 'rgba(59, 130, 246, 0.1)', color: 'var(--primary)' }}>
-                <i className="ri-user-heart-line"></i>
-              </div>
-              <h3>Customer Success</h3>
-              <p>Direct communication paths with scrum managers, weekly status presentations, and standard operations handover checklists.</p>
-            </div>
+            {(valuesSec.metadata?.cards || []).map((card, idx) => {
+              const style = valueStyles[idx % valueStyles.length];
+              return (
+                <div key={idx} className={`value-premium-card reveal slide-up delay-${((idx % 3) + 1) * 100}`}>
+                  <div className={`value-gradient-glow ${style.glowClass}`}></div>
+                  <div className="value-pattern-bg"></div>
+                  <div className="value-icon-circle" style={{ background: style.bg, color: style.color }}>
+                    <i className={card.icon || 'ri-checkbox-circle-line'}></i>
+                  </div>
+                  <h3>{card.title}</h3>
+                  <p>{card.text}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -891,33 +845,14 @@ const About = () => {
       <section className="about-achievements-sec">
         <div className="container">
           <div className="achievements-flex-grid reveal scale-up">
-            <div className="achievement-stat-item">
-              <h2 className="achievement-stat-number">
-                <AnimatedCounter value="100+" />
-              </h2>
-              <p className="achievement-stat-label">Projects Delivered</p>
-            </div>
-
-            <div className="achievement-stat-item">
-              <h2 className="achievement-stat-number">
-                <AnimatedCounter value="50+" />
-              </h2>
-              <p className="achievement-stat-label">International Clients</p>
-            </div>
-
-            <div className="achievement-stat-item">
-              <h2 className="achievement-stat-number">
-                <AnimatedCounter value="24/7" />
-              </h2>
-              <p className="achievement-stat-label">Active Support Desk</p>
-            </div>
-
-            <div className="achievement-stat-item">
-              <h2 className="achievement-stat-number">
-                <AnimatedCounter value="100%" />
-              </h2>
-              <p className="achievement-stat-label">Code Ownership</p>
-            </div>
+            {(achievementsSec.metadata?.stats || []).map((stat, idx) => (
+              <div className="achievement-stat-item" key={idx}>
+                <h2 className="achievement-stat-number">
+                  <AnimatedCounter value={stat.value} />
+                </h2>
+                <p className="achievement-stat-label">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -938,12 +873,10 @@ const About = () => {
             <div className="cta-mesh-bubble bubble-purple"></div>
 
             <div className="cta-content-left">
-              <h2 className="cta-title-premium">
-                Let's Build Something <br />
-                <span className="gradient-text-accent">Amazing Together</span>
+              <h2 className="cta-title-premium" dangerouslySetInnerHTML={{ __html: ctaSec.title || 'Let\'s Build Something <br /> <span class="gradient-text-accent">Amazing Together</span>' }}>
               </h2>
               <p className="cta-desc-premium">
-                Discuss your technical layout, database design, or core system flow with a senior solutions architect today.
+                {ctaSec.description}
               </p>
               <div className="cta-buttons-premium">
                 <Link to="/contact" className="btn btn-primary">

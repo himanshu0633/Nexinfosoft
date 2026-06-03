@@ -248,6 +248,339 @@ async function initializeDatabase() {
             desc: 'To provide clients with the most innovative and dedicated IT solutions through continuous learning efforts.'
           }
         }
+      },
+      {
+        _id: 'about_hero',
+        title: 'Empowering Businesses Through Technology',
+        subtitle: 'ABOUT NEXINFOSOFT',
+        description: 'We build enterprise-grade software architectures, premium web systems, and custom workflow automations designed to scale operations and unlock new market values.',
+        image_url: '',
+        page: 'pages',
+        order: 10,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'about_overview',
+        title: 'A Modern Technological Solutions Agency Built on Predictability',
+        subtitle: 'COMPANY OVERVIEW',
+        description: 'Nexinfosoft IT Solutions provides enterprise-grade technology services for organizations that require clear documentation, structured execution, and measurable outcomes. We support business and government teams with custom software development, mobile application deployment, ERP solutions, and digital transformation. Our approach merges agile developmental practices with rigorous quality assurance checks, ensuring your business platforms scale smoothly across critical performance spikes.',
+        image_url: '',
+        page: 'pages',
+        order: 11,
+        visible: true,
+        metadata: {
+          stats: [
+            { label: 'Years Experience', value: '10+' },
+            { label: 'Projects Completed', value: '300+' },
+            { label: 'Happy Clients', value: '250+' },
+            { label: 'Experts In-house', value: '50+' }
+          ]
+        }
+      },
+      {
+        _id: 'about_partner',
+        title: 'A Unified Platform Built For Scaling Technology Assets',
+        subtitle: 'SOFTWARE DEVELOPMENT PARTNER',
+        description: 'We design and program customized digital ecosystems that streamline core business processes. Over the years, we have emerged as a trusted technology engineering partner.',
+        image_url: '',
+        page: 'pages',
+        order: 12,
+        visible: true,
+        metadata: {
+          checklist: ['Web Apps', 'Mobile Apps', 'ERP Systems', 'Cloud Solutions', 'AI Automation']
+        }
+      },
+      {
+        _id: 'about_why',
+        title: 'Why Organizations Partner With Nexinfosoft',
+        subtitle: 'DELIVERY STRENGTHS',
+        description: 'Our delivery framework prioritizes structural predictability, complete security pipelines, and direct transparency.',
+        image_url: '',
+        page: 'pages',
+        order: 13,
+        visible: true,
+        metadata: {
+          cards: [
+            { title: 'Agile Methodology', text: 'Continuous progress tracking, bi-weekly milestone evaluations, and flexible feature adjustments.', icon: 'ri-loop-left-line' },
+            { title: 'Sprint Delivery', text: 'Predictable deliverables every sprint, enabling complete validation and incremental product growth.', icon: 'ri-calendar-check-line' },
+            { title: 'Dedicated Team', text: 'Dedicated full-stack software engineers, QA technicians, and scrum leads assigned exclusively to your target scope.', icon: 'ri-team-line' },
+            { title: 'Deployment Support', text: 'Production infrastructure provisioning, CI/CD pipeline automation, and post-deployment handover documents.', icon: 'ri-rocket-line' },
+            { title: 'QA & Testing', text: 'Comprehensive unit, integration, and security checks covering every code deployment prior to delivery.', icon: 'ri-shield-check-line' },
+            { title: 'Reporting & Metrics', text: 'Weekly project updates, active velocity tracking reports, and total budget burn transparency dashboards.', icon: 'ri-bar-chart-grouped-line' }
+          ]
+        }
+      },
+      {
+        _id: 'about_lifecycle',
+        title: 'Structured Project Lifecycle',
+        subtitle: 'DEVELOPMENT PROCESS',
+        description: 'Our structured path maps out product design and system engineering milestones to maximize predictability.',
+        image_url: '',
+        page: 'pages',
+        order: 14,
+        visible: true,
+        metadata: {
+          steps: [
+            { number: '1', title: 'Discovery', text: 'Stakeholder interviews, requirements extraction, and scope alignment.', icon: 'ri-search-line' },
+            { number: '2', title: 'Planning', text: 'Architectural drafting, technology selections, and SRS documentation.', icon: 'ri-file-list-3-line' },
+            { number: '3', title: 'UI/UX', text: 'Interactive wireframes, layout patterns, and brand designs.', icon: 'ri-palette-line' },
+            { number: '4', title: 'Development', text: 'Modular agile coding cycles, peer code audits, and sprint review demos.', icon: 'ri-code-box-line' },
+            { number: '5', title: 'Testing', text: 'Comprehensive functional verification, load tests, and security hardening.', icon: 'ri-shield-flash-line' },
+            { number: '6', title: 'Deployment', text: 'Automated server setup, CI/CD pipeline pushes, and system run logs.', icon: 'ri-ship-line' },
+            { number: '7', title: 'Support', text: 'System monitoring, standard upgrades, and post-delivery SLA desk.', icon: 'ri-customer-service-2-line' }
+          ]
+        }
+      },
+      {
+        _id: 'about_qa',
+        title: 'Verification And Quality Assurance Framework',
+        subtitle: 'QUALITY CONTROL',
+        description: 'Every software build undergoes rigorous, automated and manual checks to ensure complete system performance and absolute security.',
+        image_url: '',
+        page: 'pages',
+        order: 15,
+        visible: true,
+        metadata: {
+          cards: [
+            { title: 'Unit Testing', text: 'Validation of separate micro-modules to eliminate regression vulnerabilities.', icon: 'ri-checkbox-circle-line' },
+            { title: 'Integration Testing', text: 'Validation of system pipelines, API nodes, and database connections.', icon: 'ri-checkbox-circle-line' },
+            { title: 'Security Testing', text: 'Continuous secure code scans, threat checks, and vulnerability resolution.', icon: 'ri-checkbox-circle-line' },
+            { title: 'Performance Testing', text: 'Stress evaluations under simulated client traffic peaks to optimize latency.', icon: 'ri-checkbox-circle-line' },
+            { title: 'UAT (User Acceptance)', text: 'Collaborative beta rounds, client review sessions, and system sign-off.', icon: 'ri-checkbox-circle-line' }
+          ]
+        }
+      },
+      {
+        _id: 'about_values',
+        title: 'The Foundation Behind Every Line of Code',
+        subtitle: 'OUR VALUES',
+        description: 'Our decisions and structural engineering plans are driven by professional principles to ensure client success.',
+        image_url: '',
+        page: 'pages',
+        order: 17,
+        visible: true,
+        metadata: {
+          cards: [
+            { title: 'Integrity', text: 'We commit to absolute intellectual property ownership, detailed contracts, and complete developmental transparency.', icon: 'ri-shield-keyhole-line' },
+            { title: 'Innovation', text: 'We consistently inject modern tools, cloud structures, and AI workflows to maximize product shelf life.', icon: 'ri-lightbulb-line' },
+            { title: 'Customer Success', text: 'Direct communication paths with scrum managers, weekly status presentations, and standard operations handover checklists.', icon: 'ri-user-heart-line' }
+          ]
+        }
+      },
+      {
+        _id: 'about_achievements',
+        title: 'Trusted Delivery Metrics',
+        subtitle: 'ACHIEVEMENTS',
+        description: 'We consistently deliver projects on time, within budget, and to the highest quality standards.',
+        image_url: '',
+        page: 'pages',
+        order: 18,
+        visible: true,
+        metadata: {
+          stats: [
+            { label: 'Projects Delivered', value: '100+' },
+            { label: 'International Clients', value: '50+' },
+            { label: 'Active Support Desk', value: '24/7' },
+            { label: 'Code Ownership', value: '100%' }
+          ]
+        }
+      },
+      {
+        _id: 'about_cta',
+        title: 'Let\'s Build Something <br /> <span class="gradient-text-accent">Amazing Together</span>',
+        subtitle: 'CTA',
+        description: 'Discuss your technical layout, database design, or core system flow with a senior solutions architect today.',
+        image_url: '',
+        page: 'pages',
+        order: 19,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'faqs',
+        title: 'Frequently Asked Questions',
+        subtitle: 'FAQS',
+        description: 'Clear answers about project scope, pricing, delivery, support, and maintenance.',
+        image_url: '',
+        page: 'pages',
+        order: 20,
+        visible: true,
+        metadata: {
+          items: [
+            { question: 'What services does Nexinfosoft provide?', answer: 'We provide website development, web applications, mobile apps, CRM, ERP, UI/UX, cloud deployment, hosting, maintenance, and digital marketing services.' },
+            { question: 'How much does a website or app cost?', answer: 'Cost depends on pages, features, integrations, design complexity, and support needs. After a free consultation, we share a practical estimate with scope and timeline.' },
+            { question: 'Do you provide maintenance after launch?', answer: 'Yes. We can provide bug fixes, backups, hosting support, performance checks, content updates, and feature enhancements after deployment.' },
+            { question: 'Can you redesign an existing website?', answer: 'Yes. We can improve layout, speed, responsiveness, SEO structure, content flow, and conversion points while keeping your business identity intact.' },
+            { question: 'Do you build custom ERP or CRM software?', answer: 'Yes. We design role-based dashboards, reports, approvals, inventory, lead management, billing workflows, and custom modules as per your operations.' },
+            { question: 'How do we start?', answer: 'Share your requirement through the free consultation form or contact page. We will discuss scope, suggest features, and prepare a roadmap.' }
+          ]
+        }
+      },
+      {
+        _id: 'company_profile_hero',
+        title: 'Nexinfosoft IT Solutions',
+        subtitle: 'Enterprise Web & Software Solutions',
+        description: 'Trusted technology partner for business and government organizations. We provide structured web, mobile, ERP, enterprise software, AI/ML and digital transformation services with clear documentation and measurable outcomes.',
+        image_url: '',
+        page: 'company_profile',
+        order: 0,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'company_profile_overview',
+        title: 'About Nexinfosoft IT Solutions',
+        subtitle: 'COMPANY OVERVIEW',
+        description: 'Nexinfosoft IT Solutions provides enterprise-grade technology services for organizations that require clear documentation, structured execution, and measurable outcomes.',
+        image_url: '',
+        page: 'company_profile',
+        order: 1,
+        visible: true,
+        metadata: {
+          paragraphs: [
+            'We support business and government teams with web development, mobile applications, ERP solutions, enterprise software, AI/ML capabilities, and digital transformation services.',
+            'Our delivery approach combines agile methodology with strong quality assurance, secure deployment support, and transparent reporting, ensuring stakeholders maintain confidence throughout the engagement lifecycle.'
+          ],
+          competencies: [
+            { title: 'Delivery Focus', text: 'Structured planning, sprint execution, and predictable milestones.' },
+            { title: 'Quality Assurance', text: 'Functional, performance, and security validation across releases.' },
+            { title: 'Enterprise Support', text: 'Deployment, handover, and documentation aligned to audit requirements.' }
+          ]
+        }
+      },
+      {
+        _id: 'company_profile_capabilities',
+        title: 'Business & Technology Scope',
+        subtitle: 'CORE CAPABILITIES',
+        description: 'Business and technology capabilities covered by Nexinfosoft.',
+        image_url: '',
+        page: 'company_profile',
+        order: 2,
+        visible: true,
+        metadata: {
+          capabilities: [
+            'Web Applications', 'Mobile Solutions', 'ERP Development', 'Cloud Integration',
+            'API Development', 'UI/UX Design', 'AI Solutions', 'DevOps Support',
+            'Performance Optimization', 'Security Focused', 'Custom Software', 'Digital Transformation',
+            'Agile Delivery', 'QA Tested', 'Enterprise Ready', 'Scalable Architecture'
+          ]
+        }
+      },
+      {
+        _id: 'company_profile_services',
+        title: 'Service Capabilities And Scope',
+        subtitle: 'CORE SERVICES',
+        description: 'Service capabilities available for business and government technology requirements.',
+        image_url: '',
+        page: 'company_profile',
+        order: 3,
+        visible: true,
+        metadata: {
+          services: [
+            { icon: 'ri-window-line', title: 'Web Applications', text: 'Secure, responsive web platforms with performance optimization and governance-ready documentation.' },
+            { icon: 'ri-smartphone-line', title: 'Mobile Solutions', text: 'Business-grade applications with role-based access and scalable backend integration.' },
+            { icon: 'ri-briefcase-4-line', title: 'ERP Development', text: 'Process automation for finance, HR, inventory, and operations with audit-friendly controls.' },
+            { icon: 'ri-lock-password-line', title: 'Enterprise Software', text: 'Custom enterprise software with secure APIs and maintainable architecture.' },
+            { icon: 'ri-line-chart-line', title: 'Digital Marketing', text: 'SEO and performance marketing with measurable reporting aligned to brand guidelines.' },
+            { icon: 'ri-sparkling-line', title: 'AI & Automation', text: 'Practical AI/ML and workflow automation for analytics and operational efficiency.' }
+          ]
+        }
+      },
+      {
+        _id: 'company_profile_strengths',
+        title: 'Why Organizations Partner With Nexinfosoft',
+        subtitle: 'DELIVERY STRENGTHS',
+        description: 'Structured delivery strengths and governance-focused execution.',
+        image_url: '',
+        page: 'company_profile',
+        order: 4,
+        visible: true,
+        metadata: {
+          strengths: [
+            { title: 'Agile Methodology', text: 'Sprint planning, backlog control, and stakeholder alignment.' },
+            { title: 'Sprint Based Delivery', text: 'Incremental releases to reduce risk and enable timely reviews.' },
+            { title: 'Dedicated Team', text: 'Focused engineering and QA resources for project scope.' },
+            { title: 'Regular Reporting', text: 'Weekly status, metrics, and action items for decision makers.' },
+            { title: 'Deployment Support', text: 'Environment setup, release checklists, and operations handover.' },
+            { title: 'QA & Security Testing', text: 'Functional validation and security hardening per best practices.' }
+          ]
+        }
+      },
+      {
+        _id: 'company_profile_process',
+        title: 'Structured Project Lifecycle',
+        subtitle: 'DEVELOPMENT PROCESS',
+        description: 'A structured delivery process from requirement analysis to support and maintenance.',
+        image_url: '',
+        page: 'company_profile',
+        order: 5,
+        visible: true,
+        metadata: {
+          steps: [
+            { number: '01', title: 'Requirement Analysis', text: 'Stakeholder interviews, scope definition, and feasibility review.' },
+            { number: '02', title: 'BRD / SRS Documentation', text: 'Business requirements and functional specification preparation.' },
+            { number: '03', title: 'UI / UX Design', text: 'Wireframes, prototypes, and approval-ready interface designs.' },
+            { number: '04', title: 'Development', text: 'Sprint execution with demos, code reviews, and progress tracking.' },
+            { number: '05', title: 'Testing', text: 'QA cycles, defect management, and security validation.' },
+            { number: '06', title: 'Deployment', text: 'Release execution, monitoring setup, and stakeholder handover.' },
+            { number: '07', title: 'Support & Maintenance', text: 'Ongoing support, enhancements, and post-deployment assistance.' }
+          ]
+        }
+      },
+      {
+        _id: 'company_profile_tech',
+        title: 'Requirement-Based Technology Selection',
+        subtitle: 'TECHNOLOGY STACK',
+        description: 'Technology choices are finalized according to security, scale, maintainability, timeline, and integration needs.',
+        image_url: '',
+        page: 'company_profile',
+        order: 6,
+        visible: true,
+        metadata: {
+          techs: [
+            { label: 'Frontend Technologies', value: 'ReactJS, Angular, Vue.js, HTML5, CSS3, JavaScript, TypeScript, TailwindCSS, Bootstrap' },
+            { label: 'Backend Technologies', value: 'PHP, Laravel, Node.js, Python, Spring Boot, Java, REST APIs' },
+            { label: 'Mobile Technologies', value: 'Flutter, React Native, Android, iOS' },
+            { label: 'Database Technologies', value: 'MySQL, PostgreSQL, MongoDB, Firebase' },
+            { label: 'Cloud & DevOps', value: 'Docker, Jenkins, GitHub, CI/CD, VPS & Cloud Deployment' },
+            { label: 'AI & Analytics', value: 'AI/ML, Automation, Power BI, Data Analytics' }
+          ]
+        }
+      },
+      {
+        _id: 'company_profile_quality',
+        title: 'Verification And Assurance Framework',
+        subtitle: 'QUALITY & TESTING',
+        description: 'Quality checks and validation framework for reliable releases.',
+        image_url: '',
+        page: 'company_profile',
+        order: 7,
+        visible: true,
+        metadata: {
+          checks: [
+            { title: 'Unit Testing', text: 'Validate core modules and reduce regression risk.' },
+            { title: 'Load Testing', text: 'Assess concurrency, throughput, and stability under load.' },
+            { title: 'Automation Testing', text: 'Repeatable suites for critical workflows and acceptance criteria.' },
+            { title: 'Security Testing', text: 'Secure coding validation and vulnerability assessment.' },
+            { title: 'UAT', text: 'User acceptance planning, defect triage, and release sign-off.' }
+          ]
+        }
+      },
+      {
+        _id: 'company_profile_contact',
+        title: 'For project enquiries and tender discussions',
+        subtitle: 'CONTACT INFORMATION',
+        description: 'To discuss project requirements, timelines, or compliance needs, please contact Nexinfosoft IT Solutions.',
+        image_url: '',
+        page: 'company_profile',
+        order: 8,
+        visible: true,
+        metadata: {
+          phone: '+91 99995 30797',
+          email: 'info@nexinfosoft.com',
+          website: 'nexinfosoft.com'
+        }
       }
     ];
 
@@ -268,6 +601,10 @@ async function initializeDatabase() {
         }
         if (existing.visible === undefined) {
           existing.visible = section.visible;
+          hasChanges = true;
+        }
+        if (!existing.metadata || Object.keys(existing.metadata).length === 0) {
+          existing.metadata = section.metadata;
           hasChanges = true;
         }
         if (hasChanges) {

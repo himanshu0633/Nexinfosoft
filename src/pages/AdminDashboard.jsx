@@ -65,6 +65,16 @@ const AdminDashboard = () => {
       corporate_hero: 'Corporate Hero',
       corporate_about: 'Corporate About',
       corporate_mission: 'Corporate Mission & Vision',
+      about_hero: 'About Us Hero',
+      about_overview: 'About Us Overview',
+      about_partner: 'About Us Partner',
+      about_why: 'About Us Strengths',
+      about_lifecycle: 'About Us Lifecycle',
+      about_qa: 'About Us Quality Framework',
+      about_values: 'About Us Values',
+      about_achievements: 'About Us Achievements',
+      about_cta: 'About Us CTA banner',
+      faqs: 'FAQs Page Content',
       footer_links: 'Footer Links',
       company_profile_hero: 'Company Profile',
       company_profile_overview: 'Company Profile Overview',
@@ -472,6 +482,20 @@ const AdminDashboard = () => {
               </div>
             </div>
           </section>
+        </div>
+      );
+    }
+
+    if (activeSection.startsWith('about_') || activeSection === 'faqs') {
+      return (
+        <div className="about-page admin-real-section-preview" style={{ padding: '34px 0', background: 'var(--bg-dark)' }}>
+          <div className="container" style={{ pointerEvents: 'none' }}>
+            <div className="section-header-premium text-center" style={{ marginBottom: 0 }}>
+              <span className="section-tag-premium text-center">{subtitle || 'PAGE DETAILS'}</span>
+              <h2 className="section-title-premium" dangerouslySetInnerHTML={{ __html: title }}></h2>
+              <p className="section-desc-premium">{description}</p>
+            </div>
+          </div>
         </div>
       );
     }
@@ -1341,49 +1365,74 @@ const AdminDashboard = () => {
                       <i className="ri-settings-line"></i> Section Manager
                     </button>
                   </>
-                ) : activeTab === 'corporate' ? (
-                  <>
-                    <button onClick={() => setActiveSection('corporate_hero')} className={`tech-tab ${activeSection === 'corporate_hero' ? 'active' : ''}`}>
-                      <i className="ri-flag-line"></i> Corporate Hero
-                    </button>
-                    <button onClick={() => setActiveSection('corporate_about')} className={`tech-tab ${activeSection === 'corporate_about' ? 'active' : ''}`}>
-                      <i className="ri-building-line"></i> About Us Section
-                    </button>
-                    <button onClick={() => setActiveSection('corporate_mission')} className={`tech-tab ${activeSection === 'corporate_mission' ? 'active' : ''}`}>
-                      <i className="ri-eye-line"></i> Mission & Vision
-                    </button>
-                  </>
                 ) : (
                   <>
-                    <button onClick={() => setActiveSection('footer_links')} className={`tech-tab ${activeSection === 'footer_links' ? 'active' : ''}`}>
-                      <i className="ri-links-line"></i> Footer Links
+                    <div style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent)', margin: '14px 10px 6px 10px', borderBottom: '1px solid rgba(20, 184, 166, 0.1)', paddingBottom: '4px', letterSpacing: '0.5px' }}>About Us Page</div>
+                    <button onClick={() => setActiveSection('about_hero')} className={`tech-tab ${activeSection === 'about_hero' ? 'active' : ''}`}>
+                      <i className="ri-flag-line"></i> About Hero
                     </button>
+                    <button onClick={() => setActiveSection('about_overview')} className={`tech-tab ${activeSection === 'about_overview' ? 'active' : ''}`}>
+                      <i className="ri-file-info-line"></i> Company Overview
+                    </button>
+                    <button onClick={() => setActiveSection('about_partner')} className={`tech-tab ${activeSection === 'about_partner' ? 'active' : ''}`}>
+                      <i className="ri-team-line"></i> Delivery Partner
+                    </button>
+                    <button onClick={() => setActiveSection('about_why')} className={`tech-tab ${activeSection === 'about_why' ? 'active' : ''}`}>
+                      <i className="ri-bar-chart-grouped-line"></i> Delivery Strengths
+                    </button>
+                    <button onClick={() => setActiveSection('about_lifecycle')} className={`tech-tab ${activeSection === 'about_lifecycle' ? 'active' : ''}`}>
+                      <i className="ri-route-line"></i> Project Lifecycle
+                    </button>
+                    <button onClick={() => setActiveSection('about_qa')} className={`tech-tab ${activeSection === 'about_qa' ? 'active' : ''}`}>
+                      <i className="ri-shield-check-line"></i> QA Framework
+                    </button>
+                    <button onClick={() => setActiveSection('about_values')} className={`tech-tab ${activeSection === 'about_values' ? 'active' : ''}`}>
+                      <i className="ri-lightbulb-line"></i> Company Values
+                    </button>
+                    <button onClick={() => setActiveSection('about_achievements')} className={`tech-tab ${activeSection === 'about_achievements' ? 'active' : ''}`}>
+                      <i className="ri-trophy-line"></i> Achievements
+                    </button>
+                    <button onClick={() => setActiveSection('about_cta')} className={`tech-tab ${activeSection === 'about_cta' ? 'active' : ''}`}>
+                      <i className="ri-chat-voice-line"></i> About CTA Banner
+                    </button>
+
+                    <div style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent)', margin: '14px 10px 6px 10px', borderBottom: '1px solid rgba(20, 184, 166, 0.1)', paddingBottom: '4px', letterSpacing: '0.5px' }}>FAQ Page</div>
+                    <button onClick={() => setActiveSection('faqs')} className={`tech-tab ${activeSection === 'faqs' ? 'active' : ''}`}>
+                      <i className="ri-questionnaire-line"></i> FAQ Q&A List
+                    </button>
+
+                    <div style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent)', margin: '14px 10px 6px 10px', borderBottom: '1px solid rgba(20, 184, 166, 0.1)', paddingBottom: '4px', letterSpacing: '0.5px' }}>Company Profile</div>
                     <button onClick={() => setActiveSection('company_profile_hero')} className={`tech-tab ${activeSection === 'company_profile_hero' ? 'active' : ''}`}>
-                      <i className="ri-profile-line"></i> Company Profile
+                      <i className="ri-profile-line"></i> Profile Hero
                     </button>
                     <button onClick={() => setActiveSection('company_profile_overview')} className={`tech-tab ${activeSection === 'company_profile_overview' ? 'active' : ''}`}>
                       <i className="ri-building-2-line"></i> Profile Overview
                     </button>
                     <button onClick={() => setActiveSection('company_profile_capabilities')} className={`tech-tab ${activeSection === 'company_profile_capabilities' ? 'active' : ''}`}>
-                      <i className="ri-checkbox-multiple-line"></i> Capabilities
+                      <i className="ri-checkbox-multiple-line"></i> Capabilities Scope
                     </button>
                     <button onClick={() => setActiveSection('company_profile_services')} className={`tech-tab ${activeSection === 'company_profile_services' ? 'active' : ''}`}>
                       <i className="ri-service-line"></i> Profile Services
                     </button>
                     <button onClick={() => setActiveSection('company_profile_strengths')} className={`tech-tab ${activeSection === 'company_profile_strengths' ? 'active' : ''}`}>
-                      <i className="ri-shield-check-line"></i> Strengths
+                      <i className="ri-shield-check-line"></i> Strengths List
                     </button>
                     <button onClick={() => setActiveSection('company_profile_process')} className={`tech-tab ${activeSection === 'company_profile_process' ? 'active' : ''}`}>
-                      <i className="ri-route-line"></i> Process
+                      <i className="ri-route-line"></i> Work Process
                     </button>
                     <button onClick={() => setActiveSection('company_profile_tech')} className={`tech-tab ${activeSection === 'company_profile_tech' ? 'active' : ''}`}>
-                      <i className="ri-stack-line"></i> Tech Stack
+                      <i className="ri-stack-line"></i> Tech Specs
                     </button>
                     <button onClick={() => setActiveSection('company_profile_quality')} className={`tech-tab ${activeSection === 'company_profile_quality' ? 'active' : ''}`}>
-                      <i className="ri-verified-badge-line"></i> Quality
+                      <i className="ri-verified-badge-line"></i> Quality Checks
                     </button>
                     <button onClick={() => setActiveSection('company_profile_contact')} className={`tech-tab ${activeSection === 'company_profile_contact' ? 'active' : ''}`}>
                       <i className="ri-contacts-book-line"></i> Profile Contact
+                    </button>
+
+                    <div style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent)', margin: '14px 10px 6px 10px', borderBottom: '1px solid rgba(20, 184, 166, 0.1)', paddingBottom: '4px', letterSpacing: '0.5px' }}>Global & Legal</div>
+                    <button onClick={() => setActiveSection('footer_links')} className={`tech-tab ${activeSection === 'footer_links' ? 'active' : ''}`}>
+                      <i className="ri-links-line"></i> Footer Links
                     </button>
                     <button onClick={() => setActiveSection('privacy_policy')} className={`tech-tab ${activeSection === 'privacy_policy' ? 'active' : ''}`}>
                       <i className="ri-shield-user-line"></i> Privacy Policy
@@ -1685,37 +1734,410 @@ const AdminDashboard = () => {
                     )}
 
                     {activeSection === 'company_profile_overview' && (
+                      <>
+                        <div className="admin-page-edit-group">
+                          <div className="admin-page-edit-heading">
+                            <strong>Overview Paragraphs</strong>
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              onClick={() => handleMetadataChange('paragraphs', [...(sectionContent.metadata?.paragraphs || []), ''])}
+                            >
+                              <i className="ri-add-line"></i> Add Paragraph
+                            </button>
+                          </div>
+                          {(sectionContent.metadata?.paragraphs || []).map((paragraph, idx) => (
+                            <div className="admin-page-card-editor" key={`paragraph-${idx}`}>
+                              <div className="admin-page-edit-heading">
+                                <strong>Paragraph #{idx + 1}</strong>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary admin-remove-row-btn"
+                                  onClick={() => {
+                                    const paragraphs = [...(sectionContent.metadata?.paragraphs || [])];
+                                    paragraphs.splice(idx, 1);
+                                    handleMetadataChange('paragraphs', paragraphs);
+                                  }}
+                                  title="Remove"
+                                >
+                                  <i className="ri-delete-bin-line"></i>
+                                </button>
+                              </div>
+                              <textarea className="form-control" style={{ minHeight: '90px' }} value={paragraph || ''} onChange={(e) => handleArrayMetadataChange('paragraphs', idx, e.target.value)} />
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="admin-page-edit-group" style={{ marginTop: '20px' }}>
+                          <div className="admin-page-edit-heading">
+                            <strong>Core Competencies</strong>
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              onClick={() => addMetadataArrayObject('competencies', { title: 'New Competency', text: '' })}
+                            >
+                              <i className="ri-add-line"></i> Add Competency
+                            </button>
+                          </div>
+                          {(sectionContent.metadata?.competencies || []).map((item, idx) => (
+                            <div className="admin-page-card-editor" key={`competency-${idx}`}>
+                              <div className="admin-page-edit-heading">
+                                <strong>Competency #{idx + 1}</strong>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary admin-remove-row-btn"
+                                  onClick={() => removeMetadataArrayObject('competencies', idx)}
+                                  title="Remove"
+                                >
+                                  <i className="ri-delete-bin-line"></i>
+                                </button>
+                              </div>
+                              <label className="form-label">Competency Title</label>
+                              <input className="form-control" type="text" value={item.title || ''} onChange={(e) => updateMetadataArrayObject('competencies', idx, 'title', e.target.value)} />
+                              <label className="form-label">Competency Description</label>
+                              <textarea className="form-control" style={{ minHeight: '80px' }} value={item.text || ''} onChange={(e) => updateMetadataArrayObject('competencies', idx, 'text', e.target.value)} />
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {(activeSection === 'about_partner' || activeSection === 'company_profile_capabilities') && (
                       <div className="admin-page-edit-group">
                         <div className="admin-page-edit-heading">
-                          <strong>Overview Paragraphs</strong>
+                          <strong>{activeSection === 'about_partner' ? 'Partner Checklist Items' : 'Capabilities List'}</strong>
                           <button
                             type="button"
                             className="btn btn-secondary"
-                            onClick={() => handleMetadataChange('paragraphs', [...(sectionContent.metadata?.paragraphs || []), ''])}
+                            onClick={() => {
+                              const listKey = activeSection === 'about_partner' ? 'checklist' : 'capabilities';
+                              handleMetadataChange(listKey, [...(sectionContent.metadata?.[listKey] || []), '']);
+                            }}
                           >
-                            <i className="ri-add-line"></i> Add Paragraph
+                            <i className="ri-add-line"></i> Add Item
                           </button>
                         </div>
-                        {(sectionContent.metadata?.paragraphs || []).map((paragraph, idx) => (
-                          <div className="admin-page-card-editor" key={`paragraph-${idx}`}>
-                            <div className="admin-page-edit-heading">
-                              <strong>Paragraph #{idx + 1}</strong>
+                        {(sectionContent.metadata?.[activeSection === 'about_partner' ? 'checklist' : 'capabilities'] || []).map((item, idx) => {
+                          const listKey = activeSection === 'about_partner' ? 'checklist' : 'capabilities';
+                          return (
+                            <div className="admin-page-card-editor" key={`list-item-${idx}`} style={{ padding: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+                              <input
+                                className="form-control"
+                                type="text"
+                                value={item || ''}
+                                onChange={(e) => handleArrayMetadataChange(listKey, idx, e.target.value)}
+                                placeholder="e.g. Web Apps"
+                                style={{ margin: 0 }}
+                              />
                               <button
                                 type="button"
                                 className="btn btn-secondary admin-remove-row-btn"
+                                style={{ margin: 0 }}
                                 onClick={() => {
-                                  const paragraphs = [...(sectionContent.metadata?.paragraphs || [])];
-                                  paragraphs.splice(idx, 1);
-                                  handleMetadataChange('paragraphs', paragraphs);
+                                  const list = [...(sectionContent.metadata?.[listKey] || [])];
+                                  list.splice(idx, 1);
+                                  handleMetadataChange(listKey, list);
                                 }}
                                 title="Remove"
                               >
                                 <i className="ri-delete-bin-line"></i>
                               </button>
                             </div>
-                            <textarea className="form-control" style={{ minHeight: '90px' }} value={paragraph || ''} onChange={(e) => handleArrayMetadataChange('paragraphs', idx, e.target.value)} />
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {(activeSection === 'about_overview' || activeSection === 'about_achievements' || activeSection === 'company_profile_tech') && (
+                      <div className="admin-page-edit-group">
+                        <div className="admin-page-edit-heading">
+                          <strong>{activeSection === 'company_profile_tech' ? 'Tech Stack Categories' : 'Stats Counter Items'}</strong>
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => {
+                              const listKey = activeSection === 'company_profile_tech' ? 'techs' : 'stats';
+                              const defaultItem = activeSection === 'company_profile_tech' ? { label: 'New Category', value: 'React, Node, etc.' } : { label: 'Stat Metric', value: '100+' };
+                              addMetadataArrayObject(listKey, defaultItem);
+                            }}
+                          >
+                            <i className="ri-add-line"></i> Add Item
+                          </button>
+                        </div>
+                        {(sectionContent.metadata?.[activeSection === 'company_profile_tech' ? 'techs' : 'stats'] || []).map((item, idx) => {
+                          const listKey = activeSection === 'company_profile_tech' ? 'techs' : 'stats';
+                          return (
+                            <div className="admin-page-card-editor" key={`stat-item-${idx}`}>
+                              <div className="admin-page-edit-heading">
+                                <strong>Item #{idx + 1}</strong>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary admin-remove-row-btn"
+                                  onClick={() => removeMetadataArrayObject(listKey, idx)}
+                                  title="Remove"
+                                >
+                                  <i className="ri-delete-bin-line"></i>
+                                </button>
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                                <div>
+                                  <label className="form-label">{activeSection === 'company_profile_tech' ? 'Category Name' : 'Label'}</label>
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={item.label || ''}
+                                    onChange={(e) => updateMetadataArrayObject(listKey, idx, 'label', e.target.value)}
+                                    placeholder="e.g. Projects Completed"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="form-label">{activeSection === 'company_profile_tech' ? 'Technologies List' : 'Value'}</label>
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={item.value || ''}
+                                    onChange={(e) => updateMetadataArrayObject(listKey, idx, 'value', e.target.value)}
+                                    placeholder="e.g. 100+"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {['about_why', 'about_qa', 'about_values', 'company_profile_services', 'company_profile_strengths', 'company_profile_quality'].includes(activeSection) && (() => {
+                      let listKey = 'cards';
+                      if (activeSection === 'company_profile_services') listKey = 'services';
+                      if (activeSection === 'company_profile_strengths') listKey = 'strengths';
+                      if (activeSection === 'company_profile_quality') listKey = 'checks';
+
+                      const hasIcon = ['about_why', 'about_qa', 'about_values', 'company_profile_services'].includes(activeSection);
+
+                      return (
+                        <div className="admin-page-edit-group">
+                          <div className="admin-page-edit-heading">
+                            <strong>Cards Content List</strong>
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              onClick={() => addMetadataArrayObject(listKey, { title: 'New Card', text: '', ...(hasIcon ? { icon: 'ri-checkbox-circle-line' } : {}) })}
+                            >
+                              <i className="ri-add-line"></i> Add Card
+                            </button>
+                          </div>
+                          {(sectionContent.metadata?.[listKey] || []).map((card, idx) => (
+                            <div className="admin-page-card-editor" key={`card-item-${idx}`}>
+                              <div className="admin-page-edit-heading">
+                                <strong>Card #{idx + 1}</strong>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary admin-remove-row-btn"
+                                  onClick={() => removeMetadataArrayObject(listKey, idx)}
+                                  title="Remove"
+                                >
+                                  <i className="ri-delete-bin-line"></i>
+                                </button>
+                              </div>
+                              <div style={{ display: 'grid', gap: '15px' }}>
+                                {hasIcon && (
+                                  <div>
+                                    <label className="form-label">Card Icon (RemixIcon CSS Class)</label>
+                                    <input
+                                      className="form-control"
+                                      type="text"
+                                      value={card.icon || ''}
+                                      onChange={(e) => updateMetadataArrayObject(listKey, idx, 'icon', e.target.value)}
+                                      placeholder="e.g. ri-lightbulb-line"
+                                    />
+                                  </div>
+                                )}
+                                <div>
+                                  <label className="form-label">Card Title</label>
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={card.title || ''}
+                                    onChange={(e) => updateMetadataArrayObject(listKey, idx, 'title', e.target.value)}
+                                    placeholder="Card title"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="form-label">Card Body Copy</label>
+                                  <textarea
+                                    className="form-control"
+                                    style={{ minHeight: '90px' }}
+                                    value={card.text || ''}
+                                    onChange={(e) => updateMetadataArrayObject(listKey, idx, 'text', e.target.value)}
+                                    placeholder="Card description copy..."
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()}
+
+                    {(activeSection === 'about_lifecycle' || activeSection === 'company_profile_process') && (
+                      <div className="admin-page-edit-group">
+                        <div className="admin-page-edit-heading">
+                          <strong>Lifecycle Steps</strong>
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => addMetadataArrayObject('steps', { number: '1', title: 'New Phase', text: '', icon: 'ri-checkbox-circle-line' })}
+                          >
+                            <i className="ri-add-line"></i> Add Step
+                          </button>
+                        </div>
+                        {(sectionContent.metadata?.steps || []).map((step, idx) => (
+                          <div className="admin-page-card-editor" key={`step-${idx}`}>
+                            <div className="admin-page-edit-heading">
+                              <strong>Step #{idx + 1}</strong>
+                              <button
+                                type="button"
+                                className="btn btn-secondary admin-remove-row-btn"
+                                onClick={() => removeMetadataArrayObject('steps', idx)}
+                                title="Remove"
+                              >
+                                <i className="ri-delete-bin-line"></i>
+                              </button>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: '15px', marginBottom: '15px' }}>
+                              <div>
+                                <label className="form-label">No.</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={step.number || ''}
+                                  onChange={(e) => updateMetadataArrayObject('steps', idx, 'number', e.target.value)}
+                                  placeholder="e.g. 01"
+                                />
+                              </div>
+                              <div>
+                                <label className="form-label">Step Title</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={step.title || ''}
+                                  onChange={(e) => updateMetadataArrayObject('steps', idx, 'title', e.target.value)}
+                                  placeholder="e.g. Discovery"
+                                />
+                              </div>
+                            </div>
+                            <div style={{ display: 'grid', gap: '15px' }}>
+                              <div>
+                                <label className="form-label">Icon Class</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={step.icon || ''}
+                                  onChange={(e) => updateMetadataArrayObject('steps', idx, 'icon', e.target.value)}
+                                  placeholder="e.g. ri-search-line"
+                                />
+                              </div>
+                              <div>
+                                <label className="form-label">Description Text</label>
+                                <textarea
+                                  className="form-control"
+                                  style={{ minHeight: '80px' }}
+                                  value={step.text || ''}
+                                  onChange={(e) => updateMetadataArrayObject('steps', idx, 'text', e.target.value)}
+                                  placeholder="Description of this process step..."
+                                />
+                              </div>
+                            </div>
                           </div>
                         ))}
+                      </div>
+                    )}
+
+                    {activeSection === 'faqs' && (
+                      <div className="admin-page-edit-group">
+                        <div className="admin-page-edit-heading">
+                          <strong>FAQ Questions & Answers</strong>
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => addMetadataArrayObject('items', { question: 'New Question?', answer: '' })}
+                          >
+                            <i className="ri-add-line"></i> Add FAQ
+                          </button>
+                        </div>
+                        {(sectionContent.metadata?.items || []).map((faq, idx) => (
+                          <div className="admin-page-card-editor" key={`faq-${idx}`}>
+                            <div className="admin-page-edit-heading">
+                              <strong>FAQ #{idx + 1}</strong>
+                              <button
+                                type="button"
+                                className="btn btn-secondary admin-remove-row-btn"
+                                onClick={() => removeMetadataArrayObject('items', idx)}
+                                title="Remove"
+                              >
+                                <i className="ri-delete-bin-line"></i>
+                              </button>
+                            </div>
+                            <div style={{ display: 'grid', gap: '15px' }}>
+                              <div>
+                                <label className="form-label">Question</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={faq.question || ''}
+                                  onChange={(e) => updateMetadataArrayObject('items', idx, 'question', e.target.value)}
+                                  placeholder="Enter question text..."
+                                />
+                              </div>
+                              <div>
+                                <label className="form-label">Answer</label>
+                                <textarea
+                                  className="form-control"
+                                  style={{ minHeight: '80px' }}
+                                  value={faq.answer || ''}
+                                  onChange={(e) => updateMetadataArrayObject('items', idx, 'answer', e.target.value)}
+                                  placeholder="Enter answer copy..."
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {activeSection === 'company_profile_contact' && (
+                      <div className="admin-page-edit-group" style={{ display: 'grid', gap: '18px' }}>
+                        <div>
+                          <label className="form-label">Direct Contact Phone Number</label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            value={sectionContent.metadata?.phone || ''}
+                            onChange={(e) => handleMetadataChange('phone', e.target.value)}
+                            placeholder="e.g. +91 99995 30797"
+                          />
+                        </div>
+                        <div>
+                          <label className="form-label">Primary Business Email</label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            value={sectionContent.metadata?.email || ''}
+                            onChange={(e) => handleMetadataChange('email', e.target.value)}
+                            placeholder="e.g. info@nexinfosoft.com"
+                          />
+                        </div>
+                        <div>
+                          <label className="form-label">Official Website URL / domain</label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            value={sectionContent.metadata?.website || ''}
+                            onChange={(e) => handleMetadataChange('website', e.target.value)}
+                            placeholder="e.g. nexinfosoft.com"
+                          />
+                        </div>
                       </div>
                     )}
                   </div>

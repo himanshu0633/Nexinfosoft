@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const contact = {
+const defaultContact = {
   phone: '+91 99995 30797',
   phoneHref: 'tel:+919999530797',
   email: 'info@nexinfosoft.com',
@@ -9,14 +9,14 @@ const contact = {
   website: 'nexinfosoft.com'
 };
 
-const metadata = [
+const defaultMetadata = [
   ['Organization', 'Nexinfosoft IT Solutions'],
   ['Focus Areas', 'Web Development, Mobile Applications, ERP, Enterprise Software, AI/ML, Digital Transformation'],
   ['Engagement Model', 'Agile methodology, sprint-based delivery, dedicated teams, QA-tested releases'],
-  ['Contact', `${contact.phone} | ${contact.email} | ${contact.website}`]
+  ['Contact', `${defaultContact.phone} | ${defaultContact.email} | ${defaultContact.website}`]
 ];
 
-const capabilities = [
+const defaultCapabilities = [
   'Web Applications',
   'Mobile Solutions',
   'ERP Development',
@@ -35,7 +35,7 @@ const capabilities = [
   'Scalable Architecture'
 ];
 
-const competencies = [
+const defaultCompetencies = [
   {
     title: 'Delivery Focus',
     text: 'Structured planning, sprint execution, and predictable milestones.'
@@ -50,7 +50,7 @@ const competencies = [
   }
 ];
 
-const services = [
+const defaultServices = [
   {
     icon: 'ri-window-line',
     title: 'Web Applications',
@@ -83,7 +83,7 @@ const services = [
   }
 ];
 
-const strengths = [
+const defaultStrengths = [
   ['Agile Methodology', 'Sprint planning, backlog control, and stakeholder alignment.'],
   ['Sprint Based Delivery', 'Incremental releases to reduce risk and enable timely reviews.'],
   ['Dedicated Team', 'Focused engineering and QA resources for project scope.'],
@@ -92,7 +92,7 @@ const strengths = [
   ['QA & Security Testing', 'Functional validation and security hardening per best practices.']
 ];
 
-const processSteps = [
+const defaultProcessSteps = [
   ['01', 'Requirement Analysis', 'Stakeholder interviews, scope definition, and feasibility review.'],
   ['02', 'BRD / SRS Documentation', 'Business requirements and functional specification preparation.'],
   ['03', 'UI / UX Design', 'Wireframes, prototypes, and approval-ready interface designs.'],
@@ -102,7 +102,7 @@ const processSteps = [
   ['07', 'Support & Maintenance', 'Ongoing support, enhancements, and post-deployment assistance.']
 ];
 
-const techStack = [
+const defaultTechStack = [
   ['Frontend Technologies', 'ReactJS, Angular, Vue.js, HTML5, CSS3, JavaScript, TypeScript, TailwindCSS, Bootstrap'],
   ['Backend Technologies', 'PHP, Laravel, Node.js, Python, Spring Boot, Java, REST APIs'],
   ['Mobile Technologies', 'Flutter, React Native, Android, iOS'],
@@ -111,7 +111,7 @@ const techStack = [
   ['AI & Analytics', 'AI/ML, Automation, Power BI, Data Analytics']
 ];
 
-const qualityChecks = [
+const defaultQualityChecks = [
   ['Unit Testing', 'Validate core modules and reduce regression risk.'],
   ['Load Testing', 'Assess concurrency, throughput, and stability under load.'],
   ['Automation Testing', 'Repeatable suites for critical workflows and acceptance criteria.'],
@@ -206,6 +206,29 @@ const CompanyProfile = () => {
     description: 'To discuss project requirements, timelines, or compliance needs, please contact Nexinfosoft IT Solutions.'
   });
 
+  const dynamicContact = {
+    phone: contactSection.metadata?.phone || defaultContact.phone,
+    phoneHref: contactSection.metadata?.phone ? `tel:${contactSection.metadata.phone.replace(/\s+/g, '')}` : defaultContact.phoneHref,
+    email: contactSection.metadata?.email || defaultContact.email,
+    emailHref: contactSection.metadata?.email ? `mailto:${contactSection.metadata.email}` : defaultContact.emailHref,
+    website: contactSection.metadata?.website || defaultContact.website
+  };
+
+  const dynamicMetadata = [
+    ['Organization', heroContent.metadata?.organization || defaultMetadata[0][1]],
+    ['Focus Areas', heroContent.metadata?.focusAreas || defaultMetadata[1][1]],
+    ['Engagement Model', heroContent.metadata?.engagementModel || defaultMetadata[2][1]],
+    ['Contact', `${dynamicContact.phone} | ${dynamicContact.email} | ${dynamicContact.website}`]
+  ];
+
+  const competenciesList = overviewSection.metadata?.competencies || defaultCompetencies;
+  const capabilitiesList = capabilitiesSection.metadata?.capabilities || defaultCapabilities;
+  const servicesList = servicesSection.metadata?.services || defaultServices;
+  const strengthsList = strengthsSection.metadata?.strengths || defaultStrengths;
+  const processStepsList = processSection.metadata?.steps || defaultProcessSteps;
+  const techStackList = techSection.metadata?.techs || defaultTechStack;
+  const qualityChecksList = qualitySection.metadata?.checks || defaultQualityChecks;
+
   return (
     <div className="company-profile-page">
       <section className="company-profile-hero">
@@ -218,7 +241,7 @@ const CompanyProfile = () => {
               {heroContent.description}
             </p>
             <div className="hero-cta-btns">
-              <a href={contact.phoneHref} className="btn btn-primary">
+              <a href={dynamicContact.phoneHref} className="btn btn-primary">
                 <span>Call Now</span>
                 <i className="ri-phone-line"></i>
               </a>
@@ -233,7 +256,7 @@ const CompanyProfile = () => {
               <img src="/assets/nex-infotech-logo.png" alt="Nexinfosoft IT Solutions" />
             </div>
             <div className="company-profile-meta-table">
-              {metadata.map(([label, value]) => (
+              {dynamicMetadata.map(([label, value]) => (
                 <div className="company-profile-meta-row" key={label}>
                   <strong>{label}</strong>
                   <span>{value}</span>
@@ -272,11 +295,11 @@ const CompanyProfile = () => {
 
           <div className="company-profile-overview-grid">
             <div className="company-profile-copy-card">
-              {(overviewSection.metadata?.paragraphs || []).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              {(overviewSection.metadata?.paragraphs || []).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
             </div>
             <div className="company-profile-competency-grid">
-              {competencies.map((item) => (
-                <article className="company-profile-info-card" key={item.title}>
+              {competenciesList.map((item, index) => (
+                <article className="company-profile-info-card" key={index}>
                   <i className="ri-checkbox-circle-line"></i>
                   <h3>{item.title}</h3>
                   <p>{item.text}</p>
@@ -294,8 +317,8 @@ const CompanyProfile = () => {
             <h2 className="section-title-premium">{capabilitiesSection.title}</h2>
           </div>
           <div className="company-profile-capability-grid">
-            {capabilities.map((capability) => (
-              <div className="company-profile-capability" key={capability}>
+            {capabilitiesList.map((capability, index) => (
+              <div className="company-profile-capability" key={index}>
                 <i className="ri-check-line"></i>
                 <span>{capability}</span>
               </div>
@@ -311,10 +334,10 @@ const CompanyProfile = () => {
             <h2 className="section-title-premium">{servicesSection.title}</h2>
           </div>
           <div className="company-profile-services-grid">
-            {services.map((service) => (
-              <article className="company-profile-strength-card" key={service.title}>
+            {servicesList.map((service, index) => (
+              <article className="company-profile-strength-card" key={index}>
                 <div className="company-profile-strength-icon">
-                  <i className={service.icon}></i>
+                  <i className={service.icon || 'ri-checkbox-circle-line'}></i>
                 </div>
                 <h3>{service.title}</h3>
                 <p>{service.text}</p>
@@ -331,15 +354,19 @@ const CompanyProfile = () => {
             <h2 className="section-title-premium">{strengthsSection.title}</h2>
           </div>
           <div className="company-profile-strength-list">
-            {strengths.map(([title, text]) => (
-              <article key={title}>
-                <i className="ri-shield-check-line"></i>
-                <div>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                </div>
-              </article>
-            ))}
+            {strengthsList.map((item, idx) => {
+              const title = Array.isArray(item) ? item[0] : item.title;
+              const text = Array.isArray(item) ? item[1] : item.text;
+              return (
+                <article key={idx}>
+                  <i className="ri-shield-check-line"></i>
+                  <div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -351,13 +378,18 @@ const CompanyProfile = () => {
             <h2 className="section-title-premium">{processSection.title}</h2>
           </div>
           <div className="company-profile-process-grid">
-            {processSteps.map(([number, title, text]) => (
-              <article className="company-profile-process-card" key={title}>
-                <strong>{number}</strong>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
-            ))}
+            {processStepsList.map((item, idx) => {
+              const num = Array.isArray(item) ? item[0] : item.number;
+              const title = Array.isArray(item) ? item[1] : item.title;
+              const text = Array.isArray(item) ? item[2] : item.text;
+              return (
+                <article className="company-profile-process-card" key={idx}>
+                  <strong>{num}</strong>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -372,12 +404,16 @@ const CompanyProfile = () => {
             </p>
           </div>
           <div className="company-profile-table-card">
-            {techStack.map(([label, value]) => (
-              <div className="company-profile-table-row" key={label}>
-                <strong>{label}</strong>
-                <span>{value}</span>
-              </div>
-            ))}
+            {techStackList.map((item, idx) => {
+              const label = Array.isArray(item) ? item[0] : item.label;
+              const value = Array.isArray(item) ? item[1] : item.value;
+              return (
+                <div className="company-profile-table-row" key={idx}>
+                  <strong>{label}</strong>
+                  <span>{value}</span>
+                </div>
+              );
+            })}
           </div>
           <p className="company-profile-note">
             Additional frameworks, libraries, and third-party services may be applied where they best support the project scope and delivery timeline.
@@ -392,13 +428,17 @@ const CompanyProfile = () => {
             <h2 className="section-title-premium">{qualitySection.title}</h2>
           </div>
           <div className="company-profile-quality-grid">
-            {qualityChecks.map(([title, text]) => (
-              <article className="company-profile-quality-card" key={title}>
-                <i className="ri-verified-badge-line"></i>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
-            ))}
+            {qualityChecksList.map((item, idx) => {
+              const title = Array.isArray(item) ? item[0] : item.title;
+              const text = Array.isArray(item) ? item[1] : item.text;
+              return (
+                <article className="company-profile-quality-card" key={idx}>
+                  <i className="ri-verified-badge-line"></i>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -410,9 +450,9 @@ const CompanyProfile = () => {
             <h2>{contactSection.title}</h2>
             <p>{contactSection.description}</p>
             <div className="company-profile-contact-list">
-              <a href={contact.phoneHref}><i className="ri-phone-line"></i>{contact.phone}</a>
-              <a href={contact.emailHref}><i className="ri-mail-line"></i>{contact.email}</a>
-              <Link to="/"><i className="ri-global-line"></i>{contact.website}</Link>
+              <a href={dynamicContact.phoneHref}><i className="ri-phone-line"></i>{dynamicContact.phone}</a>
+              <a href={dynamicContact.emailHref}><i className="ri-mail-line"></i>{dynamicContact.email}</a>
+              <Link to="/"><i className="ri-global-line"></i>{dynamicContact.website}</Link>
             </div>
           </div>
           <Link to="/free-consultation.html" className="btn btn-primary">

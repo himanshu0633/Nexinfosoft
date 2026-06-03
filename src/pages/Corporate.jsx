@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const serviceHighlights = [
+const defaultServiceHighlights = [
   { icon: 'ri-code-box-line', title: 'Custom Web Development', text: 'We offer interactive and visually rich responsive websites.' },
   { icon: 'ri-smartphone-line', title: 'Custom Application Development', text: 'We provide full-stack mobile application development services.' },
   { icon: 'ri-building-4-line', title: 'ERP Solutions', text: 'We provide ERP solutions that automate your business.' },
   { icon: 'ri-tools-line', title: 'Customized Software Development', text: 'We help you build high-quality software solutions.' }
 ];
 
-const workAreas = ['Web Development', 'Software Development', 'Application Development C.A.'];
-const strengths = ['Custom Solutions', 'Reliable Service', 'Technical Intelligence', 'Resource Availability', 'Agile Process', 'Responsibility'];
+const defaultWorkAreas = ['Web Development', 'Software Development', 'Application Development C.A.'];
+const defaultStrengths = ['Custom Solutions', 'Reliable Service', 'Technical Intelligence', 'Resource Availability', 'Agile Process', 'Responsibility'];
 
-const processSteps = [
+const defaultProcessSteps = [
   { number: '01', title: 'Discussion', text: 'We understand your goals, challenges and business requirements before planning the solution.' },
   { number: '02', title: 'Development & Testing', text: 'We build the solution through agile execution and validate quality across key workflows.' },
   { number: '03', title: 'On Time Delivery', text: 'We deliver with clear milestones, handover support and practical launch readiness.' }
@@ -157,8 +157,8 @@ const Corporate = () => {
       <section className="corporate-section corporate-services-sec">
         <div className="container">
           <div className="corporate-service-grid">
-            {serviceHighlights.map((service) => (
-              <article className="corporate-service-card" key={service.title}>
+            {(about.metadata?.serviceHighlights || defaultServiceHighlights).map((service, idx) => (
+              <article className="corporate-service-card" key={idx}>
                 <i className={service.icon}></i>
                 <h3>{service.title}</h3>
                 <p>{service.text}</p>
@@ -198,8 +198,8 @@ const Corporate = () => {
       <section className="corporate-work-strip-sec">
         <div className="container">
           <div className="corporate-work-strip-grid">
-            {workAreas.map((area, index) => (
-              <div className="corporate-work-strip-card" key={area}>
+            {(about.metadata?.workAreas || defaultWorkAreas).map((area, index) => (
+              <div className="corporate-work-strip-card" key={index}>
                 <strong>{String(index + 1).padStart(2, '0')}</strong>
                 <span>{area}</span>
               </div>
@@ -245,8 +245,8 @@ const Corporate = () => {
             <h2 className="section-title-premium">We Provide The Best Way To Succeed</h2>
           </div>
           <div className="corporate-strength-grid">
-            {strengths.map((strength) => (
-              <div className="corporate-strength-pill" key={strength}>
+            {(about.metadata?.strengths || defaultStrengths).map((strength, index) => (
+              <div className="corporate-strength-pill" key={index}>
                 <i className="ri-checkbox-circle-line"></i>
                 <span>{strength}</span>
               </div>
@@ -265,8 +265,8 @@ const Corporate = () => {
             <h2 className="section-title-premium">We Follow Agile Methodology In Our Projects</h2>
           </div>
           <div className="corporate-process-grid">
-            {processSteps.map((step) => (
-              <article className="corporate-process-card" key={step.title}>
+            {(mission.metadata?.processSteps || defaultProcessSteps).map((step, idx) => (
+              <article className="corporate-process-card" key={idx}>
                 <strong>{step.number}</strong>
                 <h3>{step.title}</h3>
                 <p>{step.text}</p>
