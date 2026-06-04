@@ -6,6 +6,11 @@ const projectSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  slug: {
+    type: String,
+    trim: true,
+    lowercase: true
+  },
   category: {
     type: String,
     required: true,
@@ -32,6 +37,58 @@ const projectSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: ''
+  },
+  overview: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  challenges: {
+    type: [String],
+    required: true,
+    validate: {
+      validator: (items) => items.length > 0,
+      message: 'At least one project challenge is required.'
+    }
+  },
+  solution: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  results: {
+    type: [String],
+    required: true,
+    validate: {
+      validator: (items) => items.length > 0,
+      message: 'At least one project result is required.'
+    }
+  },
+  clientName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  clientRole: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  clientCompany: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  clientReview: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  clientRating: {
+    type: Number,
+    min: 1,
+    max: 5,
+    default: 5
   }
 }, { timestamps: true });
 

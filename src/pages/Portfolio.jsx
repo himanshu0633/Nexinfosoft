@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import portfolioData from '../data/portfolioData';
 import Process from '../components/home/Process';
 import InquireSystemSection from '../components/InquireSystemSection';
+import { getProjectSlug } from '../utils/projects';
 
 // Custom scroll-triggered animated counter component
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -69,7 +70,7 @@ const StarRating = ({ rating }) => {
 
 const Portfolio = () => {
   const [filter, setFilter] = useState('all');
-  const [data, setData] = useState(portfolioData);
+  const [data, setData] = useState({ ...portfolioData, projects: [] });
   const [activeFilterPage, setActiveFilterPage] = useState(0);
 
   // Refs for tilt parallax
@@ -146,15 +147,7 @@ const Portfolio = () => {
         const res = await fetch('/api/projects');
         if (res.ok) {
           const dbProjects = await res.json();
-          if (dbProjects && dbProjects.length > 0) {
-            setData(prev => ({
-              ...prev,
-              projects: [
-                ...dbProjects,
-                ...prev.projects.filter(staticProject => !dbProjects.some(dbProject => dbProject.slug === staticProject.slug || dbProject.name === staticProject.name))
-              ]
-            }));
-          }
+          setData(prev => ({ ...prev, projects: dbProjects || [] }));
         }
       } catch (err) {
         // Fallback active
@@ -526,7 +519,7 @@ const Portfolio = () => {
                       ))}
                     </div>
 
-                    <Link to="/contact" className="btn-view-project-link">
+                    <Link to={`/portfolio/${getProjectSlug(project)}`} className="btn-view-project-link">
                       <span>View Details</span>
                       <i className="ri-arrow-right-up-line"></i>
                     </Link>

@@ -30,7 +30,8 @@ const AdminDashboard = () => {
   // Editor states
   const [sectionContent, setSectionContent] = useState(null);
   const [serviceForm, setServiceForm] = useState({ slug: '', title: '', subtitle: '', icon: 'ri-window-line', intro: '', benefits: '', deliverables: '', image_url: '' });
-  const [projectForm, setProjectForm] = useState({ name: '', category: 'web', tag: '', techs: '', desc: '', icon: 'ri-briefcase-4-line', image_url: '' });
+  const emptyProjectForm = { name: '', category: 'web', tag: '', techs: '', desc: '', icon: 'ri-briefcase-4-line', image_url: '', overview: '', challenges: '', solution: '', results: '', clientName: '', clientRole: '', clientCompany: '', clientReview: '', clientRating: 5 };
+  const [projectForm, setProjectForm] = useState(emptyProjectForm);
   const [techForm, setTechForm] = useState({ category: 'frontend', name: '', icon: 'ri-code-line', desc: '', color: 'rgba(20, 184, 166, 0.1)', bestFor: '', projects: '', performance: '95%' });
   const [showCustomCategory, setShowCustomCategory] = useState(false);
   const [customCategory, setCustomCategory] = useState('');
@@ -1038,7 +1039,8 @@ const AdminDashboard = () => {
     setMessage('');
 
     const techsArr = typeof projectForm.techs === 'string' ? projectForm.techs.split(',').map(s => s.trim()).filter(Boolean) : projectForm.techs;
-    const payload = { ...projectForm, techs: techsArr };
+    const toList = (value) => typeof value === 'string' ? value.split(/\n|,/).map(s => s.trim()).filter(Boolean) : value;
+    const payload = { ...projectForm, techs: techsArr, challenges: toList(projectForm.challenges), results: toList(projectForm.results) };
 
     const url = editingId ? `/api/projects/${editingId}` : '/api/projects';
     const method = editingId ? 'PUT' : 'POST';
@@ -1057,7 +1059,7 @@ const AdminDashboard = () => {
       if (!res.ok) throw new Error(data.error || 'Failed to submit project.');
 
       setMessage(editingId ? 'Project successfully updated!' : 'Project successfully created!');
-      setProjectForm({ name: '', category: 'web', tag: '', techs: '', desc: '', icon: 'ri-briefcase-4-line', image_url: '' });
+      setProjectForm(emptyProjectForm);
       setEditingId(null);
       loadProjects();
     } catch (err) {
@@ -1076,7 +1078,16 @@ const AdminDashboard = () => {
       techs: (proj.techs || []).join(', '),
       desc: proj.desc || '',
       icon: proj.icon || 'ri-briefcase-4-line',
-      image_url: proj.image_url || ''
+      image_url: proj.image_url || '',
+      overview: proj.overview || '',
+      challenges: (proj.challenges || []).join('\n'),
+      solution: proj.solution || '',
+      results: (proj.results || []).join('\n'),
+      clientName: proj.clientName || '',
+      clientRole: proj.clientRole || '',
+      clientCompany: proj.clientCompany || '',
+      clientReview: proj.clientReview || '',
+      clientRating: proj.clientRating || 5
     });
   };
 
@@ -2491,6 +2502,36 @@ const AdminDashboard = () => {
                     <textarea className="form-control" style={{ minHeight: '80px' }} value={projectForm.desc} onChange={(e) => setProjectForm(prev => ({ ...prev, desc: e.target.value }))} />
                   </div>
 
+                  <h3 style={{ fontSize: '16px', fontWeight: 800, margin: '8px 0 0' }}>Project Detail Page Content</h3>
+                  <div className="form-group">
+                    <label className="form-label">Detailed Project Overview</label>
+                    <textarea className="form-control" style={{ minHeight: '100px' }} value={projectForm.overview} onChange={(e) => setProjectForm(prev => ({ ...prev, overview: e.target.value }))} required />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+                    <div className="form-group">
+                      <label className="form-label">Challenges (one per line)</label>
+                      <textarea className="form-control" style={{ minHeight: '120px' }} value={projectForm.challenges} onChange={(e) => setProjectForm(prev => ({ ...prev, challenges: e.target.value }))} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Results (one per line)</label>
+                      <textarea className="form-control" style={{ minHeight: '120px' }} value={projectForm.results} onChange={(e) => setProjectForm(prev => ({ ...prev, results: e.target.value }))} required />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Solution Delivered</label>
+                    <textarea className="form-control" style={{ minHeight: '100px' }} value={projectForm.solution} onChange={(e) => setProjectForm(prev => ({ ...prev, solution: e.target.value }))} required />
+                  </div>
+                  <h3 style={{ fontSize: '16px', fontWeight: 800, margin: '8px 0 0' }}>Client Review</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '18px' }}>
+                    <div className="form-group"><label className="form-label">Client Name</label><input className="form-control" value={projectForm.clientName} onChange={(e) => setProjectForm(prev => ({ ...prev, clientName: e.target.value }))} required /></div>
+                    <div className="form-group"><label className="form-label">Client Role</label><input className="form-control" value={projectForm.clientRole} onChange={(e) => setProjectForm(prev => ({ ...prev, clientRole: e.target.value }))} /></div>
+                    <div className="form-group"><label className="form-label">Client Company</label><input className="form-control" value={projectForm.clientCompany} onChange={(e) => setProjectForm(prev => ({ ...prev, clientCompany: e.target.value }))} /></div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 140px', gap: '18px' }}>
+                    <div className="form-group"><label className="form-label">Review Text</label><textarea className="form-control" style={{ minHeight: '100px' }} value={projectForm.clientReview} onChange={(e) => setProjectForm(prev => ({ ...prev, clientReview: e.target.value }))} required /></div>
+                    <div className="form-group"><label className="form-label">Rating</label><select className="form-control" value={projectForm.clientRating} onChange={(e) => setProjectForm(prev => ({ ...prev, clientRating: Number(e.target.value) }))}>{[5, 4, 3, 2, 1].map(value => <option key={value} value={value}>{value} Stars</option>)}</select></div>
+                  </div>
+
                   {/* Dynamic image uploader for Projects! */}
                   <div className="form-group" style={{ background: 'rgba(255,255,255,0.01)', padding: '20px', borderRadius: '10px', border: '1px dashed var(--border)' }}>
                     <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Project Screenshot / Poster</label>
@@ -2513,7 +2554,7 @@ const AdminDashboard = () => {
                       <span>{editingId ? 'Update Project' : 'Add Project'}</span>
                     </button>
                     {editingId && (
-                      <button type="button" onClick={() => { setEditingId(null); setProjectForm({ name: '', category: 'web', tag: '', techs: '', desc: '', icon: 'ri-briefcase-4-line', image_url: '' }); }} className="btn btn-secondary" style={{ padding: '12px 20px', height: '48px' }}>
+                      <button type="button" onClick={() => { setEditingId(null); setProjectForm(emptyProjectForm); }} className="btn btn-secondary" style={{ padding: '12px 20px', height: '48px' }}>
                         Cancel
                       </button>
                     )}

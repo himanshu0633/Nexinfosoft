@@ -14,6 +14,7 @@ import About from './pages/About';
 import Services from './pages/Services';
 import TechStack from './pages/TechStack';
 import Portfolio from './pages/Portfolio';
+import ProjectDetail from './pages/ProjectDetail';
 import Contact from './pages/Contact';
 import CompanyProfile from './pages/CompanyProfile';
 import Corporate from './pages/Corporate';
@@ -47,6 +48,7 @@ const AppShell = () => {
           <Route path="/services" element={<Services />} />
           <Route path="/technology-stack" element={<TechStack />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/:slug" element={<ProjectDetail />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/company-profile" element={<CompanyProfile />} />
           <Route path="/corporate" element={<Corporate />} />

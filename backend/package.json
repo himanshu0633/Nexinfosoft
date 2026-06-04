@@ -5,7 +5,8 @@
   "type": "commonjs",
   "scripts": {
     "server": "node server.js",
-    "seed:sections": "node scripts/seedSectionContent.js"
+    "seed:sections": "node scripts/seedSectionContent.js",
+    "seed:project-details": "node scripts/seedProjectDetails.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
