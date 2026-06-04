@@ -2,57 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import contactData from '../data/contactData';
 
-// Custom scroll-triggered animated counter component
-const AnimatedCounter = ({ value, duration = 1500 }) => {
-  const [count, setCount] = useState('0');
-  const ref = useRef(null);
-  const animated = useRef(false);
-
-  useEffect(() => {
-    const match = value.toString().match(/^(\d+)(.*)$/);
-    if (!match) {
-      setCount(value);
-      return;
-    }
-    const target = parseInt(match[1], 10);
-    const suffix = match[2];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting && !animated.current) {
-          animated.current = true;
-          let currentStep = 0;
-          const totalSteps = 40;
-          const stepTime = duration / totalSteps;
-
-          const timer = setInterval(() => {
-            currentStep++;
-            const progress = currentStep / totalSteps;
-            const currentVal = Math.round(target * progress);
-            if (currentStep >= totalSteps) {
-              setCount(`${target}${suffix}`);
-              clearInterval(timer);
-            } else {
-              setCount(`${currentVal}${suffix}`);
-            }
-          }, stepTime);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-    return () => {
-      if (ref.current) observer.unobserve(ref.current);
-    };
-  }, [value, duration]);
-
-  return <span ref={ref}>{count}</span>;
-};
-
 const Contact = () => {
   // Form state
   const [formData, setFormData] = useState({
@@ -74,7 +23,6 @@ const Contact = () => {
   const [captchaValue, setCaptchaValue] = useState('');
 
   // Refs for tilt parallax
-  const heroIllustrationRef = useRef(null);
   const ctaIllustrationRef = useRef(null);
   const contactMethodsScrollerRef = useRef(null);
   const contactWhyScrollerRef = useRef(null);
@@ -282,100 +230,7 @@ const Contact = () => {
   return (
     <div className="contact-page-wrapper">
       {/* ==========================================================================
-         SECTION 1: HERO SECTION
-         ========================================================================== */}
-      <section className="contact-hero-sec">
-        {/* Soft glowing mesh background */}
-        <div className="contact-mesh-grid"></div>
-        <div className="contact-glow-accent glow-one"></div>
-        <div className="contact-glow-accent glow-two"></div>
-
-        <div className="container">
-          <div className="contact-hero-grid">
-            <div className="contact-hero-left reveal slide-left">
-              <span className="section-tag-premium">CONTACT US</span>
-              <h1 className="contact-hero-title">
-                Let's Build Something Amazing Together
-              </h1>
-              <p className="contact-hero-desc">
-                Have a project idea, need a business website, ERP system, mobile app, or custom software solution? Let's discuss your requirements.
-              </p>
-
-              {/* Action Buttons */}
-              <div className="contact-hero-btns">
-             
-                <a href="#contact-methods" className="btn btn-secondary">
-                  <span>Book Free Consultation</span>
-                  <i className="ri-chat-smile-2-line"></i>
-                </a>
-                <a href="#contact-methods" className="btn btn-secondary">
-                  <span>Schedule Call</span>
-                  <i className="ri-phone-line"></i>
-                </a>
-              </div>
-
-              {/* Stats Counters */}
-              <div className="contact-hero-stats">
-                <div className="con-stat-item">
-                  <h3><AnimatedCounter value="300+" /></h3>
-                  <span>Projects Delivered</span>
-                </div>
-                <div className="con-stat-item">
-                  <h3><AnimatedCounter value="250+" /></h3>
-                  <span>Happy Clients</span>
-                </div>
-                <div className="con-stat-item">
-                  <h3><AnimatedCounter value="24/7" /></h3>
-                  <span>Support Sync</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="contact-hero-right reveal slide-right delay-200">
-              <div 
-                ref={heroIllustrationRef}
-                className="contact-hero-illustration"
-                onMouseMove={(e) => handleCardMouseMove(e, heroIllustrationRef.current)}
-                onMouseLeave={() => handleCardMouseLeave(heroIllustrationRef.current)}
-              >
-                {/* 3D Dashboard Mockup Design representation */}
-                <div className="contact-hero-3d-box">
-                  <div className="con-3d-head">
-                    <div className="con-dots">
-                      <span></span><span></span><span></span>
-                    </div>
-                    <div className="con-title">Communication Telemetry</div>
-                  </div>
-                  <div className="con-3d-body">
-                    <i className="ri-customer-service-2-fill"></i>
-                  </div>
-                </div>
-
-                {/* Floating Cards */}
-                <div className="con-floating-card c-card-one">
-                  <i className="ri-phone-fill"></i>
-                  <span>Call Us</span>
-                </div>
-                <div className="con-floating-card c-card-two">
-                  <i className="ri-mail-fill"></i>
-                  <span>Email Us</span>
-                </div>
-                <div className="con-floating-card c-card-three">
-                  <i className="ri-whatsapp-fill"></i>
-                  <span>WhatsApp Support</span>
-                </div>
-                <div className="con-floating-card c-card-four">
-                  <i className="ri-map-pin-fill"></i>
-                  <span>Visit Office</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         SECTION 2: CONTACT METHODS SECTION (4 PREMIUM CARDS)
+         SECTION 1: CONTACT METHODS SECTION (4 PREMIUM CARDS)
          ========================================================================== */}
       <section id="contact-methods" className="contact-methods-sec">
         <div className="container">

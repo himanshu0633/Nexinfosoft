@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import techStackData from '../data/techStackData';
+import InquireSystemSection from '../components/InquireSystemSection';
 
 // Custom scroll-triggered animated counter component
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -51,19 +52,6 @@ const AnimatedCounter = ({ value, duration = 1500 }) => {
   }, [value, duration]);
 
   return <span ref={ref}>{count}</span>;
-};
-
-// Helper component to render stars for ratings
-const StarRating = ({ rating }) => {
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
-    if (i <= rating) {
-      stars.push(<i key={i} className="ri-star-fill star-active"></i>);
-    } else {
-      stars.push(<i key={i} className="ri-star-line star-inactive"></i>);
-    }
-  }
-  return <div className="comparison-stars">{stars}</div>;
 };
 
 const TechStack = () => {
@@ -392,25 +380,7 @@ const TechStack = () => {
                 </Link>
               </div>
 
-              {/* Counters Row */}
-              <div className="tech-hero-stats">
-                <div className="tech-stat-item">
-                  <h3><AnimatedCounter value="300+" /></h3>
-                  <span>Projects Delivered</span>
-                </div>
-                <div className="tech-stat-item">
-                  <h3><AnimatedCounter value="50+" /></h3>
-                  <span>Experts Team</span>
-                </div>
-                <div className="tech-stat-item">
-                  <h3><AnimatedCounter value="20+" /></h3>
-                  <span>Technologies</span>
-                </div>
-                <div className="tech-stat-item">
-                  <h3><AnimatedCounter value="10+" /></h3>
-                  <span>Years Experience</span>
-                </div>
-              </div>
+
             </div>
 
             <div className="tech-hero-right reveal slide-right delay-200">
@@ -562,51 +532,7 @@ const TechStack = () => {
                   <h2 className="tech-panel-heading">{data.categories.cloud.title}</h2>
                   <p className="tech-panel-desc">{data.categories.cloud.desc}</p>
 
-                  {/* Cloud Architecture Diagram Showcase */}
-                  <div className="cloud-architecture-wrapper">
-                    <span className="diag-title">Floating Architecture Visualization</span>
-                    
-                    <div className="cloud-diagram-sandbox">
-                      <div className="diag-node node-dns">
-                        <i className="ri-shield-flash-line"></i>
-                        <span>Cloudflare DNS</span>
-                      </div>
-                      
-                      <div className="diag-connector">
-                        <div className="connector-pulse"></div>
-                      </div>
-                      
-                      <div className="diag-node node-lb">
-                        <i className="ri-git-merge-line"></i>
-                        <span>AWS Elastic Load Balancer</span>
-                      </div>
-
-                      <div className="diag-connector-split">
-                        <div className="split-connector line-left"></div>
-                        <div className="split-connector line-right"></div>
-                      </div>
-
-                      <div className="diag-nodes-row">
-                        <div className="diag-node node-app">
-                          <i className="ri-box-3-line"></i>
-                          <span>Docker App Container A</span>
-                        </div>
-                        <div className="diag-node node-app">
-                          <i className="ri-box-3-line"></i>
-                          <span>Docker App Container B</span>
-                        </div>
-                      </div>
-
-                      <div className="diag-connector-join"></div>
-
-                      <div className="diag-node node-db">
-                        <i className="ri-database-2-line"></i>
-                        <span>AWS RDS / PostgreSQL Database</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="tech-cards-grid mt-4">
+                  <div className="tech-cards-grid">
                     {data.categories.cloud.items.map((tech, idx) => (
                       <div key={idx} className="tech-detailed-card">
                         <div className="tech-card-head">
@@ -639,24 +565,6 @@ const TechStack = () => {
                           <h3>{tech.name}</h3>
                         </div>
                         <p className="tech-card-desc">{tech.desc}</p>
-                        
-                        <div className="tech-card-meta">
-                          <div className="meta-row">
-                            <strong>Best For:</strong>
-                            <span>{tech.bestFor || 'Custom Solutions'}</span>
-                          </div>
-                          <div className="meta-row">
-                            <strong>Projects:</strong>
-                            <span>{tech.projects || 'Enterprise Apps'}</span>
-                          </div>
-                          <div className="meta-row performance-row">
-                            <strong>Performance:</strong>
-                            <div className="perf-bar-outer">
-                              <div className="perf-bar-inner" style={{ width: tech.performance || '95%' }}></div>
-                            </div>
-                            <span className="perf-number">{tech.performance || '95%'}</span>
-                          </div>
-                        </div>
                       </div>
                     ))}
                   </div>
@@ -703,70 +611,9 @@ const TechStack = () => {
       </section>
 
       {/* ==========================================================================
-         SECTION 4: COMPARISON MATRIX SECTION
+         SECTION 4: SYSTEM INQUIRY
          ========================================================================== */}
-      <section className="tech-comparison-sec">
-        <div className="container">
-          <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">TECHNOLOGY COMPARISON</span>
-            <h2 className="section-title-premium text-center">
-              Compare & Choose The Best Fit For Your Project
-            </h2>
-            <p className="section-desc-premium text-center">
-              Analyze the engineering differences between core languages and frameworks to find your ideal match.
-            </p>
-          </div>
-
-          {/* Table split view */}
-          <div className="comparison-flex-layout reveal slide-up delay-100">
-            <div className="comparison-table-wrapper">
-              <table className="premium-comparison-table">
-                <thead>
-                  <tr>
-                    <th>Technology</th>
-                    <th>Best For</th>
-                    <th>Scalability</th>
-                    <th>Performance</th>
-                    <th>Learning Curve</th>
-                    <th>Maintenance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.comparisonTable.map((row, idx) => (
-                    <tr key={idx}>
-                      <td className="tech-td-bold">
-                        <span>{row.tech}</span>
-                      </td>
-                      <td className="tech-td-muted">{row.bestFor}</td>
-                      <td><StarRating rating={row.scalability} /></td>
-                      <td><StarRating rating={row.performance} /></td>
-                      <td><StarRating rating={row.learning} /></td>
-                      <td><StarRating rating={row.maintenance} /></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="comparison-side-sticky-box">
-              <h3>Not sure which technology is best?</h3>
-              <p>Our experts will help you choose the perfect stack for performance, security, and scalability.</p>
-              
-              <ul className="comparison-side-checklist">
-                <li><i className="ri-checkbox-circle-fill"></i> Free Consultation</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Customized Recommendation</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Future Ready Solutions</li>
-                <li><i className="ri-checkbox-circle-fill"></i> Budget Friendly</li>
-              </ul>
-
-              <Link to="/contact" className="btn btn-primary sticky-comparison-cta">
-                <span>Get Free Consultation</span>
-                <i className="ri-chat-smile-2-line"></i>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <InquireSystemSection />
 
       {/* ==========================================================================
          SECTION 5: PROJECTS SHOWCASE

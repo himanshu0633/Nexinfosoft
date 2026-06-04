@@ -15547,6 +15547,10 @@ body {
     gap: 10px;
 }
 
+.portfolio-filter-dots {
+    display: none;
+}
+
 .filter-pill-btn {
     display: inline-flex;
     align-items: center;
@@ -16096,6 +16100,16 @@ body {
 
 .portfolio-timeline-wrapper {
     margin-top: 42px !important;
+}
+
+@media (min-width: 769px) {
+    .portfolio-page-wrapper .portfolio-hero-sec {
+        padding-bottom: 28px !important;
+    }
+
+    .portfolio-page-wrapper .portfolio-showcase-section {
+        padding-top: 28px !important;
+    }
 }
 
 
@@ -19051,6 +19065,26 @@ strong {
         width: 62px !important;
         height: 62px !important;
         margin-bottom: 18px !important;
+        background: rgba(15, 139, 141, 0.08) !important;
+        border-color: rgba(15, 139, 141, 0.18) !important;
+        color: #0f8b8d !important;
+        overflow: visible !important;
+    }
+
+    .about-lifecycle-sec .node-icon-circle i {
+        display: block !important;
+        color: #0f8b8d !important;
+        font-size: 24px !important;
+        line-height: 1 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        z-index: 1 !important;
+    }
+
+    .about-lifecycle-sec .node-step-number {
+        top: -7px !important;
+        right: -9px !important;
+        z-index: 2 !important;
     }
 
     .about-lifecycle-sec .timeline-node-card h4 {
@@ -19076,39 +19110,11 @@ strong {
     }
 
     .portfolio-filters-wrapper::after {
-        content: '\2192' !important;
-        position: absolute !important;
-        right: 6px !important;
-        top: 48px !important;
-        width: 30px !important;
-        height: 30px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 999px !important;
-        color: #0f8b8d !important;
-        font-size: 17px !important;
-        font-weight: 800 !important;
-        background: rgba(255, 255, 255, 0.92) !important;
-        border: 1px solid rgba(15, 139, 141, 0.16) !important;
-        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08) !important;
-        backdrop-filter: blur(12px) !important;
-        pointer-events: none !important;
-        animation: portfolioScrollCue 1.4s ease-in-out infinite !important;
-        z-index: 3 !important;
+        display: none !important;
     }
 
     .portfolio-filters-wrapper::before {
-        content: '' !important;
-        position: absolute !important;
-        right: -1px !important;
-        top: 39px !important;
-        width: 58px !important;
-        height: 54px !important;
-        border-radius: 0 999px 999px 0 !important;
-        background: linear-gradient(90deg, rgba(248, 251, 255, 0), rgba(248, 251, 255, 0.95) 58%, #f8fbff) !important;
-        pointer-events: none !important;
-        z-index: 2 !important;
+        display: none !important;
     }
 
     .filters-title {
@@ -19127,11 +19133,19 @@ strong {
         overflow-x: auto !important;
         overflow-y: hidden !important;
         scroll-snap-type: x mandatory !important;
+        scroll-behavior: smooth !important;
+        touch-action: pan-x !important;
+        overscroll-behavior-x: contain !important;
         -webkit-overflow-scrolling: touch !important;
         padding: 2px 0 10px !important;
         scrollbar-width: none !important;
         -webkit-mask-image: none !important;
         mask-image: none !important;
+        cursor: grab !important;
+    }
+
+    .portfolio-interactive-pills:active {
+        cursor: grabbing !important;
     }
 
     .portfolio-interactive-pills::-webkit-scrollbar {
@@ -19159,6 +19173,29 @@ strong {
         white-space: normal !important;
         overflow-wrap: normal !important;
         word-break: normal !important;
+    }
+
+    .portfolio-filter-dots {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 7px !important;
+        margin-top: 8px !important;
+    }
+
+    .portfolio-filter-dots button {
+        width: 7px !important;
+        height: 7px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 999px !important;
+        background: rgba(15, 139, 141, 0.22) !important;
+        transition: width 0.2s ease, background-color 0.2s ease !important;
+    }
+
+    .portfolio-filter-dots button.active {
+        width: 22px !important;
+        background: #0f8b8d !important;
     }
 }
 
@@ -19293,6 +19330,30 @@ strong {
         padding-bottom: 40px !important;
     }
 
+    .portfolio-page-wrapper .portfolio-hero-stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+        padding-top: 18px !important;
+    }
+
+    .portfolio-page-wrapper .port-stat-item {
+        min-width: 0 !important;
+        text-align: center !important;
+    }
+
+    .portfolio-page-wrapper .port-stat-item h3 {
+        margin-bottom: 5px !important;
+        font-size: 20px !important;
+        line-height: 1 !important;
+    }
+
+    .portfolio-page-wrapper .port-stat-item span {
+        display: block !important;
+        font-size: 9px !important;
+        line-height: 1.25 !important;
+        overflow-wrap: anywhere !important;
+    }
+
     .portfolio-showcase-section,
     .portfolio-techs-sec,
     .portfolio-metrics-sec,
@@ -19313,12 +19374,108 @@ strong {
     }
 
     .featured-case-study-sec {
+        width: 100% !important;
+        padding: 0 !important;
         margin-bottom: 34px !important;
     }
 
     .featured-case-left,
     .featured-case-illustration {
         display: none !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-grid {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 22px 16px !important;
+        border-radius: 18px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-right,
+    .portfolio-page-wrapper .featured-case-specs,
+    .portfolio-page-wrapper .featured-case-specs .spec-block {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-right h2 {
+        font-size: 25px !important;
+        line-height: 1.15 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-specs {
+        gap: 16px !important;
+        margin-bottom: 22px !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-specs strong {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-specs p {
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-specs .spec-block:last-child strong {
+        white-space: nowrap !important;
+    }
+
+    .portfolio-page-wrapper .featured-tech-chips {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        padding: 2px 0 8px !important;
+        scroll-snap-type: x proximity !important;
+        touch-action: pan-x !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+    }
+
+    .portfolio-page-wrapper .featured-tech-chips::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .portfolio-page-wrapper .featured-tech-chips .tech-chip-item {
+        flex: 0 0 auto !important;
+        padding: 6px 10px !important;
+        font-size: 10px !important;
+        white-space: nowrap !important;
+        scroll-snap-align: start !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    .portfolio-page-wrapper .featured-metric-box {
+        min-width: 0 !important;
+        text-align: center !important;
+    }
+
+    .portfolio-page-wrapper .featured-metric-box h3 {
+        font-size: 18px !important;
+        line-height: 1 !important;
+        margin-bottom: 6px !important;
+    }
+
+    .portfolio-page-wrapper .featured-metric-box span {
+        display: block !important;
+        font-size: 8px !important;
+        line-height: 1.25 !important;
+        overflow-wrap: anywhere !important;
     }
 
     .portfolio-techs-sec .portfolio-techs-floating-row,
@@ -22144,6 +22301,15 @@ strong {
 }
 
 /* About page spacing polish */
+.about-page-wrapper .about-partner-sec .orbiting-glass-badge.badge-cloud {
+    left: auto !important;
+    right: -6% !important;
+    bottom: 25% !important;
+    width: max-content !important;
+    max-width: 180px !important;
+    white-space: nowrap !important;
+}
+
 .about-page-wrapper .about-hero-sec {
     padding-top: 178px !important;
     padding-bottom: 72px !important;
@@ -22287,6 +22453,54 @@ strong {
 
     .about-page-wrapper .section-header-premium {
         margin-bottom: 26px !important;
+    }
+
+    .about-page-wrapper .qa-frosted-cards {
+        gap: 12px !important;
+    }
+
+    .about-page-wrapper .qa-frosted-card {
+        display: grid !important;
+        grid-template-columns: 42px minmax(0, 1fr) !important;
+        align-items: start !important;
+        gap: 12px !important;
+        width: 100% !important;
+        padding: 16px !important;
+        border-radius: 16px !important;
+        text-align: left !important;
+        background: rgba(255, 255, 255, 0.72) !important;
+        border: 1px solid rgba(15, 139, 141, 0.1) !important;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.045) !important;
+    }
+
+    .about-page-wrapper .qa-frosted-card:hover {
+        transform: none !important;
+    }
+
+    .about-page-wrapper .qa-frosted-card .card-check-green {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 36px !important;
+        height: 36px !important;
+        margin: 2px 0 0 !important;
+        border-radius: 10px !important;
+        background: rgba(15, 139, 141, 0.08) !important;
+        color: #0f8b8d !important;
+        font-size: 18px !important;
+    }
+
+    .about-page-wrapper .qa-frosted-card h4 {
+        font-size: 17px !important;
+        line-height: 1.2 !important;
+        margin-bottom: 6px !important;
+        text-align: left !important;
+    }
+
+    .about-page-wrapper .qa-frosted-card p {
+        font-size: 13px !important;
+        line-height: 1.45 !important;
+        text-align: left !important;
     }
 
     .about-page-wrapper .about-overview-grid {
@@ -23027,5 +23241,263 @@ strong {
 @media (min-width: 981px) and (max-width: 1279px) {
     .core-service-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+/* Portfolio featured case study desktop polish */
+@media (min-width: 1201px) {
+    .portfolio-page-wrapper .featured-case-grid {
+        grid-template-columns: 320px minmax(0, 1fr) !important;
+        gap: 42px !important;
+        padding: 36px !important;
+        border-radius: 22px !important;
+        background: rgba(255, 255, 255, 0.62) !important;
+        border: 1px solid rgba(15, 139, 141, 0.12) !important;
+        box-shadow: 0 22px 54px rgba(15, 23, 42, 0.06) !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-left {
+        min-height: 100% !important;
+        border-radius: 18px !important;
+        background:
+            radial-gradient(circle at 50% 42%, rgba(15, 139, 141, 0.15), transparent 38%),
+            linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(225, 244, 245, 0.72)) !important;
+        border: 1px solid rgba(15, 139, 141, 0.1) !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-illustration {
+        width: 118px !important;
+        height: 118px !important;
+        font-size: 48px !important;
+        border-radius: 18px !important;
+        color: #0f8b8d !important;
+        box-shadow: 0 18px 40px rgba(15, 139, 141, 0.12) !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-right h2 {
+        margin: 6px 0 18px !important;
+        font-size: 34px !important;
+        line-height: 1.12 !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-specs {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 16px 24px !important;
+        margin-bottom: 22px !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-specs .spec-block {
+        padding: 14px 16px !important;
+        border-radius: 12px !important;
+        background: rgba(255, 255, 255, 0.58) !important;
+        border: 1px solid rgba(15, 23, 42, 0.055) !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-specs .spec-block:last-child {
+        grid-column: 1 / -1 !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-specs p {
+        margin: 0 !important;
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-metrics {
+        gap: 12px !important;
+        padding-top: 0 !important;
+        margin-bottom: 22px !important;
+        border-top: 0 !important;
+    }
+
+    .portfolio-page-wrapper .featured-metric-box {
+        padding: 13px 15px !important;
+        border-radius: 12px !important;
+        background: rgba(15, 139, 141, 0.07) !important;
+        border: 1px solid rgba(15, 139, 141, 0.1) !important;
+    }
+
+    .portfolio-page-wrapper .featured-metric-box h3 {
+        margin-bottom: 3px !important;
+        font-size: 24px !important;
+    }
+
+    .portfolio-page-wrapper .featured-case-cta {
+        min-height: 46px !important;
+        padding: 10px 22px !important;
+    }
+}
+
+/* Keep the workflow connector centered between the first and last cards. */
+@media (min-width: 769px) {
+    .process .process-timeline::before {
+        display: none !important;
+    }
+
+    .process .process-steps::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: calc((100% - 50px) / 12) !important;
+        right: calc((100% - 50px) / 12) !important;
+        height: 3px !important;
+        transform: translateY(-50%) !important;
+        background: linear-gradient(90deg, rgba(20, 184, 166, 0.1) 0%, rgba(20, 184, 166, 0.8) 50%, rgba(139, 92, 246, 0.2) 100%) !important;
+        z-index: 1 !important;
+        pointer-events: none !important;
+    }
+
+    .process .process-step {
+        z-index: 2 !important;
+    }
+
+    .process .process-number {
+        z-index: 3 !important;
+    }
+}
+
+/* Center the two Recent Work cards and keep the CTA on its own row. */
+@media (min-width: 769px) {
+    .portfolio .portfolio-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        width: min(100%, 1210px) !important;
+        margin-inline: auto !important;
+    }
+
+    .portfolio .portfolio-view-more-row {
+        margin-top: 34px !important;
+    }
+}
+
+/* Keep every dynamic service detail page on the same visual template. */
+.service-detail-page-wrapper .service-hero-grid {
+    align-items: center !important;
+}
+
+.service-detail-page-wrapper .service-hero-left,
+.service-detail-page-wrapper .benefit-premium-card,
+.service-detail-page-wrapper .why-glass-card,
+.service-detail-page-wrapper .portfolio-premium-card,
+.service-detail-page-wrapper .pricing-premium-card {
+    height: 100% !important;
+}
+
+.service-detail-page-wrapper .benefit-premium-card,
+.service-detail-page-wrapper .why-glass-card,
+.service-detail-page-wrapper .portfolio-premium-card {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.service-detail-page-wrapper .benefit-premium-card p,
+.service-detail-page-wrapper .why-glass-card p {
+    margin-bottom: 0 !important;
+}
+
+.service-detail-page-wrapper .portfolio-card-info {
+    display: flex !important;
+    flex: 1 !important;
+    flex-direction: column !important;
+}
+
+.service-detail-page-wrapper .portfolio-card-info .btn-view-project-link {
+    margin-top: auto !important;
+}
+
+.service-detail-page-wrapper .timeline-node-card h4 {
+    min-height: 38px !important;
+}
+
+.service-detail-page-wrapper .timeline-node-card p {
+    min-height: 76px !important;
+}
+
+.service-detail-page-wrapper .pricing-card-body {
+    flex: 1 !important;
+}
+
+@media (min-width: 1201px) {
+    .service-detail-page-wrapper .service-hero-left {
+        display: flex !important;
+        min-height: 430px !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+
+    .service-detail-page-wrapper .service-hero-title {
+        min-height: 72px !important;
+        display: flex !important;
+        align-items: center !important;
+        margin-bottom: 22px !important;
+        font-size: 52px !important;
+        line-height: 1.08 !important;
+        white-space: nowrap !important;
+        overflow-wrap: normal !important;
+        letter-spacing: -0.04em !important;
+    }
+
+    .service-detail-page-wrapper .service-hero-title-compact {
+        font-size: 42px !important;
+    }
+
+    .service-detail-page-wrapper .service-hero-title-extra-compact {
+        font-size: 36px !important;
+    }
+
+    .service-detail-page-wrapper .service-hero-desc {
+        min-height: 90px !important;
+        max-width: 680px !important;
+    }
+
+    .service-detail-page-wrapper .service-feature-tags {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        min-height: 126px !important;
+        align-content: flex-start !important;
+        gap: 12px !important;
+    }
+
+    .service-detail-page-wrapper .feature-tag-pill {
+        width: 100% !important;
+        min-height: 54px !important;
+        justify-content: flex-start !important;
+        padding: 10px 16px !important;
+        line-height: 1.3 !important;
+    }
+
+    .service-detail-page-wrapper .browser-mockup-frame {
+        min-height: 340px !important;
+    }
+
+    .service-detail-page-wrapper .benefit-premium-card h3 {
+        min-height: 48px !important;
+    }
+
+    .service-detail-page-wrapper .benefit-premium-card p {
+        min-height: 112px !important;
+    }
+
+    .service-detail-page-wrapper .why-glass-card h3 {
+        min-height: 44px !important;
+    }
+
+    .service-detail-page-wrapper .why-glass-card p {
+        min-height: 90px !important;
+    }
+
+    .service-detail-page-wrapper .portfolio-premium-card h3 {
+        min-height: 44px !important;
+    }
+
+    .service-detail-page-wrapper .portfolio-premium-card p {
+        min-height: 82px !important;
+    }
+
+    .service-detail-page-wrapper .pricing-card-header {
+        min-height: 120px !important;
+    }
+
+    .service-detail-page-wrapper .pricing-features-list {
+        min-height: 260px !important;
     }
 }

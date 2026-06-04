@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import portfolioData from '../data/portfolioData';
+import Process from '../components/home/Process';
+import InquireSystemSection from '../components/InquireSystemSection';
 
 // Custom scroll-triggered animated counter component
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -68,13 +70,14 @@ const StarRating = ({ rating }) => {
 const Portfolio = () => {
   const [filter, setFilter] = useState('all');
   const [data, setData] = useState(portfolioData);
+  const [activeFilterPage, setActiveFilterPage] = useState(0);
 
   // Refs for tilt parallax
   const heroIllustrationRef = useRef(null);
   const ctaIllustrationRef = useRef(null);
+  const filterScrollerRef = useRef(null);
   const successMetricsScrollerRef = useRef(null);
   const portfolioIndustriesScrollerRef = useRef(null);
-  const portfolioProcessScrollerRef = useRef(null);
 
   // Filter Pills mapping
   const filterPills = [
@@ -91,6 +94,26 @@ const Portfolio = () => {
 
   const handleFilterClick = (filterVal) => {
     setFilter(filterVal);
+  };
+
+  const filterPageCount = Math.ceil(filterPills.length / 3);
+
+  const handleFilterScroll = () => {
+    const scroller = filterScrollerRef.current;
+    if (!scroller) return;
+    const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+    const progress = maxScroll > 0 ? scroller.scrollLeft / maxScroll : 0;
+    setActiveFilterPage(Math.round(progress * (filterPageCount - 1)));
+  };
+
+  const scrollToFilterPage = (pageIndex) => {
+    const scroller = filterScrollerRef.current;
+    if (!scroller) return;
+    const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+    scroller.scrollTo({
+      left: filterPageCount > 1 ? (maxScroll * pageIndex) / (filterPageCount - 1) : 0,
+      behavior: 'smooth'
+    });
   };
 
   const handleCardMouseMove = (event, cardEl) => {
@@ -268,70 +291,6 @@ const Portfolio = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const scroller = portfolioProcessScrollerRef.current;
-    const mobileQuery = window.matchMedia('(max-width: 768px)');
-    let intervalId;
-    let resumeTimer;
-
-    const stopAutoScroll = () => {
-      clearInterval(intervalId);
-      clearTimeout(resumeTimer);
-    };
-
-    const startAutoScroll = () => {
-      stopAutoScroll();
-      if (!scroller || !mobileQuery.matches) return;
-
-      intervalId = setInterval(() => {
-        const firstItem = scroller.querySelector('.portfolio-timeline-node-card');
-        if (!firstItem) return;
-
-        const cardWidth = firstItem.getBoundingClientRect().width;
-        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
-        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-        const nextLeft = scroller.scrollLeft + cardWidth + gap;
-
-        scroller.scrollTo({
-          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
-          behavior: 'smooth'
-        });
-      }, 1000);
-    };
-
-    const pauseThenResume = () => {
-      stopAutoScroll();
-      resumeTimer = setTimeout(startAutoScroll, 2200);
-    };
-
-    const pauseAutoScroll = () => stopAutoScroll();
-    const resumeAutoScroll = () => startAutoScroll();
-
-    startAutoScroll();
-
-    if (scroller) {
-      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
-      scroller.addEventListener('mouseenter', pauseAutoScroll);
-      scroller.addEventListener('focusin', pauseAutoScroll);
-      scroller.addEventListener('mouseleave', resumeAutoScroll);
-      scroller.addEventListener('focusout', resumeAutoScroll);
-    }
-
-    mobileQuery.addEventListener('change', startAutoScroll);
-
-    return () => {
-      stopAutoScroll();
-      mobileQuery.removeEventListener('change', startAutoScroll);
-      if (scroller) {
-        scroller.removeEventListener('touchstart', pauseThenResume);
-        scroller.removeEventListener('mouseenter', pauseAutoScroll);
-        scroller.removeEventListener('focusin', pauseAutoScroll);
-        scroller.removeEventListener('mouseleave', resumeAutoScroll);
-        scroller.removeEventListener('focusout', resumeAutoScroll);
-      }
-    };
-  }, []);
-
   const filteredProjects = filter === 'all' 
     ? data.projects 
     : data.projects.filter(p => p.category === filter);
@@ -442,7 +401,11 @@ const Portfolio = () => {
         <div className="container">
           <div className="portfolio-filters-wrapper reveal slide-up">
             <span className="filters-title">FILTER SYSTEMS</span>
-            <div className="portfolio-interactive-pills">
+            <div
+              ref={filterScrollerRef}
+              className="portfolio-interactive-pills"
+              onScroll={handleFilterScroll}
+            >
               {filterPills.map((pill) => (
                 <button
                   key={pill.key}
@@ -451,6 +414,17 @@ const Portfolio = () => {
                 >
                   <span>{pill.label}</span>
                 </button>
+              ))}
+            </div>
+            <div className="portfolio-filter-dots" aria-label="Filter slider pages">
+              {Array.from({ length: filterPageCount }, (_, index) => (
+                <button
+                  type="button"
+                  key={index}
+                  className={activeFilterPage === index ? 'active' : ''}
+                  onClick={() => scrollToFilterPage(index)}
+                  aria-label={`Show filter page ${index + 1}`}
+                />
               ))}
             </div>
           </div>
@@ -618,40 +592,9 @@ const Portfolio = () => {
       </section>
 
       {/* ==========================================================================
-         SECTION 7: DEVELOPMENT PROCESS TIMELINE
+         SECTION 7: WORKFLOW BLUEPRINT
          ========================================================================== */}
-      <section className="portfolio-process-sec">
-        <div className="container">
-          <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">OUR BLUEPRINT</span>
-            <h2 className="section-title-premium text-center">
-              Our Development Process
-            </h2>
-            <p className="section-desc-premium text-center">
-              A highly disciplined, multi-step pipeline built to prevent scope creeping and deliver pixel-perfect digital systems.
-            </p>
-          </div>
-
-          {/* Timeline progress connector */}
-          <div className="portfolio-timeline-wrapper reveal slide-up">
-            <div className="timeline-connector-line"></div>
-
-            <div ref={portfolioProcessScrollerRef} className="timeline-process-grid portfolio-process-grid-mobile">
-              {data.timeline.map((step, idx) => (
-                <div key={idx} className="portfolio-timeline-node-card">
-                  <div className="node-icon-circle-wrap">
-                    <div className="node-badge-outer">
-                      <div className="node-badge-number">{step.step}</div>
-                    </div>
-                  </div>
-                  <h4>{step.title}</h4>
-                  <p>{step.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <Process />
 
       {/* ==========================================================================
          SECTION 8: TESTIMONIALS
@@ -723,7 +666,12 @@ const Portfolio = () => {
       </section>
 
       {/* ==========================================================================
-         SECTION 10: CTA SECTION (DARK GRADIENT)
+         SECTION 10: SYSTEM INQUIRY
+         ========================================================================== */}
+      <InquireSystemSection />
+
+      {/* ==========================================================================
+         SECTION 11: CTA SECTION (DARK GRADIENT)
          ========================================================================== */}
       <section className="portfolio-final-cta-sec">
         <div className="container">

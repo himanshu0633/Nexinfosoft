@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Process from '../components/home/Process';
 
 // Custom high-performance Animated Counter triggered when element enters the viewport
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -58,7 +59,6 @@ const About = () => {
   const qaDashboardRef = useRef(null);
   const rocketRef = useRef(null);
   const deliveryStrengthsScrollerRef = useRef(null);
-  const lifecycleScrollerRef = useRef(null);
 
   const cardStyles = [
     { borderClass: '', bg: 'rgba(20, 184, 166, 0.1)', color: 'var(--accent)' },
@@ -237,70 +237,6 @@ const About = () => {
 
       intervalId = setInterval(() => {
         const firstItem = scroller.querySelector('.why-premium-card');
-        if (!firstItem) return;
-
-        const cardWidth = firstItem.getBoundingClientRect().width;
-        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
-        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-        const nextLeft = scroller.scrollLeft + cardWidth + gap;
-
-        scroller.scrollTo({
-          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
-          behavior: 'smooth'
-        });
-      }, 1000);
-    };
-
-    const pauseThenResume = () => {
-      stopAutoScroll();
-      resumeTimer = setTimeout(startAutoScroll, 2200);
-    };
-
-    const pauseAutoScroll = () => stopAutoScroll();
-    const resumeAutoScroll = () => startAutoScroll();
-
-    startAutoScroll();
-
-    if (scroller) {
-      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
-      scroller.addEventListener('mouseenter', pauseAutoScroll);
-      scroller.addEventListener('focusin', pauseAutoScroll);
-      scroller.addEventListener('mouseleave', resumeAutoScroll);
-      scroller.addEventListener('focusout', resumeAutoScroll);
-    }
-
-    mobileQuery.addEventListener('change', startAutoScroll);
-
-    return () => {
-      stopAutoScroll();
-      mobileQuery.removeEventListener('change', startAutoScroll);
-      if (scroller) {
-        scroller.removeEventListener('touchstart', pauseThenResume);
-        scroller.removeEventListener('mouseenter', pauseAutoScroll);
-        scroller.removeEventListener('focusin', pauseAutoScroll);
-        scroller.removeEventListener('mouseleave', resumeAutoScroll);
-        scroller.removeEventListener('focusout', resumeAutoScroll);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const scroller = lifecycleScrollerRef.current;
-    const mobileQuery = window.matchMedia('(max-width: 768px)');
-    let intervalId;
-    let resumeTimer;
-
-    const stopAutoScroll = () => {
-      clearInterval(intervalId);
-      clearTimeout(resumeTimer);
-    };
-
-    const startAutoScroll = () => {
-      stopAutoScroll();
-      if (!scroller || !mobileQuery.matches) return;
-
-      intervalId = setInterval(() => {
-        const firstItem = scroller.querySelector('.timeline-node-card');
         if (!firstItem) return;
 
         const cardWidth = firstItem.getBoundingClientRect().width;
@@ -646,40 +582,9 @@ const About = () => {
       </section>
 
       {/* ==========================================================================
-         SECTION 5: INTERACTIVE PROJECT LIFECYCLE
+         SECTION 5: WORKFLOW BLUEPRINT
          ========================================================================== */}
-      <section className="about-lifecycle-sec">
-        <div className="container">
-          <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium">{lifecycle.subtitle}</span>
-            <h2 className="section-title-premium text-center">
-              {lifecycle.title}
-            </h2>
-            <p className="section-desc-premium text-center">
-              {lifecycle.description}
-            </p>
-          </div>
-
-          <div className="timeline-horizontal-wrapper reveal slide-up delay-200">
-            <div className="timeline-progress-line-container">
-              <div className="timeline-progress-line-active"></div>
-            </div>
-
-            <div ref={lifecycleScrollerRef} className="timeline-nodes-horizontal">
-              {(lifecycle.metadata?.steps || []).map((step, idx) => (
-                <div className="timeline-node-card" key={idx}>
-                  <div className="node-icon-circle">
-                    <i className={step.icon || 'ri-checkbox-circle-line'}></i>
-                    <span className="node-step-number">{step.number}</span>
-                  </div>
-                  <h4>{step.title}</h4>
-                  <p>{step.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <Process />
 
       {/* ==========================================================================
          SECTION 6: VERIFICATION & QUALITY ASSURANCE

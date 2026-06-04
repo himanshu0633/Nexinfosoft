@@ -16,7 +16,8 @@ const defaultProcess = [
   { step: '03', title: 'Design', desc: 'Creating clean interfaces and user flows that match your brand and audience.' },
   { step: '04', title: 'Development', desc: 'Building the frontend, backend, integrations, and admin-ready functionality.' },
   { step: '05', title: 'Testing', desc: 'Checking performance, responsiveness, forms, security basics, and browser behavior.' },
-  { step: '06', title: 'Launch', desc: 'Deploying the service, configuring domain essentials, and handing over key details.' }
+  { step: '06', title: 'Launch', desc: 'Deploying the service, configuring domain essentials, and handing over key details.' },
+  { step: '07', title: 'Support', desc: 'Providing post-launch assistance, updates, monitoring, and future improvement planning.' }
 ];
 
 const defaultWhyChoose = [
@@ -65,15 +66,61 @@ const defaultFaqs = [
   { q: 'How long does development take?', a: 'Timeline depends on scope, content, integrations, and approval speed. We confirm milestones after discovery.' },
   { q: 'Will it work properly on mobile?', a: 'Yes. The interface is planned and tested for responsive behavior across common desktop and mobile screen sizes.' },
   { q: 'Can this service be customized?', a: 'Yes. Backend-managed service details help us keep the page content flexible while the build remains tailored to your business.' },
-  { q: 'Do you provide post-launch support?', a: 'Yes. Support can include fixes, updates, small changes, monitoring help, and future feature planning.' }
+  { q: 'Do you provide post-launch support?', a: 'Yes. Support can include fixes, updates, small changes, monitoring help, and future feature planning.' },
+  { q: 'Can you integrate existing business tools?', a: 'Yes. Suitable APIs, payment systems, CRMs, analytics tools, and operational platforms can be integrated after technical review.' }
 ];
 
-const makeBenefitCards = (benefits = [], fallback = []) => {
-  const source = benefits.length > 0 ? benefits : fallback;
+const defaultFeatures = ['Custom Planning', 'Responsive Build', 'Secure Setup', 'Launch Support'];
 
-  return source.slice(0, 4).map((benefit, index) => {
+const defaultFloatingCards = [
+  { text: 'Responsive', icon: 'ri-smartphone-line' },
+  { text: 'Secure Setup', icon: 'ri-shield-check-line' },
+  { text: 'Performance Ready', icon: 'ri-flashlight-line' },
+  { text: 'Admin Friendly', icon: 'ri-dashboard-line' },
+  { text: 'Launch Support', icon: 'ri-rocket-line' }
+];
+
+const defaultIncluded = [
+  'Discovery Planning',
+  'Responsive Design',
+  'Development',
+  'Testing',
+  'Deployment',
+  'Launch Support',
+  'Performance Review',
+  'Security Basics',
+  'Admin Handover',
+  'Post-Launch Guidance'
+];
+
+const normalizeList = (source, fallback, count) => {
+  const primary = Array.isArray(source) ? source.filter(Boolean) : [];
+  const backup = Array.isArray(fallback) ? fallback.filter(Boolean) : [];
+  return [...primary, ...backup].slice(0, count);
+};
+
+const normalizeTextList = (source, fallback, count) => normalizeList(source, fallback, count)
+  .map((item) => {
+    if (typeof item === 'string') return item;
+    return item?.title || item?.name || item?.text || item?.label || '';
+  })
+  .filter(Boolean)
+  .slice(0, count);
+
+const normalizeObjectList = (source, fallback, count, normalizeItem) => normalizeList(source, fallback, count)
+  .map((item, index) => normalizeItem(item, fallback[index % fallback.length], index));
+
+const makeBenefitCards = (benefits = [], fallback = []) => {
+  const source = normalizeList(benefits, fallback, 4);
+
+  return normalizeList(source, defaultWhyChoose, 4).map((benefit, index) => {
     if (typeof benefit === 'object' && benefit.title) {
-      return benefit;
+      return {
+        ...benefit,
+        description: benefit.description || benefit.desc || 'Planned to support clearer operations, stronger customer experience, and measurable business value.',
+        icon: benefit.icon || ['ri-award-line', 'ri-settings-5-line', 'ri-line-chart-line', 'ri-shield-check-line'][index % 4],
+        color: benefit.color || benefitColors[index % benefitColors.length]
+      };
     }
 
     return {
@@ -96,27 +143,49 @@ const normalizeServiceDetail = (apiService, staticDetail) => {
   const benefits = Array.isArray(apiService?.benefits) ? apiService.benefits : merged.benefits || [];
   const deliverables = Array.isArray(apiService?.deliverables) ? apiService.deliverables : merged.deliverables || [];
   const featureSource = benefits.length > 0 ? benefits : deliverables;
+  const pricingFeatureCounts = [5, 7, 7];
 
   return {
     ...merged,
     badge: staticDetail?.badge || 'OUR SERVICE',
     title: merged.title || 'Service',
     subtitle: merged.subtitle || merged.intro || 'A focused digital service planned around your business requirements.',
-    features: featureSource.length > 0 ? featureSource.slice(0, 4) : staticDetail?.features || ['Custom Planning', 'Responsive Build', 'Secure Setup', 'Launch Support'],
+    features: normalizeTextList(featureSource, staticDetail?.features || defaultFeatures, 4),
     heroMockupTitle: staticDetail?.heroMockupTitle || `${merged.title || 'Service'} Console`,
-    floatingCards: staticDetail?.floatingCards || [
-      { text: 'Responsive', icon: 'ri-smartphone-line' },
-      { text: 'Secure Setup', icon: 'ri-shield-check-line' },
-      { text: 'Performance Ready', icon: 'ri-flashlight-line' },
-      { text: 'Admin Friendly', icon: 'ri-dashboard-line' }
-    ],
+    floatingCards: normalizeObjectList(staticDetail?.floatingCards, defaultFloatingCards, 5, (card, fallbackCard) => ({
+      text: card?.text || fallbackCard.text,
+      icon: card?.icon || fallbackCard.icon
+    })),
     benefits: makeBenefitCards(benefits, staticDetail?.benefits || []),
-    whatsIncluded: deliverables.length > 0 ? deliverables : staticDetail?.whatsIncluded || ['Discovery Planning', 'Responsive Design', 'Development', 'Testing', 'Deployment', 'Launch Support'],
-    process: staticDetail?.process || defaultProcess,
-    whyChoose: staticDetail?.whyChoose || defaultWhyChoose,
-    portfolio: staticDetail?.portfolio || defaultPortfolio,
-    pricing: staticDetail?.pricing || defaultPricing,
-    faqs: staticDetail?.faqs || defaultFaqs
+    whatsIncluded: normalizeTextList(deliverables, staticDetail?.whatsIncluded || defaultIncluded, 10),
+    process: normalizeObjectList(staticDetail?.process, defaultProcess, 7, (stage, fallbackStage, index) => ({
+      step: stage?.step || String(index + 1).padStart(2, '0'),
+      title: stage?.title || fallbackStage.title,
+      desc: stage?.desc || stage?.text || fallbackStage.desc
+    })),
+    whyChoose: normalizeObjectList(staticDetail?.whyChoose, defaultWhyChoose, 6, (item, fallbackItem) => ({
+      title: item?.title || fallbackItem.title,
+      desc: item?.desc || item?.description || fallbackItem.desc,
+      icon: item?.icon || fallbackItem.icon
+    })),
+    portfolio: normalizeObjectList(staticDetail?.portfolio, defaultPortfolio, 3, (project, fallbackProject) => ({
+      name: project?.name || project?.title || fallbackProject.name,
+      industry: project?.industry || project?.category || fallbackProject.industry,
+      desc: project?.desc || project?.description || fallbackProject.desc,
+      image: project?.image || project?.icon || fallbackProject.image
+    })),
+    pricing: normalizeObjectList(staticDetail?.pricing, defaultPricing, 3, (plan, fallbackPlan, index) => ({
+      name: plan?.name || fallbackPlan.name,
+      price: plan?.price || fallbackPlan.price,
+      features: normalizeTextList(plan?.features, fallbackPlan.features, pricingFeatureCounts[index]),
+      support: plan?.support || fallbackPlan.support,
+      timeline: plan?.timeline || fallbackPlan.timeline,
+      recommended: index === 1
+    })),
+    faqs: normalizeObjectList(staticDetail?.faqs, defaultFaqs, 5, (faq, fallbackFaq) => ({
+      q: faq?.q || faq?.question || fallbackFaq.q,
+      a: faq?.a || faq?.answer || fallbackFaq.a
+    }))
   };
 };
 
@@ -319,7 +388,7 @@ const ServiceDetail = () => {
           <div className="service-hero-grid">
             <div className="service-hero-left reveal slide-left">
               <span className="section-tag-premium">{service.badge}</span>
-              <h1 className="service-hero-title">
+              <h1 className={`service-hero-title ${service.title.length > 28 ? 'service-hero-title-compact' : ''} ${service.title.length > 38 ? 'service-hero-title-extra-compact' : ''}`}>
                 {service.title}
               </h1>
               <p className="service-hero-desc">

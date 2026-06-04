@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { normalizeVisibleServices } from '../utils/services';
+import Process from '../components/home/Process';
 
 // Custom scroll-triggered animated counter component
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -56,7 +57,6 @@ const AnimatedCounter = ({ value, duration = 1500 }) => {
 const Services = () => {
   const heroMockupRef = useRef(null);
   const ctaRocketRef = useRef(null);
-  const servicesProcessScrollerRef = useRef(null);
 
   const [services, setServices] = useState([
     {
@@ -228,70 +228,6 @@ const Services = () => {
     fetchDynamicData();
   }, []);
 
-  useEffect(() => {
-    const scroller = servicesProcessScrollerRef.current;
-    const mobileQuery = window.matchMedia('(max-width: 768px)');
-    let intervalId;
-    let resumeTimer;
-
-    const stopAutoScroll = () => {
-      clearInterval(intervalId);
-      clearTimeout(resumeTimer);
-    };
-
-    const startAutoScroll = () => {
-      stopAutoScroll();
-      if (!scroller || !mobileQuery.matches) return;
-
-      intervalId = setInterval(() => {
-        const firstItem = scroller.querySelector('.timeline-node-card');
-        if (!firstItem) return;
-
-        const cardWidth = firstItem.getBoundingClientRect().width;
-        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
-        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-        const nextLeft = scroller.scrollLeft + cardWidth + gap;
-
-        scroller.scrollTo({
-          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
-          behavior: 'smooth'
-        });
-      }, 1000);
-    };
-
-    const pauseThenResume = () => {
-      stopAutoScroll();
-      resumeTimer = setTimeout(startAutoScroll, 2200);
-    };
-
-    const pauseAutoScroll = () => stopAutoScroll();
-    const resumeAutoScroll = () => startAutoScroll();
-
-    startAutoScroll();
-
-    if (scroller) {
-      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
-      scroller.addEventListener('mouseenter', pauseAutoScroll);
-      scroller.addEventListener('focusin', pauseAutoScroll);
-      scroller.addEventListener('mouseleave', resumeAutoScroll);
-      scroller.addEventListener('focusout', resumeAutoScroll);
-    }
-
-    mobileQuery.addEventListener('change', startAutoScroll);
-
-    return () => {
-      stopAutoScroll();
-      mobileQuery.removeEventListener('change', startAutoScroll);
-      if (scroller) {
-        scroller.removeEventListener('touchstart', pauseThenResume);
-        scroller.removeEventListener('mouseenter', pauseAutoScroll);
-        scroller.removeEventListener('focusin', pauseAutoScroll);
-        scroller.removeEventListener('mouseleave', resumeAutoScroll);
-        scroller.removeEventListener('focusout', resumeAutoScroll);
-      }
-    };
-  }, []);
-
   // Helper arrays for aesthetic styling
   const getBentoColors = (index) => {
     const colors = [
@@ -334,25 +270,7 @@ const Services = () => {
                 </Link>
               </div>
 
-              {/* Statistics row */}
-              <div className="hero-stats-row">
-                <div className="hero-stat-box">
-                  <h3><AnimatedCounter value="10+" /></h3>
-                  <span>Years Experience</span>
-                </div>
-                <div className="hero-stat-box">
-                  <h3><AnimatedCounter value="300+" /></h3>
-                  <span>Projects Delivered</span>
-                </div>
-                <div className="hero-stat-box">
-                  <h3><AnimatedCounter value="250+" /></h3>
-                  <span>Happy Clients</span>
-                </div>
-                <div className="hero-stat-box">
-                  <h3><AnimatedCounter value="50+" /></h3>
-                  <span>Tech Experts</span>
-                </div>
-              </div>
+          
             </div>
 
             <div className="services-hero-right reveal slide-right delay-200">
@@ -579,92 +497,9 @@ const Services = () => {
       </section>
 
       {/* ==========================================================================
-         SECTION 4: DEVELOPMENT PROCESS TIMELINE
+         SECTION 4: WORKFLOW BLUEPRINT
          ========================================================================== */}
-      <section className="services-process-sec">
-        <div className="container">
-          <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">OUR PROCESS</span>
-            <h2 className="section-title-premium text-center">
-              Our Proven Process For Your Success
-            </h2>
-            <p className="section-desc-premium text-center">
-              A clear and agile process that ensures quality, transparency and on-time delivery every single time.
-            </p>
-          </div>
-
-          <div className="timeline-horizontal-wrapper reveal slide-up delay-200">
-            <div className="timeline-progress-line-container">
-              <div className="timeline-progress-line-active"></div>
-            </div>
-
-            <div className="timeline-nodes-horizontal services-process-mobile-scroll" ref={servicesProcessScrollerRef}>
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-chat-voice-line"></i>
-                  <span className="node-step-number">01</span>
-                </div>
-                <h4>Consultation</h4>
-                <p>We understand your business goals and requirements.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-draft-line"></i>
-                  <span className="node-step-number">02</span>
-                </div>
-                <h4>Planning</h4>
-                <p>We analyze and plan the best solution for your needs.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-palette-line"></i>
-                  <span className="node-step-number">03</span>
-                </div>
-                <h4>Design</h4>
-                <p>We create user-friendly designs focused on experience.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-code-box-line"></i>
-                  <span className="node-step-number">04</span>
-                </div>
-                <h4>Development</h4>
-                <p>We build scalable and high-performance solutions.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-shield-flash-line"></i>
-                  <span className="node-step-number">05</span>
-                </div>
-                <h4>Testing</h4>
-                <p>We ensure quality, security and flawless functionality.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-rocket-line"></i>
-                  <span className="node-step-number">06</span>
-                </div>
-                <h4>Launch</h4>
-                <p>We deploy your solution and make it live for users.</p>
-              </div>
-
-              <div className="timeline-node-card">
-                <div className="node-icon-circle">
-                  <i className="ri-customer-service-2-line"></i>
-                  <span className="node-step-number">07</span>
-                </div>
-                <h4>Support</h4>
-                <p>We provide ongoing support and continuous improvement.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Process />
 
       {/* ==========================================================================
          SECTION 5: TECHNOLOGY STACK SECTION
