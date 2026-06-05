@@ -8,10 +8,132 @@ import Industries from '../components/home/Industries';
 import Process from '../components/home/Process';
 import PortfolioPreview from '../components/home/PortfolioPreview';
 
+const PAGE_TABS = ['home', 'sections', 'about', 'corporate', 'company_profile', 'contact', 'consultation', 'faqs', 'policies', 'global'];
+
+const TAB_SECTIONS = {
+  home: [
+    { id: 'hero', label: 'Hero Banner', icon: 'ri-home-line' },
+    { id: 'services', label: 'Core Services Header', icon: 'ri-database-2-line' },
+    { id: 'whychooseus', label: 'Why Choose Us', icon: 'ri-star-line' },
+    { id: 'technologies', label: 'Technologies Stack', icon: 'ri-cpu-line' },
+    { id: 'industries', label: 'Verticals/Industries', icon: 'ri-building-4-line' },
+    { id: 'process', label: 'Process Blueprint', icon: 'ri-route-line' },
+    { id: 'portfoliopreview', label: 'Portfolio Preview Header', icon: 'ri-briefcase-line' },
+    { id: 'sections_manager', label: 'Section Manager', icon: 'ri-settings-line', style: { borderLeft: '2px solid var(--accent)' } }
+  ],
+  sections: [
+    { id: 'hero', label: 'Hero Banner', icon: 'ri-home-line' },
+    { id: 'services', label: 'Core Services Header', icon: 'ri-database-2-line' },
+    { id: 'whychooseus', label: 'Why Choose Us', icon: 'ri-star-line' },
+    { id: 'technologies', label: 'Technologies Stack', icon: 'ri-cpu-line' },
+    { id: 'industries', label: 'Verticals/Industries', icon: 'ri-building-4-line' },
+    { id: 'process', label: 'Process Blueprint', icon: 'ri-route-line' },
+    { id: 'portfoliopreview', label: 'Portfolio Preview Header', icon: 'ri-briefcase-line' },
+    { id: 'sections_manager', label: 'Section Manager', icon: 'ri-settings-line', style: { borderLeft: '2px solid var(--accent)' } }
+  ],
+  about: [
+    { id: 'about_hero', label: 'About Hero', icon: 'ri-flag-line' },
+    { id: 'about_overview', label: 'Company Overview', icon: 'ri-file-info-line' },
+    { id: 'about_partner', label: 'Delivery Partner', icon: 'ri-team-line' },
+    { id: 'about_why', label: 'Delivery Strengths', icon: 'ri-bar-chart-grouped-line' },
+    { id: 'about_lifecycle', label: 'Project Lifecycle', icon: 'ri-route-line' },
+    { id: 'about_qa', label: 'QA Framework', icon: 'ri-shield-check-line' },
+    { id: 'about_values', label: 'Company Values', icon: 'ri-lightbulb-line' },
+    { id: 'about_achievements', label: 'Achievements', icon: 'ri-trophy-line' },
+    { id: 'about_cta', label: 'About CTA Banner', icon: 'ri-chat-voice-line' }
+  ],
+  corporate: [
+    { id: 'corporate_hero', label: 'Corporate Hero', icon: 'ri-flag-line' },
+    { id: 'corporate_about', label: 'Corporate About', icon: 'ri-building-line' },
+    { id: 'corporate_mission', label: 'Corporate Mission & Vision', icon: 'ri-lightbulb-line' }
+  ],
+  company_profile: [
+    { id: 'company_profile_hero', label: 'Profile Hero', icon: 'ri-profile-line' },
+    { id: 'company_profile_overview', label: 'Profile Overview', icon: 'ri-building-2-line' },
+    { id: 'company_profile_capabilities', label: 'Capabilities Scope', icon: 'ri-checkbox-multiple-line' },
+    { id: 'company_profile_services', label: 'Profile Services', icon: 'ri-service-line' },
+    { id: 'company_profile_strengths', label: 'Strengths List', icon: 'ri-shield-check-line' },
+    { id: 'company_profile_process', label: 'Work Process', icon: 'ri-route-line' },
+    { id: 'company_profile_tech', label: 'Tech Specs', icon: 'ri-stack-line' },
+    { id: 'company_profile_quality', label: 'Quality Checks', icon: 'ri-verified-badge-line' },
+    { id: 'company_profile_contact', label: 'Profile Contact', icon: 'ri-contacts-book-line' }
+  ],
+  contact: [
+    { id: 'contact_hero', label: 'Contact Hero', icon: 'ri-contacts-line' },
+    { id: 'contact_methods', label: 'Contact Channels', icon: 'ri-mail-send-line' }
+  ],
+  consultation: [
+    { id: 'consultation_hero', label: 'Consultation Hero', icon: 'ri-user-voice-line' },
+    { id: 'consultation_info', label: 'Consultation What You Get', icon: 'ri-task-line' }
+  ],
+  faqs: [
+    { id: 'faqs', label: 'FAQ Q&A List', icon: 'ri-questionnaire-line' }
+  ],
+  policies: [
+    { id: 'privacy_policy', label: 'Privacy Policy', icon: 'ri-shield-user-line' },
+    { id: 'terms_conditions', label: 'Terms & Conditions', icon: 'ri-file-list-3-line' }
+  ],
+  global: [
+    { id: 'footer_links', label: 'Footer Links', icon: 'ri-links-line' }
+  ]
+};
+
+const getTabLabel = (tab) => {
+  switch (tab) {
+    case 'home':
+    case 'sections':
+      return 'Home Page';
+    case 'about':
+      return 'About Us Page';
+    case 'corporate':
+      return 'Corporate Page';
+    case 'company_profile':
+      return 'Company Profile Page';
+    case 'contact':
+      return 'Contact Us Page';
+    case 'consultation':
+      return 'Free Consultation Page';
+    case 'faqs':
+      return 'FAQs Page';
+    case 'policies':
+      return 'Policies Page';
+    case 'global':
+      return 'Global & Footer';
+    default:
+      return 'Site';
+  }
+};
+
+const getDefaultSectionForTab = (tab) => {
+  switch (tab) {
+    case 'home':
+    case 'sections':
+      return 'hero';
+    case 'about':
+      return 'about_hero';
+    case 'corporate':
+      return 'corporate_hero';
+    case 'company_profile':
+      return 'company_profile_hero';
+    case 'contact':
+      return 'contact_hero';
+    case 'consultation':
+      return 'consultation_hero';
+    case 'faqs':
+      return 'faqs';
+    case 'policies':
+      return 'privacy_policy';
+    case 'global':
+      return 'footer_links';
+    default:
+      return '';
+  }
+};
+
 const AdminDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'sections';
-  const activeSection = searchParams.get('section') || (activeTab === 'sections' ? 'hero' : activeTab === 'pages' ? 'footer_links' : 'corporate_hero');
+  const activeTab = searchParams.get('tab') || 'home';
+  const activeSection = searchParams.get('section') || getDefaultSectionForTab(activeTab);
 
   const setActiveTab = (tab) => {
     setSearchParams({ tab });
@@ -87,7 +209,11 @@ const AdminDashboard = () => {
       company_profile_quality: 'Company Profile Quality',
       company_profile_contact: 'Company Profile Contact',
       privacy_policy: 'Privacy Policy',
-      terms_conditions: 'Terms & Conditions'
+      terms_conditions: 'Terms & Conditions',
+      contact_hero: 'Contact Us Hero',
+      contact_methods: 'Contact Us Channels',
+      consultation_hero: 'Consultation Page Hero',
+      consultation_info: 'Consultation Page What You Get'
     };
     return labels[activeSection] || activeSection;
   };
@@ -268,10 +394,46 @@ const AdminDashboard = () => {
       },
       portfoliopreview: {
         _id: 'portfoliopreview',
-        title: 'Digital Products Built For Real Operations',
-        subtitle: 'Recent Work',
-        description: 'A quick look at specialized software categories our team designs, builds, and maintains.',
+        title: 'Explore Our Recent Success Stories',
+        subtitle: 'RECENT SOLUTIONS',
+        description: '',
         metadata: {}
+      },
+      contact_hero: {
+        _id: 'contact_hero',
+        title: 'Inquire About Your System',
+        subtitle: 'GET IN TOUCH',
+        description: 'Complete our strategic scope form to coordinate a free technical consultation.',
+        metadata: {}
+      },
+      contact_methods: {
+        _id: 'contact_methods',
+        title: 'Direct Connection Channels',
+        subtitle: 'CONTACT METHODS',
+        description: 'Reach out to our engineering desks directly for immediate response times.',
+        metadata: {
+          methods: [
+            { title: 'Phone Support', detail: '+91 99995 30797', sub: 'Direct calling helpdesk', icon: 'ri-phone-line', color: 'linear-gradient(135deg, #14b8a6, #0d9488)', link: 'tel:+919999530797' }
+          ]
+        }
+      },
+      consultation_hero: {
+        _id: 'consultation_hero',
+        title: 'Free IT & Business Consultation',
+        subtitle: 'CONSULTATION',
+        description: 'Get a clear, practical roadmap for your website, app, CRM, ERP, automation, or digital marketing requirement.',
+        metadata: {}
+      },
+      consultation_info: {
+        _id: 'consultation_info',
+        title: 'A focused discovery call before you invest',
+        subtitle: 'WHAT YOU GET',
+        description: 'We review your idea, business goal, required pages or features, technology fit, timeline, and expected budget range. The result is a simple action plan your team can understand.',
+        metadata: {
+          checklist: [
+            'Website or app feature planning'
+          ]
+        }
       }
     };
 
@@ -482,7 +644,7 @@ const AdminDashboard = () => {
       );
     }
 
-    if (activeSection.startsWith('about_') || activeSection === 'faqs') {
+    if (activeSection.startsWith('about_') || activeSection.startsWith('contact_') || activeSection.startsWith('consultation_') || activeSection === 'faqs') {
       return (
         <div className="about-page admin-real-section-preview" style={{ padding: '34px 0', background: 'var(--bg-dark)' }}>
           <div className="container" style={{ pointerEvents: 'none' }}>
@@ -565,6 +727,7 @@ const AdminDashboard = () => {
     }
   }, [token, navigate]);
 
+
   const loadAllSections = async () => {
     try {
       const res = await fetch('/api/content');
@@ -603,7 +766,11 @@ const AdminDashboard = () => {
         { id: 'company_profile_process', page: 'company_profile', order: 5 },
         { id: 'company_profile_tech', page: 'company_profile', order: 6 },
         { id: 'company_profile_quality', page: 'company_profile', order: 7 },
-        { id: 'company_profile_contact', page: 'company_profile', order: 8 }
+        { id: 'company_profile_contact', page: 'company_profile', order: 8 },
+        { id: 'contact_hero', page: 'contact', order: 0 },
+        { id: 'contact_methods', page: 'contact', order: 1 },
+        { id: 'consultation_hero', page: 'consultation', order: 0 },
+        { id: 'consultation_info', page: 'consultation', order: 1 }
       ];
 
       let successCount = 0;
@@ -729,7 +896,7 @@ const AdminDashboard = () => {
   // Fetch data depending on active tab
   useEffect(() => {
     if (!token) return;
-    if (activeTab === 'sections' || activeTab === 'corporate' || activeTab === 'pages') {
+    if (PAGE_TABS.includes(activeTab)) {
       loadAllSections();
     }
   }, [activeTab, token]);
@@ -761,7 +928,7 @@ const AdminDashboard = () => {
       }
     };
 
-    if ((activeTab === 'sections' || activeTab === 'corporate' || activeTab === 'pages') && activeSection !== 'sections_manager') {
+    if (PAGE_TABS.includes(activeTab) && activeSection !== 'sections_manager') {
       fetchSection();
     }
   }, [activeSection, activeTab, token]);
@@ -1336,138 +1503,33 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <section className="content-page" style={{ paddingTop: '130px', paddingBottom: '120px' }}>
-        {(activeTab === 'sections' || activeTab === 'corporate' || activeTab === 'pages') && (
+      <section className="content-page admin-dashboard-page" style={{ paddingTop: '130px', paddingBottom: '120px' }}>
+        {PAGE_TABS.includes(activeTab) && (
           <div className="container">
             <div className="glass-card admin-section-subnav">
               <div className="admin-section-subnav-title">
-                <span>{activeTab === 'sections' ? 'Home Pages' : activeTab === 'corporate' ? 'Corporate Pages' : 'Site Pages'}</span>
+                <span>{getTabLabel(activeTab)} Sections</span>
               </div>
               <div className="admin-section-subnav-scroll">
-                {activeTab === 'sections' ? (
-                  <>
-                    <button onClick={() => setActiveSection('hero')} className={`tech-tab ${activeSection === 'hero' ? 'active' : ''}`}>
-                      <i className="ri-home-line"></i> Hero Banner
-                    </button>
-                    <button onClick={() => setActiveSection('services')} className={`tech-tab ${activeSection === 'services' ? 'active' : ''}`}>
-                      <i className="ri-database-2-line"></i> Core Services Header
-                    </button>
-                    <button onClick={() => setActiveSection('whychooseus')} className={`tech-tab ${activeSection === 'whychooseus' ? 'active' : ''}`}>
-                      <i className="ri-star-line"></i> Why Choose Us
-                    </button>
-                    <button onClick={() => setActiveSection('technologies')} className={`tech-tab ${activeSection === 'technologies' ? 'active' : ''}`}>
-                      <i className="ri-cpu-line"></i> Technologies Stack
-                    </button>
-                    <button onClick={() => setActiveSection('industries')} className={`tech-tab ${activeSection === 'industries' ? 'active' : ''}`}>
-                      <i className="ri-building-4-line"></i> Verticals/Industries
-                    </button>
-                    <button onClick={() => setActiveSection('process')} className={`tech-tab ${activeSection === 'process' ? 'active' : ''}`}>
-                      <i className="ri-route-line"></i> Process Blueprint
-                    </button>
-                    <button onClick={() => setActiveSection('portfoliopreview')} className={`tech-tab ${activeSection === 'portfoliopreview' ? 'active' : ''}`}>
-                      <i className="ri-briefcase-line"></i> Portfolio Preview Header
-                    </button>
-                    <button onClick={() => setActiveSection('sections_manager')} className={`tech-tab ${activeSection === 'sections_manager' ? 'active' : ''}`} style={{ borderLeft: '2px solid var(--accent)' }}>
-                      <i className="ri-settings-line"></i> Section Manager
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <div style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent)', margin: '14px 10px 6px 10px', borderBottom: '1px solid rgba(20, 184, 166, 0.1)', paddingBottom: '4px', letterSpacing: '0.5px' }}>About Us Page</div>
-                    <button onClick={() => setActiveSection('about_hero')} className={`tech-tab ${activeSection === 'about_hero' ? 'active' : ''}`}>
-                      <i className="ri-flag-line"></i> About Hero
-                    </button>
-                    <button onClick={() => setActiveSection('about_overview')} className={`tech-tab ${activeSection === 'about_overview' ? 'active' : ''}`}>
-                      <i className="ri-file-info-line"></i> Company Overview
-                    </button>
-                    <button onClick={() => setActiveSection('about_partner')} className={`tech-tab ${activeSection === 'about_partner' ? 'active' : ''}`}>
-                      <i className="ri-team-line"></i> Delivery Partner
-                    </button>
-                    <button onClick={() => setActiveSection('about_why')} className={`tech-tab ${activeSection === 'about_why' ? 'active' : ''}`}>
-                      <i className="ri-bar-chart-grouped-line"></i> Delivery Strengths
-                    </button>
-                    <button onClick={() => setActiveSection('about_lifecycle')} className={`tech-tab ${activeSection === 'about_lifecycle' ? 'active' : ''}`}>
-                      <i className="ri-route-line"></i> Project Lifecycle
-                    </button>
-                    <button onClick={() => setActiveSection('about_qa')} className={`tech-tab ${activeSection === 'about_qa' ? 'active' : ''}`}>
-                      <i className="ri-shield-check-line"></i> QA Framework
-                    </button>
-                    <button onClick={() => setActiveSection('about_values')} className={`tech-tab ${activeSection === 'about_values' ? 'active' : ''}`}>
-                      <i className="ri-lightbulb-line"></i> Company Values
-                    </button>
-                    <button onClick={() => setActiveSection('about_achievements')} className={`tech-tab ${activeSection === 'about_achievements' ? 'active' : ''}`}>
-                      <i className="ri-trophy-line"></i> Achievements
-                    </button>
-                    <button onClick={() => setActiveSection('about_cta')} className={`tech-tab ${activeSection === 'about_cta' ? 'active' : ''}`}>
-                      <i className="ri-chat-voice-line"></i> About CTA Banner
-                    </button>
-
-                    <div style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent)', margin: '14px 10px 6px 10px', borderBottom: '1px solid rgba(20, 184, 166, 0.1)', paddingBottom: '4px', letterSpacing: '0.5px' }}>FAQ Page</div>
-                    <button onClick={() => setActiveSection('faqs')} className={`tech-tab ${activeSection === 'faqs' ? 'active' : ''}`}>
-                      <i className="ri-questionnaire-line"></i> FAQ Q&A List
-                    </button>
-
-                    <div style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent)', margin: '14px 10px 6px 10px', borderBottom: '1px solid rgba(20, 184, 166, 0.1)', paddingBottom: '4px', letterSpacing: '0.5px' }}>Company Profile</div>
-                    <button onClick={() => setActiveSection('company_profile_hero')} className={`tech-tab ${activeSection === 'company_profile_hero' ? 'active' : ''}`}>
-                      <i className="ri-profile-line"></i> Profile Hero
-                    </button>
-                    <button onClick={() => setActiveSection('company_profile_overview')} className={`tech-tab ${activeSection === 'company_profile_overview' ? 'active' : ''}`}>
-                      <i className="ri-building-2-line"></i> Profile Overview
-                    </button>
-                    <button onClick={() => setActiveSection('company_profile_capabilities')} className={`tech-tab ${activeSection === 'company_profile_capabilities' ? 'active' : ''}`}>
-                      <i className="ri-checkbox-multiple-line"></i> Capabilities Scope
-                    </button>
-                    <button onClick={() => setActiveSection('company_profile_services')} className={`tech-tab ${activeSection === 'company_profile_services' ? 'active' : ''}`}>
-                      <i className="ri-service-line"></i> Profile Services
-                    </button>
-                    <button onClick={() => setActiveSection('company_profile_strengths')} className={`tech-tab ${activeSection === 'company_profile_strengths' ? 'active' : ''}`}>
-                      <i className="ri-shield-check-line"></i> Strengths List
-                    </button>
-                    <button onClick={() => setActiveSection('company_profile_process')} className={`tech-tab ${activeSection === 'company_profile_process' ? 'active' : ''}`}>
-                      <i className="ri-route-line"></i> Work Process
-                    </button>
-                    <button onClick={() => setActiveSection('company_profile_tech')} className={`tech-tab ${activeSection === 'company_profile_tech' ? 'active' : ''}`}>
-                      <i className="ri-stack-line"></i> Tech Specs
-                    </button>
-                    <button onClick={() => setActiveSection('company_profile_quality')} className={`tech-tab ${activeSection === 'company_profile_quality' ? 'active' : ''}`}>
-                      <i className="ri-verified-badge-line"></i> Quality Checks
-                    </button>
-                    <button onClick={() => setActiveSection('company_profile_contact')} className={`tech-tab ${activeSection === 'company_profile_contact' ? 'active' : ''}`}>
-                      <i className="ri-contacts-book-line"></i> Profile Contact
-                    </button>
-
-                    <div style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent)', margin: '14px 10px 6px 10px', borderBottom: '1px solid rgba(20, 184, 166, 0.1)', paddingBottom: '4px', letterSpacing: '0.5px' }}>Global & Legal</div>
-                    <button onClick={() => setActiveSection('footer_links')} className={`tech-tab ${activeSection === 'footer_links' ? 'active' : ''}`}>
-                      <i className="ri-links-line"></i> Footer Links
-                    </button>
-                    <button onClick={() => setActiveSection('privacy_policy')} className={`tech-tab ${activeSection === 'privacy_policy' ? 'active' : ''}`}>
-                      <i className="ri-shield-user-line"></i> Privacy Policy
-                    </button>
-                    <button onClick={() => setActiveSection('terms_conditions')} className={`tech-tab ${activeSection === 'terms_conditions' ? 'active' : ''}`}>
-                      <i className="ri-file-list-3-line"></i> Terms & Conditions
-                    </button>
-                  </>
-                )}
+                {(TAB_SECTIONS[activeTab] || []).map((sec) => (
+                  <button 
+                    key={sec.id}
+                    onClick={() => setActiveSection(sec.id)} 
+                    className={`tech-tab ${activeSection === sec.id ? 'active' : ''}`}
+                    style={sec.style || {}}
+                  >
+                    <i className={sec.icon}></i> {sec.label}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {sectionContent && (
-              <div className="glass-card admin-section-preview-block">
-                <div className="admin-preview-heading">
-                  <span>{getSectionLabel()}</span>
-                  <small>Website style live preview</small>
-                </div>
-                <div className="admin-preview-device">
-                  {renderSectionPreview()}
-                </div>
-              </div>
-            )}
           </div>
         )}
 
-        <div className="container admin-dashboard-layout">
+        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && activeSection !== 'sections_manager' ? 'active-split' : ''}`}>
           {/* MAIN FORM OR DATA MANAGER */}
-          <div className="glass-card" style={{ padding: '34px', borderRadius: '12px', gridColumn: '1 / -1' }}>
+          <div className="glass-card" style={{ padding: '34px', borderRadius: '12px' }}>
             
             {/* Status alerts */}
             {message && (
@@ -1484,7 +1546,7 @@ const AdminDashboard = () => {
             {/* =========================================================
                 TAB 1 & 2: SECTIONS FORM EDITORS
                 ========================================================= */}
-            {(activeTab === 'sections' || activeTab === 'corporate' || activeTab === 'pages') && sectionContent && (
+            {PAGE_TABS.includes(activeTab) && sectionContent && (
               <form onSubmit={handleSaveSection} style={{ display: 'grid', gap: '22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <h2 style={{ fontSize: '20px', fontWeight: 800 }}>Edit {activeSection.toUpperCase().replace('_', ' ')}</h2>
@@ -1676,7 +1738,7 @@ const AdminDashboard = () => {
                   </div>
                 )}
 
-                {activeTab === 'pages' && sectionContent.metadata && (
+                {!['home', 'sections'].includes(activeTab) && PAGE_TABS.includes(activeTab) && sectionContent.metadata && (
                   <div className="admin-direct-page-editor">
                     <h4>Page Details</h4>
 
@@ -1808,23 +1870,23 @@ const AdminDashboard = () => {
                       </>
                     )}
 
-                    {(activeSection === 'about_partner' || activeSection === 'company_profile_capabilities') && (
+                    {(activeSection === 'about_partner' || activeSection === 'consultation_info' || activeSection === 'company_profile_capabilities') && (
                       <div className="admin-page-edit-group">
                         <div className="admin-page-edit-heading">
-                          <strong>{activeSection === 'about_partner' ? 'Partner Checklist Items' : 'Capabilities List'}</strong>
+                          <strong>{activeSection === 'about_partner' ? 'Partner Checklist Items' : activeSection === 'consultation_info' ? 'Consultation Checklist Items' : 'Capabilities List'}</strong>
                           <button
                             type="button"
                             className="btn btn-secondary"
                             onClick={() => {
-                              const listKey = activeSection === 'about_partner' ? 'checklist' : 'capabilities';
+                              const listKey = (activeSection === 'about_partner' || activeSection === 'consultation_info') ? 'checklist' : 'capabilities';
                               handleMetadataChange(listKey, [...(sectionContent.metadata?.[listKey] || []), '']);
                             }}
                           >
                             <i className="ri-add-line"></i> Add Item
                           </button>
                         </div>
-                        {(sectionContent.metadata?.[activeSection === 'about_partner' ? 'checklist' : 'capabilities'] || []).map((item, idx) => {
-                          const listKey = activeSection === 'about_partner' ? 'checklist' : 'capabilities';
+                        {(sectionContent.metadata?.[(activeSection === 'about_partner' || activeSection === 'consultation_info') ? 'checklist' : 'capabilities'] || []).map((item, idx) => {
+                          const listKey = (activeSection === 'about_partner' || activeSection === 'consultation_info') ? 'checklist' : 'capabilities';
                           return (
                             <div className="admin-page-card-editor" key={`list-item-${idx}`} style={{ padding: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
                               <input
@@ -2146,6 +2208,103 @@ const AdminDashboard = () => {
                         </div>
                       </div>
                     )}
+
+                    {activeSection === 'contact_methods' && (
+                      <div className="admin-page-edit-group">
+                        <div className="admin-page-edit-heading">
+                          <strong>Contact Channels</strong>
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => addMetadataArrayObject('methods', { title: 'New Channel', detail: '', sub: '', icon: 'ri-phone-line', color: 'linear-gradient(135deg, #14b8a6, #0d9488)', link: '' })}
+                          >
+                            <i className="ri-add-line"></i> Add Channel
+                          </button>
+                        </div>
+                        {(sectionContent.metadata?.methods || []).map((method, idx) => (
+                          <div className="admin-page-card-editor" key={`method-${idx}`}>
+                            <div className="admin-page-edit-heading">
+                              <strong>Channel #{idx + 1}</strong>
+                              <button
+                                type="button"
+                                className="btn btn-secondary admin-remove-row-btn"
+                                onClick={() => removeMetadataArrayObject('methods', idx)}
+                                title="Remove"
+                              >
+                                <i className="ri-delete-bin-line"></i>
+                              </button>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '10px' }}>
+                              <div>
+                                <label className="form-label">Channel Title</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={method.title || ''}
+                                  onChange={(e) => updateMetadataArrayObject('methods', idx, 'title', e.target.value)}
+                                  placeholder="e.g. WhatsApp Chat"
+                                />
+                              </div>
+                              <div>
+                                <label className="form-label">Contact Details</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={method.detail || ''}
+                                  onChange={(e) => updateMetadataArrayObject('methods', idx, 'detail', e.target.value)}
+                                  placeholder="e.g. +91 99995 30797"
+                                />
+                              </div>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '10px' }}>
+                              <div>
+                                <label className="form-label">Remixicon Icon Class</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={method.icon || ''}
+                                  onChange={(e) => updateMetadataArrayObject('methods', idx, 'icon', e.target.value)}
+                                  placeholder="e.g. ri-whatsapp-line"
+                                />
+                              </div>
+                              <div>
+                                <label className="form-label">Subtext Description</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={method.sub || ''}
+                                  onChange={(e) => updateMetadataArrayObject('methods', idx, 'sub', e.target.value)}
+                                  placeholder="e.g. Chat live with an expert"
+                                />
+                              </div>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                              <div>
+                                <label className="form-label">Glow Gradient Style (CSS)</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={method.color || ''}
+                                  onChange={(e) => updateMetadataArrayObject('methods', idx, 'color', e.target.value)}
+                                  placeholder="linear-gradient(135deg, #10b981, #059669)"
+                                />
+                              </div>
+                              <div>
+                                <label className="form-label">Action Target Link / URL</label>
+                                <input
+                                  className="form-control"
+                                  type="text"
+                                  value={method.link || ''}
+                                  onChange={(e) => updateMetadataArrayObject('methods', idx, 'link', e.target.value)}
+                                  placeholder="e.g. https://wa.me/919999530797"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                   </div>
                 )}
 
@@ -2159,7 +2318,7 @@ const AdminDashboard = () => {
             {/* =========================================================
                 SECTION MANAGER TAB
                 ========================================================= */}
-            {activeTab === 'sections' && activeSection === 'sections_manager' && (
+            {['home', 'sections'].includes(activeTab) && activeSection === 'sections_manager' && (
               <div>
                 <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '20px' }}>Master Section Manager</h2>
                 <div className="admin-lead-filter-panel" style={{ display: 'block', padding: '20px', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border)', borderRadius: '8px', marginBottom: '24px' }}>
@@ -2177,6 +2336,8 @@ const AdminDashboard = () => {
                         <option value="policy">Policies Page (policy)</option>
                         <option value="global">Global (global)</option>
                         <option value="company_profile">Company Profile (company_profile)</option>
+                        <option value="contact">Contact Page (contact)</option>
+                        <option value="consultation">Consultation Page (consultation)</option>
                       </select>
                     </div>
 
@@ -2866,6 +3027,19 @@ const AdminDashboard = () => {
             })()}
 
           </div>
+
+          {/* RIGHT SIDE: LIVE PREVIEW (Only for page sections) */}
+          {PAGE_TABS.includes(activeTab) && activeSection !== 'sections_manager' && sectionContent && (
+            <div className="glass-card admin-section-preview-block" style={{ margin: 0, padding: '24px', position: 'sticky', top: '120px' }}>
+              <div className="admin-preview-heading" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '16px' }}>
+                <span style={{ fontSize: '16px', fontWeight: 800 }}>{getSectionLabel()}</span>
+                <small style={{ color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Live preview matching website styles</small>
+              </div>
+              <div className="admin-preview-device" style={{ maxHeight: 'calc(100vh - 280px)', overflowY: 'auto' }}>
+                {renderSectionPreview()}
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </>

@@ -582,8 +582,153 @@ async function initializeDatabase() {
           email: 'info@nexinfosoft.com',
           website: 'nexinfosoft.com'
         }
+      },
+      {
+        _id: 'contact_hero',
+        title: 'Inquire About Your System',
+        subtitle: 'GET IN TOUCH',
+        description: 'Complete our strategic scope form to coordinate a free technical consultation.',
+        image_url: '',
+        page: 'contact',
+        order: 0,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'contact_methods',
+        title: 'Direct Connection Channels',
+        subtitle: 'CONTACT METHODS',
+        description: 'Reach out to our engineering desks directly for immediate response times.',
+        image_url: '',
+        page: 'contact',
+        order: 1,
+        visible: true,
+        metadata: {
+          methods: [
+            {
+              title: 'Phone Support',
+              detail: '+91 99995 30797',
+              sub: 'Direct calling helpdesk',
+              icon: 'ri-phone-line',
+              color: 'linear-gradient(135deg, #14b8a6, #0d9488)',
+              link: 'tel:+919999530797'
+            },
+            {
+              title: 'Email Support',
+              detail: 'info@nexinfosoft.com',
+              sub: 'Urgent project scopes',
+              icon: 'ri-mail-line',
+              color: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+              link: 'mailto:info@nexinfosoft.com'
+            },
+            {
+              title: 'WhatsApp Chat',
+              detail: 'Instant Response',
+              sub: 'Chat live with an expert',
+              icon: 'ri-whatsapp-line',
+              color: 'linear-gradient(135deg, #10b981, #059669)',
+              link: 'https://wa.me/919999530797'
+            },
+            {
+              title: 'Office Address',
+              detail: 'Gurugram, Haryana, India',
+              sub: 'Stop by our design center',
+              icon: 'ri-map-pin-line',
+              color: 'linear-gradient(135deg, #f59e0b, #d97706)',
+              link: 'https://maps.google.com'
+            }
+          ]
+        }
+      },
+      {
+        _id: 'contact_why',
+        title: 'Why Organizations Partner With Nexinfosoft',
+        subtitle: 'WHY NEXINFOSOFT',
+        description: 'We merge modern architectural frameworks with strategic business development objectives.',
+        image_url: '',
+        page: 'contact',
+        order: 2,
+        visible: true,
+        metadata: {
+          cards: [
+            { title: '10+ Years Experience', desc: 'A decade of delivering bulletproof enterprise software architectures globally.', icon: 'ri-award-line' },
+            { title: '300+ Projects Delivered', desc: 'Custom resource systems, portal networks, and apps driving active business scales.', icon: 'ri-flashlight-line' },
+            { title: '250+ Happy Clients', desc: 'Validated by long-term partner retainers and high-end agency reviews.', icon: 'ri-team-line' },
+            { title: '24/7 Dedicated Support', desc: 'Direct access to senior developers and quick system maintenance SLA cycles.', icon: 'ri-customer-service-2-line' },
+            { title: '100% Code Ownership', desc: 'You retain complete ownership of the repository code and database setups.', icon: 'ri-folder-keyhole-line' },
+            { title: 'Dedicated Tech Team', desc: 'Certified full-stack engineers and creative designers locked to your scope.', icon: 'ri-group-line' }
+          ]
+        }
+      },
+      {
+        _id: 'contact_timeline',
+        title: 'Project Discussion Process',
+        subtitle: 'OUR ROADMAP',
+        description: 'A highly strategic workflow built to capture your objectives accurately from the very first call.',
+        image_url: '',
+        page: 'contact',
+        order: 3,
+        visible: true,
+        metadata: {
+          steps: [
+            { step: '01', title: 'Submit Inquiry', desc: 'Submit your requirements brief and technical objectives via our glass form.' },
+            { step: '02', title: 'Requirement Discussion', desc: 'A senior software architect contacts you within 4 hours to review systems.' },
+            { step: '03', title: 'Proposal & Planning', desc: 'We deliver a structured project blueprint, roadmap schedule, and transparent price plans.' },
+            { step: '04', title: 'Development Starts', desc: 'Our dedicated engineers start building your modules with clean codes.' },
+            { step: '05', title: 'Delivery & Support', desc: 'Your system goes live with complete AWS configurations and support.' }
+          ]
+        }
+      },
+      {
+        _id: 'contact_faqs',
+        title: 'Frequently Asked Questions',
+        subtitle: 'QUESTIONS',
+        description: 'Have questions regarding NDAs, project timelines, support agreements, or billing models? Explore our quick resources.',
+        image_url: '',
+        page: 'contact',
+        order: 4,
+        visible: true,
+        metadata: {
+          items: [
+            { question: 'How quickly do you respond?', answer: 'We respond to all direct contact inquiries and custom system scopes within 4 hours. You will receive a call from a dedicated strategic technology architect.' },
+            { question: 'Do you sign Non-Disclosure Agreements (NDAs)?', answer: 'Absolutely. We respect your proprietary processes and business intelligence. We execute strict standard NDAs before scoping detailed layouts.' },
+            { question: 'Do you provide maintenance and hosting support?', answer: 'Yes, we handle complete server migrations, setup AWS / Vercel networks, configure backups, and offer ongoing technical support packages.' },
+            { question: 'Can you work internationally?', answer: 'Yes! Nexinfosoft works with startups and established business groups across North America, Europe, the Middle East, and Asia.' },
+            { question: 'What industries do you specialize in?', answer: 'We engineer robust solutions for Healthcare, Real Estate, E-Commerce, Logistics, Finance, Enterprise ERPs, and B2B SaaS portals.' }
+          ]
+        }
+      },
+      {
+        _id: 'consultation_hero',
+        title: 'Free IT & Business Consultation',
+        subtitle: 'CONSULTATION',
+        description: 'Get a clear, practical roadmap for your website, app, CRM, ERP, automation, or digital marketing requirement.',
+        image_url: '',
+        page: 'consultation',
+        order: 0,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'consultation_info',
+        title: 'A focused discovery call before you invest',
+        subtitle: 'WHAT YOU GET',
+        description: 'We review your idea, business goal, required pages or features, technology fit, timeline, and expected budget range. The result is a simple action plan your team can understand.',
+        image_url: '',
+        page: 'consultation',
+        order: 1,
+        visible: true,
+        metadata: {
+          checklist: [
+            'Website or app feature planning',
+            'Technology and hosting guidance',
+            'Budget and timeline estimate',
+            'SEO, conversion, and launch suggestions'
+          ]
+        }
       }
     ];
+
 
     for (const section of sections) {
       const existing = await SectionContent.findById(section._id);

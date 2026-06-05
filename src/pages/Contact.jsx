@@ -15,7 +15,6 @@ const Contact = () => {
   });
 
   const [modalActive, setModalActive] = useState(false);
-  const [activeFaqIndex, setActiveFaqIndex] = useState(null);
 
   // Captcha states
   const [captchaSvg, setCaptchaSvg] = useState('');
@@ -25,8 +24,16 @@ const Contact = () => {
   // Refs for tilt parallax
   const ctaIllustrationRef = useRef(null);
   const contactMethodsScrollerRef = useRef(null);
-  const contactWhyScrollerRef = useRef(null);
-  const contactProcessScrollerRef = useRef(null);
+
+  // Dynamic content states
+  const [hero, setHero] = useState({
+    title: 'Inquire About Your System',
+    subtitle: 'GET IN TOUCH',
+    description: 'Complete our strategic scope form to coordinate a free technical consultation.'
+  });
+
+  const [methods, setMethods] = useState(contactData.contactMethods);
+
 
   // Fetch new visual captcha from Express server
   const fetchNewCaptcha = async () => {
@@ -118,14 +125,6 @@ const Contact = () => {
     setModalActive(false);
   };
 
-  const toggleFaq = (index) => {
-    if (activeFaqIndex === index) {
-      setActiveFaqIndex(null);
-    } else {
-      setActiveFaqIndex(index);
-    }
-  };
-
   const handleCardMouseMove = (event, cardEl) => {
     if (!cardEl) return;
     const rect = cardEl.getBoundingClientRect();
@@ -144,13 +143,39 @@ const Contact = () => {
     revealElements.forEach(el => el.classList.add('active'));
     window.scrollTo(0, 0);
     fetchNewCaptcha();
+
+    // Fetch dynamic content from backend database
+    const fetchContactData = async () => {
+      const ids = ['contact_hero', 'contact_methods'];
+      try {
+        const entries = await Promise.all(ids.map(async (id) => {
+          const res = await fetch(`/api/content/${id}`);
+          if (!res.ok) return null;
+          const data = await res.json();
+          return [id, data];
+        }));
+        const dataMap = Object.fromEntries(entries.filter(Boolean));
+        if (dataMap.contact_hero) {
+          setHero({
+            title: dataMap.contact_hero.title,
+            subtitle: dataMap.contact_hero.subtitle,
+            description: dataMap.contact_hero.description
+          });
+        }
+        if (dataMap.contact_methods && dataMap.contact_methods.metadata?.methods) {
+          setMethods(dataMap.contact_methods.metadata.methods);
+        }
+      } catch (err) {
+        // Fallbacks are already loaded
+      }
+    };
+    fetchContactData();
   }, []);
+
 
   useEffect(() => {
     const scrollers = [
-      { ref: contactMethodsScrollerRef, itemSelector: '.contact-method-card' },
-      { ref: contactWhyScrollerRef, itemSelector: '.why-glass-card' },
-      { ref: contactProcessScrollerRef, itemSelector: '.contact-timeline-node-card' }
+      { ref: contactMethodsScrollerRef, itemSelector: '.contact-method-card' }
     ];
     const mobileQuery = window.matchMedia('(max-width: 768px)');
     const timers = [];
@@ -236,7 +261,7 @@ const Contact = () => {
       <section id="contact-methods" className="contact-methods-sec">
         <div className="container">
           <div ref={contactMethodsScrollerRef} className="contact-methods-grid contact-methods-mobile-scroll">
-            {contactData.contactMethods.map((method, idx) => (
+            {methods.map((method, idx) => (
               <a 
                 href={method.link} 
                 target="_blank" 
@@ -266,8 +291,9 @@ const Contact = () => {
           <div className="contact-form-map-grid">
             {/* Left Glass Form */}
             <div className="contact-form-wrapper reveal slide-left">
-              <h3>Inquire About Your System</h3>
-              <p>Complete our strategic scope form to coordinate a free technical consultation.</p>
+              <h3>{hero.title || 'Inquire About Your System'}</h3>
+              <p>{hero.description}</p>
+
 
               <form onSubmit={handleFormSubmit}>
                 <div className="form-double-row">
@@ -414,21 +440,21 @@ const Contact = () => {
                     <i className="ri-map-pin-fill"></i>
                     <div>
                       <strong>Office Address</strong>
-                      <p>Gurugram, Haryana, India</p>
+                      <p>{(methods.find(m => m.title.toLowerCase().includes('address')) || {}).detail || 'Gurugram, Haryana, India'}</p>
                     </div>
                   </div>
                   <div className="info-line">
                     <i className="ri-phone-fill"></i>
                     <div>
                       <strong>Direct Phone Lines</strong>
-                      <p>+91 99995 30797</p>
+                      <p>{(methods.find(m => m.title.toLowerCase().includes('phone')) || {}).detail || '+91 99995 30797'}</p>
                     </div>
                   </div>
                   <div className="info-line">
                     <i className="ri-mail-fill"></i>
                     <div>
                       <strong>General Email Desk</strong>
-                      <p>info@nexinfosoft.com</p>
+                      <p>{(methods.find(m => m.title.toLowerCase().includes('email')) || {}).detail || 'info@nexinfosoft.com'}</p>
                     </div>
                   </div>
                   <div className="info-line">
@@ -453,113 +479,6 @@ const Contact = () => {
                     referrerPolicy="no-referrer-when-downgrade"
                   />
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         SECTION 4: WHY CHOOSE NEXINFOSOFT
-         ========================================================================== */}
-      <section className="contact-why-sec">
-        <div className="container">
-          <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">WHY NEXINFOSOFT</span>
-            <h2 className="section-title-premium text-center">
-              Why Organizations Partner With Nexinfosoft
-            </h2>
-            <p className="section-desc-premium text-center">
-              We merge modern architectural frameworks with strategic business development objectives.
-            </p>
-          </div>
-
-          <div ref={contactWhyScrollerRef} className="why-choose-glass-grid contact-why-mobile-scroll">
-            {contactData.whyChoose.map((item, idx) => (
-              <div key={idx} className="why-glass-card reveal slide-up" style={{ '--delay': `${idx * 80}ms` }}>
-                <div className="why-icon-badge">
-                  <i className={item.icon}></i>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         SECTION 5: PROJECT DISCUSSION PROCESS TIMELINE
-         ========================================================================== */}
-      <section className="contact-process-sec">
-        <div className="container">
-          <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">OUR ROADMAP</span>
-            <h2 className="section-title-premium text-center">
-              Project Discussion Process
-            </h2>
-            <p className="section-desc-premium text-center">
-              A highly strategic workflow built to capture your objectives accurately from the very first call.
-            </p>
-          </div>
-
-          {/* Timeline progress connector */}
-          <div className="contact-timeline-wrapper reveal slide-up">
-            <div className="timeline-connector-line"></div>
-
-            <div ref={contactProcessScrollerRef} className="timeline-process-grid contact-process-mobile-scroll">
-              {contactData.processTimeline.map((step, idx) => (
-                <div key={idx} className="contact-timeline-node-card">
-                  <div className="node-icon-circle-wrap">
-                    <div className="node-badge-outer">
-                      <div className="node-badge-number">{step.step}</div>
-                    </div>
-                  </div>
-                  <h4>{step.title}</h4>
-                  <p>{step.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         SECTION 6: FAQ ACCORDIONS
-         ========================================================================== */}
-      <section className="contact-faq-sec">
-        <div className="container">
-          <div className="contact-faq-grid">
-            <div className="faq-grid-left reveal slide-left">
-              <span className="section-tag-premium">QUESTIONS</span>
-              <h2 className="section-title-premium">
-                Frequently Asked Questions
-              </h2>
-              <p className="section-desc-premium">
-                Have questions regarding NDAs, project timelines, support agreements, or billing models? Explore our quick resources.
-              </p>
-            </div>
-
-            <div className="faq-grid-right reveal slide-right delay-200">
-              <div className="accordion-faq-list">
-                {contactData.faqs.map((faq, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`accordion-faq-card ${activeFaqIndex === idx ? 'faq-active' : ''}`}
-                    onClick={() => toggleFaq(idx)}
-                  >
-                    <div className="faq-card-head">
-                      <h4>{faq.q}</h4>
-                      <div className="faq-toggle-icon">
-                        <i className="ri-add-line"></i>
-                      </div>
-                    </div>
-                    
-                    <div className="faq-card-body">
-                      <p>{faq.a}</p>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>

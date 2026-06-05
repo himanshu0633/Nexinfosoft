@@ -1,72 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const PortfolioPreview = ({ previewData = null }) => {
+const PortfolioPreview = () => {
   const portfolioScrollerRef = useRef(null);
-  
-  const [data, setData] = useState({
-    title: 'Digital Products Built For Real Operations',
-    subtitle: 'Recent Work',
-    description: 'A quick look at specialized software categories our team designs, builds, and maintains.'
-  });
 
   const [projects, setProjects] = useState([
     {
+      name: 'Clinic Management System',
+      category: 'healthcare',
       tag: 'E-Commerce Platform',
-      title: 'Multi-Vendor Marketplace Storefront',
+      title: 'Clinic Management System',
       desc: 'High-conversion checkout, secure payment gateways, modular shopping cart, and automatic inventory synchronizations.',
-      img: '/assets/images/ecommerce_mockup.png'
+      image_url: '/assets/images/ecommerce_mockup.png'
     },
     {
+      name: 'ERP System',
+      category: 'erp',
       tag: 'ERP System',
       title: 'Operations & Resource Management ERP',
       desc: 'Centralized enterprise workflows for resource scheduling, production tracking, costing audits, and team approvals.',
-      img: '/assets/images/erp_mockup.png'
+      image_url: '/assets/images/erp_mockup.png'
     },
     {
+      name: 'Real Estate Platform',
+      category: 'real-estate',
       tag: 'CRM Console',
       title: 'Sales Automation CRM Platform',
       desc: 'Automated lead tracking, customer pipelines, unified communications, and interactive support ticketing desks.',
-      img: '/assets/images/crm_mockup.png'
-    },
-    {
-      tag: 'Mobile App',
-      title: 'B2C Retail Customer Application',
-      desc: 'High-performance iOS & Android mobile apps featuring push alerts, offline storage, and secure biometric authentication.',
-      img: '/assets/images/mobile_mockup.png'
-    },
-    {
-      tag: 'Web Portal',
-      title: 'Secure B2B Client Service Portal',
-      desc: 'Glassmorphic client reporting dashboard with documentation repositories and highly secure multi-tenant form flows.',
-      img: '/assets/images/portal_mockup.png'
-    },
-    {
-      tag: 'AI & Analytics',
-      title: 'Intelligent BI Reporting Dashboard',
-      desc: 'Real-time database visualization, automated report generation, and predictive business intelligence widgets.',
-      img: '/assets/images/analytics_mockup.png'
+      image_url: '/assets/images/crm_mockup.png'
     }
   ]);
-
-  useEffect(() => {
-    if (previewData) {
-      setData(previewData);
-      return;
-    }
-
-    const fetchHeaders = async () => {
-      try {
-        const res = await fetch('/api/content/portfoliopreview');
-        if (res.ok) {
-          const json = await res.json();
-          setData(json);
-        }
-      } catch (e) {}
-    };
-
-    fetchHeaders();
-  }, [previewData]);
 
   useEffect(() => {
     const fetchDynamicProjects = async () => {
@@ -76,10 +39,11 @@ const PortfolioPreview = ({ previewData = null }) => {
           const dbProjects = await res.json();
           if (dbProjects && dbProjects.length > 0) {
             const mapped = dbProjects.map(proj => ({
+              ...proj,
               tag: proj.tag || proj.category.toUpperCase(),
               title: proj.name,
               desc: proj.desc,
-              img: proj.image_url || '/assets/images/analytics_mockup.png'
+              image_url: proj.image_url || '/assets/images/analytics_mockup.png'
             }));
             setProjects(mapped);
           }
@@ -108,7 +72,7 @@ const PortfolioPreview = ({ previewData = null }) => {
       if (!scroller || !mobileQuery.matches) return;
 
       intervalId = setInterval(() => {
-        const firstItem = scroller.querySelector('.portfolio-card');
+        const firstItem = scroller.querySelector('.portfolio-glass-card');
         if (!firstItem) return;
 
         const cardWidth = firstItem.getBoundingClientRect().width;
@@ -156,41 +120,56 @@ const PortfolioPreview = ({ previewData = null }) => {
     };
   }, [projects]);
 
-  const visibleProjects = projects.slice(0, 2);
-  const hasMoreProjects = projects.length > 2;
+  const visibleProjects = projects.slice(0, 3);
+  const hasMoreProjects = projects.length > 3;
 
   return (
-    <section className="portfolio">
+    <section className="services-portfolio-sec home-recent-solutions-sec">
       <div className="container">
-        <div className="section-header reveal slide-up active">
-          <span className="section-tag">{data.subtitle || 'Recent Work'}</span>
-          <h2 className="section-title">{data.title}</h2>
-          <p className="section-desc">{data.description}</p>
+        <div className="section-header-premium reveal slide-up active">
+          <span className="section-tag-premium text-center">RECENT SOLUTIONS</span>
+          <h2 className="section-title-premium text-center">
+            Explore Our Recent Success Stories
+          </h2>
         </div>
 
-        <div ref={portfolioScrollerRef} className="portfolio-grid">
-          {visibleProjects.map((project, idx) => (
-            <div 
-              key={idx} 
-              className={`portfolio-card reveal slide-up delay-${(idx + 1) * 100} active`}
-            >
-              <div className="portfolio-img-box" style={{ background: 'rgba(255,255,255,0.01)' }}>
-                <img src={project.img} alt={project.title} loading="lazy" style={{ objectFit: 'cover' }} />
+        <div ref={portfolioScrollerRef} className="portfolio-showcase-grid">
+          {visibleProjects.map((project, index) => {
+            const bgClasses = ['background-clinic', 'background-erp-mock', 'background-re', 'background-ecom', 'background-mobile-mock'];
+            const bgClass = bgClasses[index % bgClasses.length];
+            const projectName = project.name || project.title;
+            const projectCategory = project.tag || (project.category ? project.category.toUpperCase() : 'PROJECT');
+            return (
+              <div key={project._id || projectName || index} className="portfolio-glass-card reveal slide-up active">
+                <div className={`portfolio-mockup-screen ${bgClass}`}>
+                  <div className="window-decor-dots"><span></span><span></span><span></span></div>
+                  {project.image_url ? (
+                    <img src={project.image_url} alt={projectName} className="portfolio-screenshot-img" loading="lazy" />
+                  ) : (
+                    <div className="portfolio-mockup-placeholder" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.01)', color: 'var(--text-muted)' }}>
+                      <i className={`${project.icon || 'ri-briefcase-4-line'} style-24`} style={{ fontSize: '48px' }}></i>
+                    </div>
+                  )}
+                </div>
+                <div className="portfolio-card-desc">
+                  <span className="proj-cat-pill">{projectCategory}</span>
+                  <h3>{projectName}</h3>
+                  <p>{project.desc}</p>
+                  <Link to="/portfolio" className="btn-view-project">
+                    <span>View Project</span>
+                    <i className="ri-arrow-right-line"></i>
+                  </Link>
+                </div>
               </div>
-              <div className="portfolio-content">
-                <span className="portfolio-tag">{project.tag}</span>
-                <h3 className="portfolio-title">{project.title}</h3>
-                <p className="portfolio-desc">{project.desc}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {hasMoreProjects && (
-          <div className="portfolio-view-more-row reveal slide-up active">
-            <Link to="/portfolio" className="btn btn-secondary portfolio-view-more-btn">
-              View More
-              <i className="fa-solid fa-arrow-right"></i>
+          <div className="services-portfolio-view-more reveal slide-up active">
+            <Link to="/portfolio" className="btn btn-primary">
+              <span>View More</span>
+              <i className="ri-arrow-right-line"></i>
             </Link>
           </div>
         )}

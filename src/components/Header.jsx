@@ -127,61 +127,70 @@ const Header = () => {
         </Link>
         
         {isAdminPage ? (
-          <ul className={`nav-menu ${mobileMenuOpen ? 'active' : ''}`}>
+          <ul className={`nav-menu ${mobileMenuOpen ? 'active' : ''}`} style={{ fontSize: '12.5px', gap: '9px' }}>
             <li className="nav-item">
-              <Link 
-                to="/admin/dashboard?tab=sections&section=hero" 
-                className={`nav-link ${activeTab === 'sections' ? 'active' : ''}`}
-              >
-                Home Sections
+              <Link to="/admin/dashboard?tab=home&section=hero" className={`nav-link ${['home', 'sections'].includes(activeTab) ? 'active' : ''}`}>
+                Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
-                to="/admin/dashboard?tab=corporate&section=corporate_hero" 
-                className={`nav-link ${activeTab === 'corporate' ? 'active' : ''}`}
-              >
-                Corporate Sections
+              <Link to="/admin/dashboard?tab=about&section=about_hero" className={`nav-link ${activeTab === 'about' ? 'active' : ''}`}>
+                About
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
-                to="/admin/dashboard?tab=services" 
-                className={`nav-link ${activeTab === 'services' ? 'active' : ''}`}
-              >
-                Manage Services
+              <Link to="/admin/dashboard?tab=corporate&section=corporate_hero" className={`nav-link ${activeTab === 'corporate' ? 'active' : ''}`}>
+                Corporate
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
-                to="/admin/dashboard?tab=projects" 
-                className={`nav-link ${activeTab === 'projects' ? 'active' : ''}`}
-              >
-                Manage Projects/Portfolio
+              <Link to="/admin/dashboard?tab=company_profile&section=company_profile_hero" className={`nav-link ${activeTab === 'company_profile' ? 'active' : ''}`}>
+                Profile
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
-                to="/admin/dashboard?tab=techstack" 
-                className={`nav-link ${activeTab === 'techstack' ? 'active' : ''}`}
-              >
-                Manage Tech Stack
+              <Link to="/admin/dashboard?tab=contact&section=contact_hero" className={`nav-link ${activeTab === 'contact' ? 'active' : ''}`}>
+                Contact
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
-                to="/admin/dashboard?tab=leads" 
-                className={`nav-link ${activeTab === 'leads' ? 'active' : ''}`}
-              >
-                Manage Leads
+              <Link to="/admin/dashboard?tab=consultation&section=consultation_hero" className={`nav-link ${activeTab === 'consultation' ? 'active' : ''}`}>
+                Consultation
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
-                to="/admin/dashboard?tab=pages&section=footer_links" 
-                className={`nav-link ${activeTab === 'pages' ? 'active' : ''}`}
-              >
-                Site Pages
+              <Link to="/admin/dashboard?tab=faqs&section=faqs" className={`nav-link ${activeTab === 'faqs' ? 'active' : ''}`}>
+                FAQs
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/dashboard?tab=policies&section=privacy_policy" className={`nav-link ${activeTab === 'policies' ? 'active' : ''}`}>
+                Policies
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/dashboard?tab=global&section=footer_links" className={`nav-link ${activeTab === 'global' ? 'active' : ''}`}>
+                Global
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/dashboard?tab=services" className={`nav-link ${activeTab === 'services' ? 'active' : ''}`}>
+                Services
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/dashboard?tab=projects" className={`nav-link ${activeTab === 'projects' ? 'active' : ''}`}>
+                Projects
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/dashboard?tab=techstack" className={`nav-link ${activeTab === 'techstack' ? 'active' : ''}`}>
+                Tech Stack
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/dashboard?tab=leads" className={`nav-link ${activeTab === 'leads' ? 'active' : ''}`}>
+                Leads
               </Link>
             </li>
             {/* Mobile-Only Log out Option */}

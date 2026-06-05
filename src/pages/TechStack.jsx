@@ -738,26 +738,6 @@ const TechStack = () => {
                 </div>
               </div>
             </div>
-
-            {/* Micro stats banner inside CTA */}
-            <div className="cta-micro-stats-banner">
-              <div className="micro-stat">
-                <strong><AnimatedCounter value="300+" /></strong>
-                <span>Projects</span>
-              </div>
-              <div className="micro-stat">
-                <strong><AnimatedCounter value="50+" /></strong>
-                <span>Experts Team</span>
-              </div>
-              <div className="micro-stat">
-                <strong>24/7</strong>
-                <span>Support Sync</span>
-              </div>
-              <div className="micro-stat">
-                <strong>100%</strong>
-                <span>Client Satisfaction</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
