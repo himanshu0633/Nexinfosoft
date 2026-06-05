@@ -7,6 +7,7 @@ const SectionContent = require('../models/SectionContent');
 const Service = require('../models/Service');
 const Project = require('../models/Project');
 const TechItem = require('../models/TechItem');
+const projectDetails = require('../scripts/seedProjectDetails');
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/nexinfosoft';
 const DB_CONNECT_TIMEOUT_MS = Number(process.env.DB_CONNECT_TIMEOUT_MS || 5000);
@@ -780,6 +781,7 @@ async function initializeDatabase() {
       const defaultProjects = [
         {
           name: 'Clinic Management System',
+          ...projectDetails['Clinic Management System'],
           category: 'healthcare',
           tag: 'Healthcare',
           techs: ['React', 'Node.js', 'MongoDB'],
@@ -789,6 +791,7 @@ async function initializeDatabase() {
         },
         {
           name: 'Real Estate Portal',
+          ...projectDetails['Real Estate Portal'],
           category: 'real-estate',
           tag: 'Real Estate',
           techs: ['Next.js', 'MongoDB', 'AWS'],
@@ -798,6 +801,7 @@ async function initializeDatabase() {
         },
         {
           name: 'ERP Management System',
+          ...projectDetails['ERP Management System'],
           category: 'erp',
           tag: 'Enterprise ERP',
           techs: ['React', 'Laravel', 'MySQL'],
@@ -807,6 +811,7 @@ async function initializeDatabase() {
         },
         {
           name: 'E-Commerce Platform',
+          ...projectDetails['E-Commerce Platform'],
           category: 'ecommerce',
           tag: 'E-Commerce',
           techs: ['React', 'Node.js', 'MongoDB'],
@@ -816,6 +821,7 @@ async function initializeDatabase() {
         },
         {
           name: 'CRM Dashboard',
+          ...projectDetails['CRM Dashboard'],
           category: 'crm',
           tag: 'CRM Solutions',
           techs: ['React', 'Node.js', 'PostgreSQL'],
@@ -825,6 +831,7 @@ async function initializeDatabase() {
         },
         {
           name: 'Restaurant Booking App',
+          ...projectDetails['Restaurant Booking App'],
           category: 'mobile',
           tag: 'Mobile Apps',
           techs: ['Flutter', 'Node.js', 'Firebase'],
@@ -834,6 +841,7 @@ async function initializeDatabase() {
         },
         {
           name: 'Hyperlocal Delivery App',
+          ...projectDetails['Hyperlocal Delivery App'],
           category: 'mobile',
           tag: 'Mobile Apps',
           techs: ['React Native', 'Node.js', 'Redis'],
@@ -843,6 +851,7 @@ async function initializeDatabase() {
         },
         {
           name: 'School ERP',
+          ...projectDetails['School ERP'],
           category: 'erp',
           tag: 'Enterprise ERP',
           techs: ['Angular', 'Java', 'PostgreSQL'],
@@ -852,6 +861,7 @@ async function initializeDatabase() {
         },
         {
           name: 'HRMS Portal',
+          ...projectDetails['HRMS Portal'],
           category: 'crm',
           tag: 'CRM Solutions',
           techs: ['React', 'Laravel', 'MySQL'],
@@ -861,6 +871,7 @@ async function initializeDatabase() {
         },
         {
           name: 'Property Listing Platform',
+          ...projectDetails['Property Listing Platform'],
           category: 'real-estate',
           tag: 'Real Estate',
           techs: ['Next.js', 'PostgreSQL', 'Cloudflare'],

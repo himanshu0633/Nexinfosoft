@@ -7,7 +7,7 @@ const path = require('path');
 const db = require('./config/db');
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 4001;
 
 // Enable CORS and JSON body parses
 app.use(cors());

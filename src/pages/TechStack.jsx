@@ -77,7 +77,7 @@ const TechStack = () => {
     const revealElements = document.querySelectorAll('.reveal');
     revealElements.forEach(el => el.classList.add('active'));
     window.scrollTo(0, 0);
-  }, [activeTab]);
+  }, []);
 
   useEffect(() => {
     const fetchDynamicTechStack = async () => {

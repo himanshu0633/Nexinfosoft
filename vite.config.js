@@ -10,7 +10,7 @@ export default defineConfig({
     // Setup a template for local backend API integrations to bypass CORS in dev environment
     proxy: {
       '/api': {
-        target: 'http://localhost:5001',
+        target: 'http://localhost:4001',
         changeOrigin: true,
         secure: false
       }

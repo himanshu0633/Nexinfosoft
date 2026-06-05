@@ -177,9 +177,10 @@ const Contact = () => {
           const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
           const maxScroll = scroller.scrollWidth - scroller.clientWidth;
           const nextLeft = scroller.scrollLeft + cardWidth + gap;
+          const isAtEnd = scroller.scrollLeft >= maxScroll - 4;
 
           scroller.scrollTo({
-            left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
+            left: isAtEnd ? 0 : Math.min(nextLeft, maxScroll),
             behavior: 'smooth'
           });
         }, 1000);

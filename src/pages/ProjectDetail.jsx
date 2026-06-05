@@ -53,13 +53,41 @@ const ProjectDetail = () => {
   const challenges = project.challenges || [];
   const results = project.results || [];
   const rating = Math.min(5, Math.max(1, Number(project.clientRating) || 5));
+  const detailCards = [
+    project.overview && {
+      number: '01',
+      icon: 'ri-file-list-3-line',
+      title: 'Project Overview',
+      body: project.overview
+    },
+    challenges.length > 0 && {
+      number: '02',
+      icon: 'ri-error-warning-line',
+      title: 'Challenges',
+      list: challenges,
+      listIcon: 'ri-checkbox-circle-line'
+    },
+    project.solution && {
+      number: '03',
+      icon: 'ri-lightbulb-line',
+      title: 'Our Solution',
+      body: project.solution
+    },
+    results.length > 0 && {
+      number: '04',
+      icon: 'ri-bar-chart-grouped-line',
+      title: 'Project Results',
+      list: results,
+      listIcon: 'ri-checkbox-circle-line'
+    }
+  ].filter(Boolean);
 
   return (
     <div className="project-detail-page">
       <section className="project-detail-hero">
         <div className="container project-detail-hero-grid">
           <div>
-            <Link to="/portfolio" className="project-detail-back"><i className="ri-arrow-left-line"></i> Portfolio</Link>
+            <Link to="/portfolio" className="project-detail-back"><i className="ri-arrow-left-line"></i> Back to Portfolio</Link>
             <span className="section-tag-premium">{project.tag || project.category}</span>
             <h1>{project.name}</h1>
             {project.overview && <p>{project.overview}</p>}
@@ -77,34 +105,25 @@ const ProjectDetail = () => {
 
       <section className="project-detail-section">
         <div className="container project-detail-content-grid">
-          {project.overview && (
-            <article className="project-detail-card project-detail-overview">
-              <span className="project-detail-number">01</span>
-              <h2>Project Overview</h2>
-              <p>{project.overview}</p>
+          {detailCards.map((card) => (
+            <article key={card.number} className="project-detail-card">
+              <div className="project-detail-card-side">
+                <span className="project-detail-number">{card.number}</span>
+                <i className={`project-detail-card-icon ${card.icon}`}></i>
+              </div>
+              <div>
+                <h2>{card.title}</h2>
+                {card.body && <p>{card.body}</p>}
+                {card.list && (
+                  <ul>
+                    {card.list.map((item) => (
+                      <li key={item}><i className={card.listIcon}></i>{item}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </article>
-          )}
-          {challenges.length > 0 && (
-            <article className="project-detail-card">
-              <span className="project-detail-number">02</span>
-              <h2>Challenges</h2>
-              <ul>{challenges.map((item) => <li key={item}><i className="ri-checkbox-circle-line"></i>{item}</li>)}</ul>
-            </article>
-          )}
-          {project.solution && (
-            <article className="project-detail-card">
-              <span className="project-detail-number">03</span>
-              <h2>Our Solution</h2>
-              <p>{project.solution}</p>
-            </article>
-          )}
-          {results.length > 0 && (
-            <article className="project-detail-card">
-              <span className="project-detail-number">04</span>
-              <h2>Project Results</h2>
-              <ul>{results.map((item) => <li key={item}><i className="ri-arrow-right-circle-line"></i>{item}</li>)}</ul>
-            </article>
-          )}
+          ))}
         </div>
       </section>
 
@@ -112,6 +131,9 @@ const ProjectDetail = () => {
         <section className="project-review-section">
           <div className="container">
             <div className="project-review-card">
+              <button className="project-review-arrow project-review-arrow-left" type="button" aria-label="Previous review">
+                <i className="ri-arrow-left-s-line"></i>
+              </button>
               <i className="ri-double-quotes-l project-review-quote"></i>
               <div className="project-review-stars">
                 {Array.from({ length: rating }).map((_, index) => <i key={index} className="ri-star-fill"></i>)}
@@ -119,6 +141,14 @@ const ProjectDetail = () => {
               <blockquote>{project.clientReview}</blockquote>
               {project.clientName && <strong>{project.clientName}</strong>}
               <span>{[project.clientRole, project.clientCompany].filter(Boolean).join(' · ')}</span>
+              <div className="project-review-dots" aria-hidden="true">
+                <span className="active"></span>
+                <span></span>
+                <span></span>
+              </div>
+              <button className="project-review-arrow project-review-arrow-right" type="button" aria-label="Next review">
+                <i className="ri-arrow-right-s-line"></i>
+              </button>
             </div>
           </div>
         </section>
@@ -127,7 +157,8 @@ const ProjectDetail = () => {
       <section className="project-detail-cta">
         <div className="container">
           <div className="project-detail-cta-box">
-            <div><span className="section-tag-premium">START YOUR PROJECT</span><h2>Have a similar idea?</h2></div>
+            <div className="project-detail-cta-icon"><i className="ri-send-plane-fill"></i></div>
+            <div><span className="section-tag-premium">START YOUR PROJECT</span><h2>Have a similar idea?</h2><p>Let's build a solution that drives your business forward.</p></div>
             <Link to="/contact" className="btn btn-primary"><span>Discuss Your Project</span><i className="ri-arrow-right-line"></i></Link>
           </div>
         </div>

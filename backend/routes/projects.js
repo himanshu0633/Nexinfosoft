@@ -1,8 +1,12 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 const Project = require('../models/Project');
 const authMiddleware = require('../middleware/auth');
-const projectDetails = require('../scripts/seedProjectDetails');
+
+const projectDetailsPath = path.join(__dirname, '../scripts/seedProjectDetails.js');
+const projectDetails = fs.existsSync(projectDetailsPath) ? require(projectDetailsPath) : {};
 
 const makeSlug = (value = '') => value
   .toLowerCase()
@@ -70,6 +74,7 @@ router.get('/', async (req, res) => {
     await persistMissingProjectDetails(projects);
     res.json(projects.map(withProjectDetails));
   } catch (err) {
+    console.error('Failed to retrieve projects:', err);
     res.status(500).json({ error: 'Failed to retrieve projects.' });
   }
 });
@@ -94,6 +99,7 @@ router.get('/:identifier', async (req, res) => {
     await persistMissingProjectDetails([project]);
     res.json(withProjectDetails(project));
   } catch (err) {
+    console.error('Failed to retrieve project:', err);
     res.status(500).json({ error: 'Failed to retrieve project.' });
   }
 });

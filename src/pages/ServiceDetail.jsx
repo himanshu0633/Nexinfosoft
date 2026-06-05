@@ -663,66 +663,7 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      {/* ==========================================================================
-         SECTION 7: PRICING SECTION
-         ========================================================================== */}
-      <section className="service-pricing-sec">
-        <div className="container">
-          <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">TRANSPARENT PRICING</span>
-            <h2 className="section-title-premium text-center">
-              Choose The Plan That Fits Your Goals
-            </h2>
-            <p className="section-desc-premium text-center">
-              No hidden fees. Premium engineering scoped to match your immediate launch timelines.
-            </p>
-          </div>
-
-          <div className="pricing-cards-container">
-            {service.pricing.map((plan, idx) => (
-              <div 
-                key={idx} 
-                className={`pricing-premium-card reveal slide-up ${plan.recommended ? 'recommended-pricing-card' : ''}`}
-                style={{ '--delay': `${idx * 150}ms` }}
-              >
-                {plan.recommended && <div className="recommended-ribbon">RECOMMENDED</div>}
-                
-                <div className="pricing-card-header">
-                  <span className="pricing-plan-name">{plan.name}</span>
-                  <h3 className="pricing-plan-price">{plan.price}</h3>
-                  <span className="pricing-plan-timeline"><i className="ri-time-line"></i> {plan.timeline}</span>
-                </div>
-
-                <div className="pricing-card-body">
-                  <ul className="pricing-features-list">
-                    {plan.features.map((feat, fIdx) => (
-                      <li key={fIdx}>
-                        <i className="ri-checkbox-circle-fill"></i>
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <div className="pricing-support-tier">
-                    <i className="ri-customer-service-2-fill"></i>
-                    <span>{plan.support}</span>
-                  </div>
-                </div>
-
-                <div className="pricing-card-footer">
-                  <Link 
-                    to="/contact" 
-                    className={`btn ${plan.recommended ? 'btn-primary' : 'btn-secondary'} pricing-cta-btn`}
-                  >
-                    <span>Get Started Now</span>
-                    <i className="ri-arrow-right-line"></i>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+ 
 
       {/* ==========================================================================
          SECTION 8: FAQ SECTION
