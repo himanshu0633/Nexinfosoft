@@ -77,7 +77,6 @@ const Portfolio = () => {
   const heroIllustrationRef = useRef(null);
   const ctaIllustrationRef = useRef(null);
   const filterScrollerRef = useRef(null);
-  const successMetricsScrollerRef = useRef(null);
   const portfolioIndustriesScrollerRef = useRef(null);
 
   // Filter Pills mapping
@@ -154,70 +153,6 @@ const Portfolio = () => {
       }
     };
     fetchDynamicProjects();
-  }, []);
-
-  useEffect(() => {
-    const scroller = successMetricsScrollerRef.current;
-    const mobileQuery = window.matchMedia('(max-width: 768px)');
-    let intervalId;
-    let resumeTimer;
-
-    const stopAutoScroll = () => {
-      clearInterval(intervalId);
-      clearTimeout(resumeTimer);
-    };
-
-    const startAutoScroll = () => {
-      stopAutoScroll();
-      if (!scroller || !mobileQuery.matches) return;
-
-      intervalId = setInterval(() => {
-        const firstItem = scroller.querySelector('.metric-premium-box');
-        if (!firstItem) return;
-
-        const cardWidth = firstItem.getBoundingClientRect().width;
-        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
-        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-        const nextLeft = scroller.scrollLeft + cardWidth + gap;
-
-        scroller.scrollTo({
-          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
-          behavior: 'smooth'
-        });
-      }, 1000);
-    };
-
-    const pauseThenResume = () => {
-      stopAutoScroll();
-      resumeTimer = setTimeout(startAutoScroll, 2200);
-    };
-
-    const pauseAutoScroll = () => stopAutoScroll();
-    const resumeAutoScroll = () => startAutoScroll();
-
-    startAutoScroll();
-
-    if (scroller) {
-      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
-      scroller.addEventListener('mouseenter', pauseAutoScroll);
-      scroller.addEventListener('focusin', pauseAutoScroll);
-      scroller.addEventListener('mouseleave', resumeAutoScroll);
-      scroller.addEventListener('focusout', resumeAutoScroll);
-    }
-
-    mobileQuery.addEventListener('change', startAutoScroll);
-
-    return () => {
-      stopAutoScroll();
-      mobileQuery.removeEventListener('change', startAutoScroll);
-      if (scroller) {
-        scroller.removeEventListener('touchstart', pauseThenResume);
-        scroller.removeEventListener('mouseenter', pauseAutoScroll);
-        scroller.removeEventListener('focusin', pauseAutoScroll);
-        scroller.removeEventListener('mouseleave', resumeAutoScroll);
-        scroller.removeEventListener('focusout', resumeAutoScroll);
-      }
-    };
   }, []);
 
   useEffect(() => {
@@ -559,38 +494,12 @@ const Portfolio = () => {
       </section>
 
       {/* ==========================================================================
-         SECTION 6: CLIENT SUCCESS METRICS
-         ========================================================================== */}
-      <section className="portfolio-metrics-sec">
-        <div className="container">
-          <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">METRICS</span>
-            <h2 className="section-title-premium text-center">
-              Client Success Metrics
-            </h2>
-            <p className="section-desc-premium text-center">
-              Our engineering achievements validated by real-world telemetry and cost improvements.
-            </p>
-          </div>
-
-          <div ref={successMetricsScrollerRef} className="success-metrics-grid">
-            {data.successMetrics.map((met, idx) => (
-              <div key={idx} className="metric-premium-box reveal slide-up" style={{ '--delay': `${idx * 100}ms` }}>
-                <h3><AnimatedCounter value={met.value} /></h3>
-                <span>{met.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-         SECTION 7: WORKFLOW BLUEPRINT
+         SECTION 6: WORKFLOW BLUEPRINT
          ========================================================================== */}
       <Process />
 
       {/* ==========================================================================
-         SECTION 8: TESTIMONIALS
+         SECTION 7: TESTIMONIALS
          ========================================================================== */}
       <section className="portfolio-testimonials-sec">
         <div className="container">

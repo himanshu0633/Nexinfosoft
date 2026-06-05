@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const isTokenExpired = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp ? payload.exp * 1000 <= Date.now() : false;
+  } catch (err) {
+    return true;
+  }
+};
+
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -10,8 +19,12 @@ const AdminLogin = () => {
 
   useEffect(() => {
     // If already authorized, skip direct to dashboard
-    if (localStorage.getItem('adminToken')) {
+    const existingToken = localStorage.getItem('adminToken');
+    if (existingToken && !isTokenExpired(existingToken)) {
       navigate('/admin/dashboard');
+    } else if (existingToken) {
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUser');
     }
     window.scrollTo(0, 0);
   }, [navigate]);

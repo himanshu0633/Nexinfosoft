@@ -33,6 +33,7 @@ const Contact = () => {
   });
 
   const [methods, setMethods] = useState(contactData.contactMethods);
+  const [activeMethodPage, setActiveMethodPage] = useState(0);
 
 
   // Fetch new visual captcha from Express server
@@ -173,85 +174,45 @@ const Contact = () => {
   }, []);
 
 
-  useEffect(() => {
-    const scrollers = [
-      { ref: contactMethodsScrollerRef, itemSelector: '.contact-method-card' }
-    ];
-    const mobileQuery = window.matchMedia('(max-width: 768px)');
-    const timers = [];
-    const resumeTimers = [];
+  const updateActiveMethodPage = () => {
+    const scroller = contactMethodsScrollerRef.current;
+    if (!scroller) return;
+    const cards = Array.from(scroller.querySelectorAll('.contact-method-card'));
+    if (!cards.length) return;
 
-    const stopAutoScroll = () => {
-      timers.splice(0).forEach(clearInterval);
-      resumeTimers.splice(0).forEach(clearTimeout);
-    };
+    const scrollerLeft = scroller.getBoundingClientRect().left;
+    const closestIndex = cards.reduce((closest, card, index) => {
+      const distance = Math.abs(card.getBoundingClientRect().left - scrollerLeft);
+      return distance < closest.distance ? { index, distance } : closest;
+    }, { index: 0, distance: Infinity }).index;
 
-    const startAutoScroll = () => {
-      stopAutoScroll();
-      if (!mobileQuery.matches) return;
+    setActiveMethodPage(closestIndex);
+  };
 
-      scrollers.forEach(({ ref, itemSelector }) => {
-        const scroller = ref.current;
-        if (!scroller) return;
+  const scrollToMethodPage = (pageIndex) => {
+    const scroller = contactMethodsScrollerRef.current;
+    const targetCard = scroller?.querySelectorAll('.contact-method-card')[pageIndex];
+    if (!scroller || !targetCard) return;
 
-        const timer = setInterval(() => {
-          const firstItem = scroller.querySelector(itemSelector);
-          if (!firstItem) return;
-
-          const cardWidth = firstItem.getBoundingClientRect().width;
-          const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
-          const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-          const nextLeft = scroller.scrollLeft + cardWidth + gap;
-          const isAtEnd = scroller.scrollLeft >= maxScroll - 4;
-
-          scroller.scrollTo({
-            left: isAtEnd ? 0 : Math.min(nextLeft, maxScroll),
-            behavior: 'smooth'
-          });
-        }, 1000);
-
-        timers.push(timer);
-      });
-    };
-
-    const pauseThenResume = () => {
-      stopAutoScroll();
-      resumeTimers.push(setTimeout(startAutoScroll, 2200));
-    };
-
-    const pauseAutoScroll = () => stopAutoScroll();
-    const resumeAutoScroll = () => startAutoScroll();
-
-    startAutoScroll();
-
-    scrollers.forEach(({ ref }) => {
-      const scroller = ref.current;
-      if (scroller) {
-        scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
-        scroller.addEventListener('mouseenter', pauseAutoScroll);
-        scroller.addEventListener('focusin', pauseAutoScroll);
-        scroller.addEventListener('mouseleave', resumeAutoScroll);
-        scroller.addEventListener('focusout', resumeAutoScroll);
-      }
+    scroller.scrollTo({
+      left: targetCard.offsetLeft - scroller.offsetLeft,
+      behavior: 'smooth'
     });
+  };
 
-    mobileQuery.addEventListener('change', startAutoScroll);
+  useEffect(() => {
+    const scroller = contactMethodsScrollerRef.current;
+    if (!scroller) return undefined;
+
+    updateActiveMethodPage();
+    scroller.addEventListener('scroll', updateActiveMethodPage, { passive: true });
+    window.addEventListener('resize', updateActiveMethodPage);
 
     return () => {
-      stopAutoScroll();
-      mobileQuery.removeEventListener('change', startAutoScroll);
-      scrollers.forEach(({ ref }) => {
-        const scroller = ref.current;
-        if (scroller) {
-          scroller.removeEventListener('touchstart', pauseThenResume);
-          scroller.removeEventListener('mouseenter', pauseAutoScroll);
-          scroller.removeEventListener('focusin', pauseAutoScroll);
-          scroller.removeEventListener('mouseleave', resumeAutoScroll);
-          scroller.removeEventListener('focusout', resumeAutoScroll);
-        }
-      });
+      scroller.removeEventListener('scroll', updateActiveMethodPage);
+      window.removeEventListener('resize', updateActiveMethodPage);
     };
-  }, []);
+  }, [methods]);
 
   return (
     <div className="contact-page-wrapper">
@@ -278,6 +239,17 @@ const Contact = () => {
                 <span>{method.sub}</span>
                 <div className="method-card-glow"></div>
               </a>
+            ))}
+          </div>
+          <div className="contact-method-dots" aria-label="Contact methods pages">
+            {methods.map((method, idx) => (
+              <button
+                type="button"
+                key={method.title || idx}
+                className={activeMethodPage === idx ? 'active' : ''}
+                onClick={() => scrollToMethodPage(idx)}
+                aria-label={`Show ${method.title || `contact method ${idx + 1}`}`}
+              />
             ))}
           </div>
         </div>

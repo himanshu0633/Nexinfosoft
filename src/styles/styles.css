@@ -12303,31 +12303,15 @@ body {
     isolation: isolate;
 }
 
-/* Light Background Grid mesh overlay */
+/* Keep About backgrounds clean and section-led */
 .about-page-wrapper::before {
-    content: '' !important;
-    position: absolute !important;
-    inset: 0 !important;
-    z-index: -2 !important;
-    opacity: 0.45 !important;
-    background-image:
-        linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px) !important;
-    background-size: 42px 42px !important;
-    mask-image: linear-gradient(180deg, transparent 0%, #000 5%, #000 95%, transparent 100%) !important;
-    pointer-events: none !important;
+    content: none !important;
+    display: none !important;
 }
 
-/* Light Background dot-texture overlay */
 .about-page-wrapper::after {
-    content: '' !important;
-    position: absolute !important;
-    inset: 0 !important;
-    z-index: -1 !important;
-    opacity: 0.18 !important;
-    background-image: radial-gradient(rgba(15, 23, 42, 0.34) 0.6px, transparent 0.6px) !important;
-    background-size: 6px 6px !important;
-    pointer-events: none !important;
+    content: none !important;
+    display: none !important;
 }
 
 .section-title-premium,
@@ -15621,16 +15605,31 @@ body {
 
 .tech-page-wrapper .tech-process-sec {
     background:
-        linear-gradient(135deg, rgba(236, 253, 245, 0.82) 0%, rgba(248, 251, 255, 0.96) 50%, rgba(243, 247, 251, 0.94) 100%);
+        radial-gradient(circle at 14% 18%, rgba(20, 184, 166, 0.13), transparent 34%),
+        radial-gradient(circle at 86% 28%, rgba(15, 118, 110, 0.08), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #f7fbff 50%, #eafbf7 100%);
 }
 
 .tech-page-wrapper .tech-process-sec::before {
     background:
-        linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(20, 184, 166, 0.12), transparent 44%, rgba(15, 118, 110, 0.08));
-    background-size: 36px 36px;
-    opacity: 0.7;
+        radial-gradient(circle at 18% 20%, rgba(20, 184, 166, 0.08), transparent 34%),
+        linear-gradient(90deg, rgba(20, 184, 166, 0.08), transparent 44%, rgba(15, 118, 110, 0.06));
+    background-size: auto;
+    opacity: 1;
+}
+
+.tech-process-sec {
+    background:
+        radial-gradient(circle at 14% 18%, rgba(20, 184, 166, 0.13), transparent 34%),
+        radial-gradient(circle at 86% 28%, rgba(15, 118, 110, 0.08), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #f7fbff 50%, #eafbf7 100%) !important;
+}
+
+.tech-process-sec::before {
+    background-image:
+        radial-gradient(circle at 18% 20%, rgba(20, 184, 166, 0.08), transparent 34%),
+        linear-gradient(90deg, rgba(20, 184, 166, 0.08), transparent 44%, rgba(15, 118, 110, 0.06)) !important;
+    background-size: auto !important;
 }
 
 .tech-page-wrapper > .contact-form-map-sec {
@@ -17187,6 +17186,10 @@ body {
 
 .contact-method-card:hover .method-card-glow {
     border-color: rgba(20, 184, 166, 0.25);
+}
+
+.contact-method-dots {
+    display: none;
 }
 
 /* 3. Contact Form & Map Layout Styling */
@@ -23045,6 +23048,37 @@ strong {
 .about-page-wrapper .about-hero-sec {
     padding-top: 178px !important;
     padding-bottom: 72px !important;
+    position: relative !important;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 12% 18%, rgba(20, 184, 166, 0.14), transparent 34%),
+        radial-gradient(circle at 88% 22%, rgba(15, 118, 110, 0.08), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #f7fbff 48%, #e9fbf6 100%) !important;
+}
+
+.about-page-wrapper .about-hero-sec::before,
+.about-page-wrapper .about-hero-sec::after {
+    content: none !important;
+    display: none !important;
+}
+
+.about-hero-sec {
+    background:
+        radial-gradient(circle at 12% 18%, rgba(20, 184, 166, 0.14), transparent 34%),
+        radial-gradient(circle at 88% 22%, rgba(15, 118, 110, 0.08), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #f7fbff 48%, #e9fbf6 100%) !important;
+    background-image:
+        radial-gradient(circle at 12% 18%, rgba(20, 184, 166, 0.14), transparent 34%),
+        radial-gradient(circle at 88% 22%, rgba(15, 118, 110, 0.08), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #f7fbff 48%, #e9fbf6 100%) !important;
+}
+
+.about-hero-sec::before,
+.about-hero-sec::after {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+    background-image: none !important;
 }
 
 .about-page-wrapper .about-overview-sec,
@@ -23103,16 +23137,31 @@ strong {
 
 .about-page-wrapper .about-partner-sec {
     background:
-        linear-gradient(135deg, rgba(243, 247, 251, 0.98) 0%, rgba(248, 250, 252, 0.94) 48%, rgba(255, 255, 255, 0.9) 100%) !important;
+        radial-gradient(circle at 14% 18%, rgba(20, 184, 166, 0.12), transparent 34%),
+        radial-gradient(circle at 88% 24%, rgba(15, 118, 110, 0.08), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #f7fbff 50%, #eafbf7 100%) !important;
 }
 
 .about-page-wrapper .about-partner-sec::before {
     background:
-        linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(20, 184, 166, 0.1), transparent 44%, rgba(15, 118, 110, 0.08));
-    background-size: 42px 42px;
-    opacity: 0.58;
+        radial-gradient(circle at 18% 20%, rgba(20, 184, 166, 0.08), transparent 34%),
+        linear-gradient(90deg, rgba(20, 184, 166, 0.08), transparent 44%, rgba(15, 118, 110, 0.06));
+    background-size: auto;
+    opacity: 1;
+}
+
+.about-partner-sec {
+    background:
+        radial-gradient(circle at 14% 18%, rgba(20, 184, 166, 0.12), transparent 34%),
+        radial-gradient(circle at 88% 24%, rgba(15, 118, 110, 0.08), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #f7fbff 50%, #eafbf7 100%) !important;
+}
+
+.about-partner-sec::before {
+    background-image:
+        radial-gradient(circle at 18% 20%, rgba(20, 184, 166, 0.08), transparent 34%),
+        linear-gradient(90deg, rgba(20, 184, 166, 0.08), transparent 44%, rgba(15, 118, 110, 0.06)) !important;
+    background-size: auto !important;
 }
 
 .about-page-wrapper .about-why-sec {

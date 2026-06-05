@@ -130,6 +130,15 @@ const getDefaultSectionForTab = (tab) => {
   }
 };
 
+const isTokenExpired = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp ? payload.exp * 1000 <= Date.now() : false;
+  } catch (err) {
+    return true;
+  }
+};
+
 const AdminDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'home';
@@ -174,6 +183,13 @@ const AdminDashboard = () => {
   
   const navigate = useNavigate();
   const token = localStorage.getItem('adminToken');
+
+  const handleAuthExpired = () => {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    setError('Admin session expired. Please login again and retry your changes.');
+    navigate('/admin-login');
+  };
 
   const getSectionLabel = () => {
     const labels = {
@@ -722,7 +738,11 @@ const AdminDashboard = () => {
 
   // Verify authorization
   useEffect(() => {
-    if (!token) {
+    if (!token || isTokenExpired(token)) {
+      if (token) {
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+      }
       navigate('/admin-login');
     }
   }, [token, navigate]);
@@ -1120,7 +1140,18 @@ const AdminDashboard = () => {
       });
 
       const data = await res.json();
+      if (res.status === 401 || res.status === 403) {
+        handleAuthExpired();
+        return;
+      }
       if (!res.ok) throw new Error(data.error || 'Failed to save section.');
+
+      if (data.data) {
+        setSectionContent(data.data);
+        if (activeSection === 'footer_links') {
+          window.dispatchEvent(new CustomEvent('footer-links-updated', { detail: data.data }));
+        }
+      }
 
       setMessage('Changes successfully saved in the database!');
     } catch (err) {

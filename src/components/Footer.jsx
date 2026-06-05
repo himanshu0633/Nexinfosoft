@@ -29,19 +29,47 @@ const Footer = () => {
   });
 
   useEffect(() => {
+    const applyFooterData = (data) => {
+      setFooterData(prev => ({ ...prev, ...data, metadata: { ...prev.metadata, ...(data.metadata || {}) } }));
+    };
+
     const fetchFooterLinks = async () => {
       try {
-        const res = await fetch('/api/content/footer_links');
+        const res = await fetch(`/api/content/footer_links?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
-          setFooterData(prev => ({ ...prev, ...data, metadata: { ...prev.metadata, ...data.metadata } }));
+          applyFooterData(data);
         }
       } catch (err) {
         // Static footer fallback remains available.
       }
     };
 
+    const handleFooterUpdate = (event) => {
+      if (event.detail) {
+        applyFooterData(event.detail);
+      } else {
+        fetchFooterLinks();
+      }
+    };
+
+    const handleVisibilityRefresh = () => {
+      if (document.visibilityState === 'visible') {
+        fetchFooterLinks();
+      }
+    };
+
     fetchFooterLinks();
+
+    window.addEventListener('footer-links-updated', handleFooterUpdate);
+    window.addEventListener('focus', fetchFooterLinks);
+    document.addEventListener('visibilitychange', handleVisibilityRefresh);
+
+    return () => {
+      window.removeEventListener('footer-links-updated', handleFooterUpdate);
+      window.removeEventListener('focus', fetchFooterLinks);
+      document.removeEventListener('visibilitychange', handleVisibilityRefresh);
+    };
   }, []);
 
   const renderFooterLink = (link) => (
