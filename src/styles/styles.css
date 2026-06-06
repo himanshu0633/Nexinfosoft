@@ -13058,6 +13058,10 @@ body {
     margin-top: 42px;
 }
 
+.recent-solutions-controls {
+    display: none;
+}
+
 .portfolio-glass-card {
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.58) !important;
@@ -18914,6 +18918,16 @@ strong {
         margin-bottom: -84px !important;
     }
 
+    .footer .logo {
+        grid-column: auto !important;
+        grid-row: auto !important;
+        display: flex !important;
+        justify-content: flex-start !important;
+        justify-self: start !important;
+        width: fit-content !important;
+        margin: 0 !important;
+    }
+
     .header .nav-container {
         display: flex !important;
         justify-content: space-between !important;
@@ -20319,6 +20333,30 @@ strong {
         scroll-snap-align: start !important;
     }
 
+    .contact-method-dots {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .contact-method-dots button {
+        width: 7px;
+        height: 7px;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(15, 118, 110, 0.22);
+        cursor: pointer;
+        transition: width 0.25s ease, background-color 0.25s ease;
+    }
+
+    .contact-method-dots button.active {
+        width: 22px;
+        background: var(--accent);
+    }
+
     .contact-why-sec .why-glass-card {
         flex: 0 0 min(84vw, 330px) !important;
         width: min(84vw, 330px) !important;
@@ -20515,6 +20553,40 @@ strong {
 
 /* Mobile Services Recent Solutions slider */
 @media (max-width: 768px) {
+    .home-recent-solutions-sec .section-header-premium {
+        margin-bottom: 18px !important;
+    }
+
+    .recent-solutions-controls {
+        display: flex !important;
+        justify-content: flex-end;
+        gap: 10px;
+        margin: -4px 0 14px;
+    }
+
+    .recent-solutions-arrow {
+        width: 42px;
+        height: 42px;
+        border: 1px solid rgba(15, 139, 141, 0.18);
+        border-radius: 50%;
+        background: #ffffff;
+        color: var(--accent);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+        cursor: pointer;
+    }
+
+    .recent-solutions-arrow i {
+        font-size: 24px;
+        line-height: 1;
+    }
+
+    .recent-solutions-arrow:active {
+        transform: scale(0.96);
+    }
+
     .services-portfolio-sec .portfolio-showcase-grid {
         display: flex !important;
         grid-template-columns: none !important;
@@ -24614,6 +24686,33 @@ strong {
 
     .contact-page-wrapper .contact-form-wrapper {
         padding: 28px 22px !important;
+    }
+
+    .contact-page-wrapper .interactive-office-card .info-line {
+        display: grid !important;
+        grid-template-columns: 42px minmax(0, 1fr) !important;
+        gap: 12px !important;
+        align-items: center !important;
+    }
+
+    .contact-page-wrapper .interactive-office-card .info-line i {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        width: 42px !important;
+        height: 42px !important;
+        align-self: start !important;
+    }
+
+    .contact-page-wrapper .interactive-office-card .info-line > div {
+        grid-column: 2 !important;
+        min-width: 0 !important;
+        padding-top: 2px !important;
+    }
+
+    .contact-page-wrapper .interactive-office-card .info-line strong,
+    .contact-page-wrapper .interactive-office-card .info-line p {
+        max-width: 100% !important;
+        overflow-wrap: anywhere !important;
     }
 }
 

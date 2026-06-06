@@ -56,72 +56,23 @@ const PortfolioPreview = () => {
     fetchDynamicProjects();
   }, []);
 
-  useEffect(() => {
-    const scroller = portfolioScrollerRef.current;
-    const mobileQuery = window.matchMedia('(max-width: 768px)');
-    let intervalId;
-    let resumeTimer;
-
-    const stopAutoScroll = () => {
-      clearInterval(intervalId);
-      clearTimeout(resumeTimer);
-    };
-
-    const startAutoScroll = () => {
-      stopAutoScroll();
-      if (!scroller || !mobileQuery.matches) return;
-
-      intervalId = setInterval(() => {
-        const firstItem = scroller.querySelector('.portfolio-glass-card');
-        if (!firstItem) return;
-
-        const cardWidth = firstItem.getBoundingClientRect().width;
-        const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
-        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-        const nextLeft = scroller.scrollLeft + cardWidth + gap;
-
-        scroller.scrollTo({
-          left: nextLeft >= maxScroll - 4 ? 0 : nextLeft,
-          behavior: 'smooth'
-        });
-      }, 1000);
-    };
-
-    const pauseThenResume = () => {
-      stopAutoScroll();
-      resumeTimer = setTimeout(startAutoScroll, 2200);
-    };
-
-    const pauseAutoScroll = () => stopAutoScroll();
-    const resumeAutoScroll = () => startAutoScroll();
-
-    startAutoScroll();
-
-    if (scroller) {
-      scroller.addEventListener('touchstart', pauseThenResume, { passive: true });
-      scroller.addEventListener('mouseenter', pauseAutoScroll);
-      scroller.addEventListener('focusin', pauseAutoScroll);
-      scroller.addEventListener('mouseleave', resumeAutoScroll);
-      scroller.addEventListener('focusout', resumeAutoScroll);
-    }
-
-    mobileQuery.addEventListener('change', startAutoScroll);
-
-    return () => {
-      stopAutoScroll();
-      mobileQuery.removeEventListener('change', startAutoScroll);
-      if (scroller) {
-        scroller.removeEventListener('touchstart', pauseThenResume);
-        scroller.removeEventListener('mouseenter', pauseAutoScroll);
-        scroller.removeEventListener('focusin', pauseAutoScroll);
-        scroller.removeEventListener('mouseleave', resumeAutoScroll);
-        scroller.removeEventListener('focusout', resumeAutoScroll);
-      }
-    };
-  }, [projects]);
-
   const visibleProjects = projects.slice(0, 3);
   const hasMoreProjects = projects.length > 3;
+
+  const scrollPortfolio = (direction) => {
+    const scroller = portfolioScrollerRef.current;
+    const firstItem = scroller?.querySelector('.portfolio-glass-card');
+    if (!scroller || !firstItem) return;
+
+    const gap = parseFloat(window.getComputedStyle(scroller).gap) || 0;
+    const cardWidth = firstItem.getBoundingClientRect().width + gap;
+    const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+    const nextLeft = direction === 'next'
+      ? Math.min(scroller.scrollLeft + cardWidth, maxScroll)
+      : Math.max(scroller.scrollLeft - cardWidth, 0);
+
+    scroller.scrollTo({ left: nextLeft, behavior: 'smooth' });
+  };
 
   return (
     <section className="services-portfolio-sec home-recent-solutions-sec">
@@ -131,6 +82,15 @@ const PortfolioPreview = () => {
           <h2 className="section-title-premium text-center">
             Explore Our Recent Success Stories
           </h2>
+        </div>
+
+        <div className="recent-solutions-controls" aria-label="Recent solutions slider controls">
+          <button type="button" className="recent-solutions-arrow" aria-label="Previous project" onClick={() => scrollPortfolio('prev')}>
+            <i className="ri-arrow-left-s-line"></i>
+          </button>
+          <button type="button" className="recent-solutions-arrow" aria-label="Next project" onClick={() => scrollPortfolio('next')}>
+            <i className="ri-arrow-right-s-line"></i>
+          </button>
         </div>
 
         <div ref={portfolioScrollerRef} className="portfolio-showcase-grid">

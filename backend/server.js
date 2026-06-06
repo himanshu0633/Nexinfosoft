@@ -43,11 +43,17 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-// Start Express server
-app.listen(PORT, () => {
-  console.log(`==================================================`);
-  console.log(`  NEXINFOSOFT BACKEND SERVER IS RUNNING`);
-  console.log(`  Local Address: http://localhost:${PORT}`);
-  console.log(`  MongoDB: configured (${db.readyState === 1 ? 'connected' : 'connecting'})`);
-  console.log(`==================================================`);
-});
+// Export app for serverless deployment
+module.exports = app;
+
+// Start Express server if run directly
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`==================================================`);
+    console.log(`  NEXINFOSOFT BACKEND SERVER IS RUNNING`);
+    console.log(`  Local Address: http://localhost:${PORT}`);
+    console.log(`  MongoDB: configured (${db.readyState === 1 ? 'connected' : 'connecting'})`);
+    console.log(`==================================================`);
+  });
+}
+

@@ -7,8 +7,12 @@ const authMiddleware = require('../middleware/auth');
 
 // Automatically ensure uploads directory exists under the public folder
 const uploadsDir = path.join(__dirname, '..', '..', 'public', 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('Warning: Could not create uploads directory (read-only filesystem):', err.message);
 }
 
 // Multer Disk Storage Configuration
