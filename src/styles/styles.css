@@ -15800,7 +15800,10 @@ body {
 @media (max-width: 768px) {
     .tech-hero-sec {
         padding-top: 158px !important;
-        padding-bottom: 64px !important;
+        padding-bottom: 40px !important;
+    }
+    .tech-hero-right {
+        display: none !important;
     }
     .tech-hero-title {
         font-size: 34px;
@@ -24688,14 +24691,18 @@ strong {
         padding: 28px 22px !important;
     }
 
-    .contact-page-wrapper .interactive-office-card .info-line {
+    .contact-page-wrapper .interactive-office-card .info-line,
+    .portfolio-page-wrapper .interactive-office-card .info-line,
+    .tech-page-wrapper .interactive-office-card .info-line {
         display: grid !important;
         grid-template-columns: 42px minmax(0, 1fr) !important;
         gap: 12px !important;
         align-items: center !important;
     }
 
-    .contact-page-wrapper .interactive-office-card .info-line i {
+    .contact-page-wrapper .interactive-office-card .info-line i,
+    .portfolio-page-wrapper .interactive-office-card .info-line i,
+    .tech-page-wrapper .interactive-office-card .info-line i {
         grid-column: 1 !important;
         grid-row: 1 !important;
         width: 42px !important;
@@ -24703,14 +24710,20 @@ strong {
         align-self: start !important;
     }
 
-    .contact-page-wrapper .interactive-office-card .info-line > div {
+    .contact-page-wrapper .interactive-office-card .info-line > div,
+    .portfolio-page-wrapper .interactive-office-card .info-line > div,
+    .tech-page-wrapper .interactive-office-card .info-line > div {
         grid-column: 2 !important;
         min-width: 0 !important;
         padding-top: 2px !important;
     }
 
     .contact-page-wrapper .interactive-office-card .info-line strong,
-    .contact-page-wrapper .interactive-office-card .info-line p {
+    .contact-page-wrapper .interactive-office-card .info-line p,
+    .portfolio-page-wrapper .interactive-office-card .info-line strong,
+    .portfolio-page-wrapper .interactive-office-card .info-line p,
+    .tech-page-wrapper .interactive-office-card .info-line strong,
+    .tech-page-wrapper .interactive-office-card .info-line p {
         max-width: 100% !important;
         overflow-wrap: anywhere !important;
     }
