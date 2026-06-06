@@ -7,7 +7,7 @@
       "destination": "/api"
     },
     {
-      "source": "/((?!assets/|uploads/).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
