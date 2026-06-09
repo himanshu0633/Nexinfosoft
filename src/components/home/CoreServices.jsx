@@ -86,23 +86,6 @@ const CoreServices = ({ previewData = null }) => {
   ]);
 
   useEffect(() => {
-    if (previewData) {
-      setData(previewData);
-      return;
-    }
-
-    const fetchServicesContent = async () => {
-      try {
-        const res = await fetch('/api/content/services');
-        if (res.ok) {
-          const json = await res.json();
-          setData(json);
-        }
-      } catch (err) {
-        // Fallback is already handled by default state
-      }
-    };
-
     const fetchServicesList = async () => {
       try {
         const res = await fetch('/api/services');
@@ -128,8 +111,26 @@ const CoreServices = ({ previewData = null }) => {
       }
     };
 
-    fetchServicesContent();
     fetchServicesList();
+  }, []);
+
+  useEffect(() => {
+    if (previewData) {
+      setData(previewData);
+    } else {
+      const fetchServicesContent = async () => {
+        try {
+          const res = await fetch('/api/content/services');
+          if (res.ok) {
+            const json = await res.json();
+            setData(json);
+          }
+        } catch (err) {
+          // Fallback is already handled by default state
+        }
+      };
+      fetchServicesContent();
+    }
   }, [previewData]);
 
   useEffect(() => {
@@ -194,6 +195,9 @@ const CoreServices = ({ previewData = null }) => {
     };
   }, []);
 
+  const displayServices = services.slice(0, 10);
+  const hasMore = services.length > 10;
+
   return (
     <section id="services" className="core-services-premium">
       <div className="core-services-bg" aria-hidden="true">
@@ -220,7 +224,7 @@ const CoreServices = ({ previewData = null }) => {
 
         <div className="core-services-layout">
           <div ref={serviceScrollerRef} className="core-service-grid">
-            {services.map((service, index) => (
+            {displayServices.map((service, index) => (
               <Link
                 to={service.to}
                 className={`core-service-card core-service-card-${service.size} reveal slide-up active`}
@@ -237,6 +241,14 @@ const CoreServices = ({ previewData = null }) => {
               </Link>
             ))}
           </div>
+          {hasMore && (
+            <div className="services-portfolio-view-more reveal slide-up active" style={{ marginTop: '48px' }}>
+              <Link to="/services" className="btn btn-primary">
+                <span>View More Services</span>
+                <i className="ri-arrow-right-line"></i>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </section>

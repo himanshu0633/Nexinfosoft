@@ -89,6 +89,10 @@ const projectSchema = new mongoose.Schema({
     min: 1,
     max: 5,
     default: 5
+  },
+  showOnHome: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 

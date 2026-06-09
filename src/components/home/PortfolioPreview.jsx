@@ -56,8 +56,9 @@ const PortfolioPreview = () => {
     fetchDynamicProjects();
   }, []);
 
-  const visibleProjects = projects.slice(0, 3);
-  const hasMoreProjects = projects.length > 3;
+  const homeProjects = projects.filter(proj => proj.showOnHome === true);
+  const visibleProjects = homeProjects.length > 0 ? homeProjects.slice(0, 3) : projects.slice(0, 3);
+  const hasMoreProjects = projects.length > visibleProjects.length;
 
   const scrollPortfolio = (direction) => {
     const scroller = portfolioScrollerRef.current;

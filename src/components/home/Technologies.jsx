@@ -49,23 +49,6 @@ const Technologies = ({ previewData = null }) => {
   ]);
 
   useEffect(() => {
-    if (previewData) {
-      setData(previewData);
-      return;
-    }
-
-    const fetchTechContent = async () => {
-      try {
-        const res = await fetch('/api/content/technologies');
-        if (res.ok) {
-          const json = await res.json();
-          setData(json);
-        }
-      } catch (err) {
-        // Fallback handled by default state
-      }
-    };
-
     const fetchTechItems = async () => {
       try {
         const res = await fetch('/api/techstack');
@@ -95,8 +78,26 @@ const Technologies = ({ previewData = null }) => {
       }
     };
 
-    fetchTechContent();
     fetchTechItems();
+  }, []);
+
+  useEffect(() => {
+    if (previewData) {
+      setData(previewData);
+    } else {
+      const fetchTechContent = async () => {
+        try {
+          const res = await fetch('/api/content/technologies');
+          if (res.ok) {
+            const json = await res.json();
+            setData(json);
+          }
+        } catch (err) {
+          // Fallback handled by default state
+        }
+      };
+      fetchTechContent();
+    }
   }, [previewData]);
 
   // Map technologies to their respective categories and highlight card text on the Tech Stack page

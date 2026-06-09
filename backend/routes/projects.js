@@ -31,7 +31,8 @@ const normalizeProjectPayload = (body) => ({
   clientRole: body.clientRole || '',
   clientCompany: body.clientCompany || '',
   clientReview: body.clientReview || '',
-  clientRating: Number(body.clientRating) || 5
+  clientRating: Number(body.clientRating) || 5,
+  showOnHome: body.showOnHome !== undefined ? !!body.showOnHome : false
 });
 
 const withProjectDetails = (project) => {

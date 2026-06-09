@@ -200,6 +200,19 @@ const isTokenExpired = (token) => {
   }
 };
 
+const sectionSupportsImage = (sectionId) => {
+  const imageAllowedSections = ['hero', 'corporate_hero', 'corporate_about', 'corporate_mission'];
+  if (imageAllowedSections.includes(sectionId)) return true;
+
+  const allPredefinedStaticSections = Object.values(TAB_SECTIONS)
+    .flat()
+    .map(s => s.id);
+  
+  if (allPredefinedStaticSections.includes(sectionId)) return false;
+
+  return true;
+};
+
 const AdminDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'home';
@@ -223,7 +236,7 @@ const AdminDashboard = () => {
   const [sectionContent, setSectionContent] = useState(null);
   const emptyServiceForm = { slug: '', title: '', subtitle: '', icon: 'ri-window-line', intro: '', benefits: '', deliverables: '', image_url: '', visible: true };
   const [serviceForm, setServiceForm] = useState(emptyServiceForm);
-  const emptyProjectForm = { name: '', category: 'web', tag: '', techs: '', desc: '', icon: 'ri-briefcase-4-line', image_url: '', overview: '', challenges: '', solution: '', results: '', clientName: '', clientRole: '', clientCompany: '', clientReview: '', clientRating: 5 };
+  const emptyProjectForm = { name: '', category: 'web', tag: '', techs: '', desc: '', icon: 'ri-briefcase-4-line', image_url: '', overview: '', challenges: '', solution: '', results: '', clientName: '', clientRole: '', clientCompany: '', clientReview: '', clientRating: 5, showOnHome: false };
   const [projectForm, setProjectForm] = useState(emptyProjectForm);
   const [techForm, setTechForm] = useState({ category: 'frontend', name: '', icon: 'ri-code-line', desc: '', color: 'rgba(20, 184, 166, 0.1)', bestFor: '', projects: '', performance: '95%' });
   const [showCustomCategory, setShowCustomCategory] = useState(false);
@@ -357,7 +370,13 @@ const AdminDashboard = () => {
             'Post-Deployment Support & Documentation',
             'Agile Iterations & 100% Code Ownership'
           ],
-     
+          cards: [
+            { title: 'Modern Stack', desc: 'Project-fit tools selected for maintainability, integrations, and performance.' },
+            { title: 'Agile Speed', desc: 'Sprint-based delivery with predictable milestones and transparent updates.' },
+            { title: 'Secure & Reliable', desc: 'Security validation, access controls, and reliable deployment support.' },
+            { title: 'Priority Support', desc: 'Direct communication with project managers and support engineers.' },
+            { title: 'Enterprise Ready Solutions', desc: 'Built for scalability, security and long-term growth. We help you stay future-ready.' }
+          ]
         }
       },
       corporate_hero: {
@@ -1600,7 +1619,8 @@ const AdminDashboard = () => {
       clientRole: proj.clientRole || '',
       clientCompany: proj.clientCompany || '',
       clientReview: proj.clientReview || '',
-      clientRating: proj.clientRating || 5
+      clientRating: proj.clientRating || 5,
+      showOnHome: proj.showOnHome === true
     });
   };
 
@@ -1616,6 +1636,45 @@ const AdminDashboard = () => {
         loadProjects();
       }
     } catch (e) {}
+  };
+
+  const handleToggleProjectShowOnHome = async (proj) => {
+    try {
+      const payload = {
+        name: proj.name,
+        category: proj.category,
+        tag: proj.tag || '',
+        techs: proj.techs || [],
+        desc: proj.desc || '',
+        icon: proj.icon || 'ri-briefcase-4-line',
+        image_url: proj.image_url || '',
+        overview: proj.overview || '',
+        challenges: proj.challenges || [],
+        solution: proj.solution || '',
+        results: proj.results || [],
+        clientName: proj.clientName || '',
+        clientRole: proj.clientRole || '',
+        clientCompany: proj.clientCompany || '',
+        clientReview: proj.clientReview || '',
+        clientRating: proj.clientRating || 5,
+        showOnHome: proj.showOnHome !== true
+      };
+
+      const res = await fetch(`/api/projects/${proj._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update project homepage visibility.');
+      setMessage('Project homepage status updated successfully.');
+      loadProjects();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   // CRUD handlers: Tech Stack Items
@@ -1991,7 +2050,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Section Image Uploader (Editable for all photo sections!) */}
-                {sectionContent && (
+                {sectionContent && sectionSupportsImage(activeSection) && (
                   <div className="form-group" style={{ background: 'rgba(255,255,255,0.01)', padding: '20px', borderRadius: '10px', border: '1px dashed var(--border)' }}>
                     <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Section Artwork / Photo (Image upload)</label>
                     {sectionContent.image_url && (
@@ -2034,6 +2093,78 @@ const AdminDashboard = () => {
                       <button type="button" onClick={addRotatingKeyword} className="btn btn-secondary" style={{ marginTop: '12px', padding: '8px 16px', fontSize: '13px' }}>
                         <i className="ri-add-line"></i> Add Rotating Keyword
                       </button>
+                    </div>
+                  </div>
+                )}
+
+                {activeSection === 'whychooseus' && sectionContent.metadata && (
+                  <div style={{ display: 'grid', gap: '22px', borderTop: '1px solid var(--border)', paddingTop: '22px' }}>
+                    <h4 style={{ fontSize: '15px', fontWeight: 700 }}>Checklist Items</h4>
+                    <div style={{ display: 'grid', gap: '10px' }}>
+                      {[0, 1, 2].map((idx) => {
+                        const val = sectionContent.metadata.checklist?.[idx] || '';
+                        return (
+                          <div key={idx} className="form-group">
+                            <label className="form-label" style={{ fontSize: '12px' }}>Checklist #{idx + 1}</label>
+                            <input 
+                              className="form-control" 
+                              type="text" 
+                              value={val} 
+                              onChange={(e) => {
+                                const arr = [...(sectionContent.metadata.checklist || ['', '', ''])];
+                                arr[idx] = e.target.value;
+                                handleMetadataChange('checklist', arr);
+                              }} 
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <h4 style={{ fontSize: '15px', fontWeight: 700, marginTop: '14px' }}>Floating Feature Cards</h4>
+                    <div style={{ display: 'grid', gap: '16px' }}>
+                      {[0, 1, 2, 3, 4].map((idx) => {
+                        const cardLabels = ['Card 1 (Modern Stack)', 'Card 2 (Agile Speed)', 'Card 3 (Secure & Reliable)', 'Card 4 (Priority Support)', 'Card 5 (Enterprise Ready)'];
+                        const cardsList = sectionContent.metadata.cards || [
+                          { title: 'Modern Stack', desc: 'Project-fit tools selected for maintainability, integrations, and performance.' },
+                          { title: 'Agile Speed', desc: 'Sprint-based delivery with predictable milestones and transparent updates.' },
+                          { title: 'Secure & Reliable', desc: 'Security validation, access controls, and reliable deployment support.' },
+                          { title: 'Priority Support', desc: 'Direct communication with project managers and support engineers.' },
+                          { title: 'Enterprise Ready Solutions', desc: 'Built for scalability, security and long-term growth. We help you stay future-ready.' }
+                        ];
+                        const card = cardsList[idx] || { title: '', desc: '' };
+                        return (
+                          <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border)', display: 'grid', gap: '10px' }}>
+                            <strong style={{ fontSize: '13px' }}>{cardLabels[idx]}</strong>
+                            <div className="form-group">
+                              <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Card Title</label>
+                              <input 
+                                className="form-control" 
+                                type="text" 
+                                value={card.title || ''} 
+                                onChange={(e) => {
+                                  const updatedCards = [...cardsList];
+                                  updatedCards[idx] = { ...card, title: e.target.value };
+                                  handleMetadataChange('cards', updatedCards);
+                                }} 
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Card Description</label>
+                              <textarea 
+                                className="form-control" 
+                                style={{ minHeight: '60px' }}
+                                value={card.desc || ''} 
+                                onChange={(e) => {
+                                  const updatedCards = [...cardsList];
+                                  updatedCards[idx] = { ...card, desc: e.target.value };
+                                  handleMetadataChange('cards', updatedCards);
+                                }} 
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -2364,18 +2495,26 @@ const AdminDashboard = () => {
                       if (activeSection === 'company_profile_quality') listKey = 'checks';
 
                       const hasIcon = ['about_why', 'about_qa', 'about_values', 'company_profile_services'].includes(activeSection);
+                      const isStrengthsSection = ['about_why', 'company_profile_strengths'].includes(activeSection);
+                      const currentCount = (sectionContent.metadata?.[listKey] || []).length;
 
                       return (
                         <div className="admin-page-edit-group">
                           <div className="admin-page-edit-heading">
-                            <strong>Cards Content List</strong>
-                            <button
-                              type="button"
-                              className="btn btn-secondary"
-                              onClick={() => addMetadataArrayObject(listKey, { title: 'New Card', text: '', ...(hasIcon ? { icon: 'ri-checkbox-circle-line' } : {}) })}
-                            >
-                              <i className="ri-add-line"></i> Add Card
-                            </button>
+                            <strong>Cards Content List (Current: {currentCount})</strong>
+                            {(!isStrengthsSection || currentCount < 6) ? (
+                              <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => addMetadataArrayObject(listKey, { title: 'New Card', text: '', ...(hasIcon ? { icon: 'ri-checkbox-circle-line' } : {}) })}
+                              >
+                                <i className="ri-add-line"></i> Add Card
+                              </button>
+                            ) : (
+                              <span style={{ fontSize: '12.5px', color: 'var(--accent)', fontWeight: 'bold' }}>
+                                <i className="ri-error-warning-line"></i> Max 6 strengths allowed
+                              </span>
+                            )}
                           </div>
                           {(sectionContent.metadata?.[listKey] || []).map((card, idx) => (
                             <div className="admin-page-card-editor" key={`card-item-${idx}`}>
@@ -3127,6 +3266,17 @@ const AdminDashboard = () => {
                     <div className="form-group"><label className="form-label">Rating</label><select className="form-control" value={projectForm.clientRating} onChange={(e) => setProjectForm(prev => ({ ...prev, clientRating: Number(e.target.value) }))}>{[5, 4, 3, 2, 1].map(value => <option key={value} value={value}>{value} Stars</option>)}</select></div>
                   </div>
 
+                  <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <input
+                      type="checkbox"
+                      id="projectShowOnHomeInput"
+                      checked={projectForm.showOnHome === true}
+                      onChange={(e) => setServiceForm && setProjectForm(prev => ({ ...prev, showOnHome: e.target.checked }))}
+                      style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                    />
+                    <label htmlFor="projectShowOnHomeInput" style={{ cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}>Show this project on Homepage (Recent Solutions)</label>
+                  </div>
+
                   {/* Dynamic image uploader for Projects! */}
                   <div className="form-group" style={{ background: 'rgba(255,255,255,0.01)', padding: '20px', borderRadius: '10px', border: '1px dashed var(--border)' }}>
                     <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Project Screenshot / Poster</label>
@@ -3165,12 +3315,20 @@ const AdminDashboard = () => {
                           <img src={proj.image_url} alt="project thumbnail" style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '12px', border: '1px solid var(--border)' }} />
                         )}
                         <strong style={{ fontSize: '16px', display: 'block' }}>{proj.name}</strong>
-                        <span style={{ fontSize: '11px', color: 'var(--accent)', background: 'rgba(20,184,166,0.1)', padding: '2px 8px', borderRadius: '4px', display: 'inline-block', marginTop: '6px' }}>
-                          {proj.category.toUpperCase()}
-                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginTop: '6px' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--accent)', background: 'rgba(20,184,166,0.1)', padding: '2px 8px', borderRadius: '4px', display: 'inline-block' }}>
+                            {proj.category.toUpperCase()}
+                          </span>
+                          <span style={{ fontSize: '11px', fontWeight: 800, color: proj.showOnHome === true ? '#8fba4a' : '#ef4444', background: proj.showOnHome === true ? 'rgba(143,184,74,0.1)' : 'rgba(239,68,68,0.1)', padding: '2px 8px', borderRadius: '4px', display: 'inline-block' }}>
+                            {proj.showOnHome === true ? 'Home Selected' : 'Not on Home'}
+                          </span>
+                        </div>
                         <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>{proj.desc?.slice(0, 80)}...</p>
                       </div>
-                      <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '16px', flexWrap: 'wrap' }}>
+                        <button onClick={() => handleToggleProjectShowOnHome(proj)} className="btn btn-secondary" style={{ flex: '1 1 100%', padding: '6px 0', fontSize: '12px' }}>
+                          {proj.showOnHome === true ? 'Remove from Home' : 'Show on Home'}
+                        </button>
                         <button onClick={() => handleEditProject(proj)} className="btn btn-secondary" style={{ flex: 1, padding: '6px 0', fontSize: '12px' }}>Edit</button>
                         <button onClick={() => handleDeleteProject(proj._id)} className="btn btn-secondary" style={{ flex: 1, padding: '6px 0', fontSize: '12px', background: 'rgba(239,68,68,0.1)', color: '#ef4444', borderColor: 'rgba(239,68,68,0.2)' }}>Delete</button>
                       </div>

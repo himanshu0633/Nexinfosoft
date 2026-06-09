@@ -59,6 +59,12 @@ const WhyChooseUs = ({ previewData = null }) => {
     });
   };
 
+  const card1 = data.metadata?.cards?.[0] || { title: 'Modern Stack', desc: 'Project-fit tools selected for maintainability, integrations, and performance.' };
+  const card2 = data.metadata?.cards?.[1] || { title: 'Agile Speed', desc: 'Sprint-based delivery with predictable milestones and transparent updates.' };
+  const card3 = data.metadata?.cards?.[2] || { title: 'Secure & Reliable', desc: 'Security validation, access controls, and reliable deployment support.' };
+  const card4 = data.metadata?.cards?.[3] || { title: 'Priority Support', desc: 'Direct communication with project managers and support engineers.' };
+  const card5 = data.metadata?.cards?.[4] || { title: 'Enterprise Ready Solutions', desc: 'Built for scalability, security and long-term growth. We help you stay future-ready.' };
+
   return (
     <section className="why-choose-us value-proposition-premium">
       <div className="value-bg" aria-hidden="true">
@@ -105,8 +111,8 @@ const WhyChooseUs = ({ previewData = null }) => {
             <div className="value-card-dots"><span></span><span></span><span></span></div>
             <span className="value-icon"><i className="ri-box-3-line"></i></span>
             <div>
-              <h3>Modern Stack</h3>
-              <p>Project-fit tools selected for maintainability, integrations, and performance.</p>
+              <h3>{card1.title}</h3>
+              <p>{card1.desc}</p>
               <div className="value-logo-strip">
                 <span><i className="ri-reactjs-line"></i></span>
                 <span>node</span>
@@ -120,8 +126,8 @@ const WhyChooseUs = ({ previewData = null }) => {
             <div className="value-card-dots"><span></span><span></span><span></span></div>
             <span className="value-icon"><i className="ri-time-line"></i></span>
             <div>
-              <h3>Agile Speed</h3>
-              <p>Sprint-based delivery with predictable milestones and transparent updates.</p>
+              <h3>{card2.title}</h3>
+              <p>{card2.desc}</p>
               <div className="value-progress-head"><span>Sprint Progress</span><strong>72%</strong></div>
               <div className="value-progress"><span style={{ width: '72%' }}></span></div>
             </div>
@@ -132,8 +138,8 @@ const WhyChooseUs = ({ previewData = null }) => {
               <span className="value-icon"><i className="ri-shield-keyhole-line"></i></span>
               <span className="value-status"><i></i> Protected</span>
             </div>
-            <h3>Secure &amp; Reliable</h3>
-            <p>Security validation, access controls, and reliable deployment support.</p>
+            <h3>{card3.title}</h3>
+            <p>{card3.desc}</p>
             <div className="value-tech-tags"><span>SSL</span><span>HTTPS</span><span>Backup</span></div>
           </article>
 
@@ -141,8 +147,8 @@ const WhyChooseUs = ({ previewData = null }) => {
             <div className="value-card-dots"><span></span><span></span><span></span></div>
             <span className="value-icon"><i className="ri-customer-service-2-line"></i></span>
             <div>
-              <h3>Priority Support</h3>
-              <p>Direct communication with project managers and support engineers.</p>
+              <h3>{card4.title}</h3>
+              <p>{card4.desc}</p>
               <div className="value-avatars"><span>N</span><span>I</span><span>X</span><b>+12</b></div>
             </div>
           </article>
@@ -155,8 +161,8 @@ const WhyChooseUs = ({ previewData = null }) => {
               <span><i className="ri-line-chart-line"></i></span>
             </div>
             <div>
-              <h3>Enterprise Ready Solutions</h3>
-              <p>Built for scalability, security and long-term growth. We help you stay future-ready.</p>
+              <h3>{card5.title}</h3>
+              <p>{card5.desc}</p>
             </div>
             <Link to="/services" aria-label="View enterprise solutions"><i className="ri-arrow-right-line"></i></Link>
           </article>
