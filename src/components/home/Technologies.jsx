@@ -51,7 +51,7 @@ const Technologies = ({ previewData = null }) => {
   useEffect(() => {
     const fetchTechItems = async () => {
       try {
-        const res = await fetch('/api/techstack');
+        const res = await fetch(`/api/techstack?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const json = await res.json();
           if (json && json.length > 0) {
@@ -87,7 +87,7 @@ const Technologies = ({ previewData = null }) => {
     } else {
       const fetchTechContent = async () => {
         try {
-          const res = await fetch('/api/content/technologies');
+          const res = await fetch(`/api/content/technologies?t=${Date.now()}`, { cache: 'no-store' });
           if (res.ok) {
             const json = await res.json();
             setData(json);

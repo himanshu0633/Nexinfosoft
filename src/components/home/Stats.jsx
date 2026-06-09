@@ -62,7 +62,7 @@ const Stats = ({ previewData = null }) => {
 
     const fetchStatsContent = async () => {
       try {
-        const res = await fetch('/api/content/stats');
+        const res = await fetch(`/api/content/stats?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const json = await res.json();
           setData(json);

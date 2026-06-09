@@ -88,7 +88,7 @@ const CoreServices = ({ previewData = null }) => {
   useEffect(() => {
     const fetchServicesList = async () => {
       try {
-        const res = await fetch('/api/services');
+        const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const json = await res.json();
           if (json && json.length > 0) {
@@ -120,7 +120,7 @@ const CoreServices = ({ previewData = null }) => {
     } else {
       const fetchServicesContent = async () => {
         try {
-          const res = await fetch('/api/content/services');
+          const res = await fetch(`/api/content/services?t=${Date.now()}`, { cache: 'no-store' });
           if (res.ok) {
             const json = await res.json();
             setData(json);

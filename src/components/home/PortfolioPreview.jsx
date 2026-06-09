@@ -34,7 +34,7 @@ const PortfolioPreview = () => {
   useEffect(() => {
     const fetchDynamicProjects = async () => {
       try {
-        const res = await fetch('/api/projects');
+        const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const dbProjects = await res.json();
           if (dbProjects && dbProjects.length > 0) {

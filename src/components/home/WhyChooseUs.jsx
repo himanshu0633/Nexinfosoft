@@ -26,7 +26,7 @@ const WhyChooseUs = ({ previewData = null }) => {
 
     const fetchWhyChooseUsContent = async () => {
       try {
-        const res = await fetch('/api/content/whychooseus');
+        const res = await fetch(`/api/content/whychooseus?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const json = await res.json();
           setData(json);

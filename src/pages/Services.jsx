@@ -257,7 +257,7 @@ const Services = () => {
 
       try {
         const entries = await Promise.all(Object.keys(contentMap).map(async (id) => {
-          const res = await fetch(`/api/content/${id}`);
+          const res = await fetch(`/api/content/${id}?t=${Date.now()}`, { cache: 'no-store' });
           if (!res.ok) return null;
           const data = await res.json();
           if (data.visible === false) return null;
@@ -274,7 +274,7 @@ const Services = () => {
       // Fetch dynamic services
       try {
         console.log("Services.jsx: Fetching dynamic services...");
-        const res = await fetch('/api/services');
+        const res = await fetch(`/api/services?t=${Date.now()}`, { cache: 'no-store' });
         console.log("Services.jsx: Fetch response status:", res.status);
         if (res.ok) {
           const data = await res.json();
@@ -293,7 +293,7 @@ const Services = () => {
 
       // Fetch dynamic projects
       try {
-        const res = await fetch('/api/projects');
+        const res = await fetch(`/api/projects?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {

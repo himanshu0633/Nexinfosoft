@@ -27,7 +27,7 @@ const Process = ({ previewData = null }) => {
 
     const fetchProcess = async () => {
       try {
-        const res = await fetch('/api/content/process');
+        const res = await fetch(`/api/content/process?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const json = await res.json();
           setData(json);

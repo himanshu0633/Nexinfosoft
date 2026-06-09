@@ -30,7 +30,7 @@ const Industries = ({ previewData = null }) => {
 
     const fetchIndustries = async () => {
       try {
-        const res = await fetch('/api/content/industries');
+        const res = await fetch(`/api/content/industries?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const json = await res.json();
           setData(json);

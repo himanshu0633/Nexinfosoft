@@ -26,7 +26,7 @@ const Hero = ({ previewData = null }) => {
 
     const fetchHeroContent = async () => {
       try {
-        const res = await fetch('/api/content/hero');
+        const res = await fetch(`/api/content/hero?t=${Date.now()}`, { cache: 'no-store' });
         if (res.ok) {
           const json = await res.json();
           setData(json);
