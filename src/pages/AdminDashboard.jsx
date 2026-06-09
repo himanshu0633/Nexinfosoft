@@ -9,7 +9,7 @@ import Process from '../components/home/Process';
 import PortfolioPreview from '../components/home/PortfolioPreview';
 import { CustomDynamicSection } from '../components/DynamicPageSections';
 
-const PAGE_TABS = ['home', 'sections', 'about', 'service_page', 'tech_page', 'portfolio_page', 'corporate', 'company_profile', 'contact', 'consultation', 'faqs', 'policies', 'global'];
+const PAGE_TABS = ['home', 'sections', 'about', 'service_page', 'tech_page', 'portfolio_page', 'corporate', 'company_profile', 'contact', 'consultation', 'faqs', 'policies', 'global', 'icons'];
 
 const PAGE_CATEGORY_BY_TAB = {
   home: 'home',
@@ -44,8 +44,7 @@ const TAB_SECTIONS = {
     { id: 'technologies', label: 'Technologies', icon: 'ri-cpu-line' },
     { id: 'industries', label: 'Industries', icon: 'ri-building-4-line' },
     { id: 'process', label: 'Process', icon: 'ri-route-line' },
-    { id: 'portfoliopreview', label: 'Portfolio Preview', icon: 'ri-briefcase-line' },
-    { id: 'sections_manager', label: 'Section Manager', icon: 'ri-settings-line', style: { borderLeft: '2px solid var(--accent)' } }
+    { id: 'portfoliopreview', label: 'Portfolio Preview', icon: 'ri-briefcase-line' }
   ],
   sections: [
     { id: 'hero', label: 'Hero', icon: 'ri-home-line' },
@@ -54,18 +53,16 @@ const TAB_SECTIONS = {
     { id: 'technologies', label: 'Technologies', icon: 'ri-cpu-line' },
     { id: 'industries', label: 'Industries', icon: 'ri-building-4-line' },
     { id: 'process', label: 'Process', icon: 'ri-route-line' },
-    { id: 'portfoliopreview', label: 'Portfolio Preview', icon: 'ri-briefcase-line' },
-    { id: 'sections_manager', label: 'Section Manager', icon: 'ri-settings-line', style: { borderLeft: '2px solid var(--accent)' } }
+    { id: 'portfoliopreview', label: 'Portfolio Preview', icon: 'ri-briefcase-line' }
   ],
   about: [
     { id: 'about_hero', label: 'About Hero', icon: 'ri-flag-line' },
     { id: 'about_overview', label: 'Company Overview', icon: 'ri-file-info-line' },
     { id: 'about_partner', label: 'Delivery Partner', icon: 'ri-team-line' },
     { id: 'about_why', label: 'Delivery Strengths', icon: 'ri-bar-chart-grouped-line' },
-    { id: 'about_lifecycle', label: 'Project Lifecycle', icon: 'ri-route-line' },
+    { id: 'process', label: 'Project Lifecycle', icon: 'ri-route-line' },
     { id: 'about_qa', label: 'QA Framework', icon: 'ri-shield-check-line' },
     { id: 'about_values', label: 'Company Values', icon: 'ri-lightbulb-line' },
-    { id: 'about_achievements', label: 'Achievements', icon: 'ri-trophy-line' },
     { id: 'about_cta', label: 'About CTA Banner', icon: 'ri-chat-voice-line' }
   ],
   service_page: [
@@ -154,6 +151,8 @@ const getTabLabel = (tab) => {
       return 'Policies Page';
     case 'global':
       return 'Global & Footer';
+    case 'icons':
+      return 'Icons Guide';
     default:
       return 'Site';
   }
@@ -186,6 +185,8 @@ const getDefaultSectionForTab = (tab) => {
       return 'privacy_policy';
     case 'global':
       return 'footer_links';
+    case 'icons':
+      return '';
     default:
       return '';
   }
@@ -213,6 +214,103 @@ const sectionSupportsImage = (sectionId) => {
   return true;
 };
 
+const REMIXICON_LIST = [
+  // Development
+  { class: 'ri-code-s-slash-line', category: 'Development', name: 'Code Slash' },
+  { class: 'ri-code-box-line', category: 'Development', name: 'Code Box' },
+  { class: 'ri-reactjs-line', category: 'Development', name: 'React' },
+  { class: 'ri-angularjs-line', category: 'Development', name: 'Angular' },
+  { class: 'ri-vuejs-line', category: 'Development', name: 'Vue' },
+  { class: 'ri-nodejs-line', category: 'Development', name: 'Node.js' },
+  { class: 'ri-terminal-box-line', category: 'Development', name: 'Terminal' },
+  { class: 'ri-html5-line', category: 'Development', name: 'HTML5' },
+  { class: 'ri-css3-line', category: 'Development', name: 'CSS3' },
+  { class: 'ri-tailwind-css-line', category: 'Development', name: 'Tailwind' },
+  { class: 'ri-bootstrap-line', category: 'Development', name: 'Bootstrap' },
+  { class: 'ri-git-merge-line', category: 'Development', name: 'Git Merge' },
+  { class: 'ri-database-2-line', category: 'Development', name: 'Database' },
+  { class: 'ri-database-line', category: 'Development', name: 'Database Simple' },
+  { class: 'ri-server-line', category: 'Development', name: 'Server' },
+  { class: 'ri-cpu-line', category: 'Development', name: 'CPU / Tech' },
+  { class: 'ri-cloud-line', category: 'Development', name: 'Cloud' },
+  { class: 'ri-ship-line', category: 'Development', name: 'Docker / Ship' },
+  { class: 'ri-brain-line', category: 'Development', name: 'AI / Brain' },
+  { class: 'ri-mind-map', category: 'Development', name: 'Mind Map' },
+  { class: 'ri-braces-line', category: 'Development', name: 'Braces' },
+  { class: 'ri-bug-line', category: 'Development', name: 'Bug' },
+  { class: 'ri-dashboard-3-line', category: 'Development', name: 'Dashboard' },
+  
+  // Business
+  { class: 'ri-briefcase-line', category: 'Business', name: 'Briefcase' },
+  { class: 'ri-briefcase-4-line', category: 'Business', name: 'Briefcase Solid' },
+  { class: 'ri-bar-chart-box-line', category: 'Business', name: 'Bar Chart Box' },
+  { class: 'ri-line-chart-line', category: 'Business', name: 'Line Chart' },
+  { class: 'ri-pie-chart-line', category: 'Business', name: 'Pie Chart' },
+  { class: 'ri-global-line', category: 'Business', name: 'Global Network' },
+  { class: 'ri-building-line', category: 'Business', name: 'Building' },
+  { class: 'ri-building-4-line', category: 'Business', name: 'Enterprise' },
+  { class: 'ri-customer-service-2-line', category: 'Business', name: 'Support / Avatars' },
+  { class: 'ri-slideshow-line', category: 'Business', name: 'Presentation' },
+  { class: 'ri-hand-coin-line', category: 'Business', name: 'Funding / Finance' },
+  { class: 'ri-percent-line', category: 'Business', name: 'Percentage' },
+  { class: 'ri-verified-badge-line', category: 'Business', name: 'Verified Badge' },
+  
+  // System / Settings
+  { class: 'ri-settings-line', category: 'System', name: 'Settings' },
+  { class: 'ri-settings-5-line', category: 'System', name: 'CI/CD Settings' },
+  { class: 'ri-shield-check-line', category: 'System', name: 'Shield Check' },
+  { class: 'ri-shield-keyhole-line', category: 'System', name: 'Shield Keyhole' },
+  { class: 'ri-lock-line', category: 'System', name: 'Lock' },
+  { class: 'ri-key-line', category: 'System', name: 'Key' },
+  { class: 'ri-search-line', category: 'System', name: 'Search' },
+  { class: 'ri-notification-line', category: 'System', name: 'Notification' },
+  { class: 'ri-home-line', category: 'System', name: 'Home' },
+  { class: 'ri-home-5-line', category: 'System', name: 'Home Alternative' },
+  { class: 'ri-checkbox-circle-line', category: 'System', name: 'Checkbox Circle' },
+  { class: 'ri-checkbox-circle-fill', category: 'System', name: 'Checkbox Checked' },
+  { class: 'ri-error-warning-line', category: 'System', name: 'Alert' },
+  { class: 'ri-delete-bin-line', category: 'System', name: 'Delete / Trash' },
+  
+  // Device
+  { class: 'ri-smartphone-line', category: 'Device', name: 'Smartphone' },
+  { class: 'ri-tablet-line', category: 'Device', name: 'Tablet' },
+  { class: 'ri-computer-line', category: 'Device', name: 'Desktop Computer' },
+  { class: 'ri-macbook-line', category: 'Device', name: 'Macbook' },
+  { class: 'ri-router-line', category: 'Device', name: 'Router' },
+  { class: 'ri-sensor-line', category: 'Device', name: 'Sensor / IoT' },
+  
+  // Design / Editor
+  { class: 'ri-pencil-ruler-2-line', category: 'Design', name: 'Pencil Ruler' },
+  { class: 'ri-markup-line', category: 'Design', name: 'Markup' },
+  { class: 'ri-palette-line', category: 'Design', name: 'Palette' },
+  { class: 'ri-focus-line', category: 'Design', name: 'Focus / Target' },
+  { class: 'ri-layout-line', category: 'Design', name: 'Layout' },
+  { class: 'ri-grid-line', category: 'Design', name: 'Grid' },
+  { class: 'ri-window-line', category: 'Design', name: 'Browser Window' },
+  { class: 'ri-tools-line', category: 'Design', name: 'Tools' },
+  
+  // Communication
+  { class: 'ri-chat-3-line', category: 'Communication', name: 'Chat Balloon' },
+  { class: 'ri-chat-voice-line', category: 'Communication', name: 'Chat Voice' },
+  { class: 'ri-mail-line', category: 'Communication', name: 'Mail' },
+  { class: 'ri-mail-send-line', category: 'Communication', name: 'Mail Send' },
+  { class: 'ri-phone-line', category: 'Communication', name: 'Phone' },
+  { class: 'ri-phone-fill', category: 'Communication', name: 'Phone Fill' },
+  { class: 'ri-whatsapp-line', category: 'Communication', name: 'WhatsApp' },
+  { class: 'ri-send-plane-line', category: 'Communication', name: 'Send' },
+  
+  // Map / General
+  { class: 'ri-flag-line', category: 'General', name: 'Flag' },
+  { class: 'ri-trophy-line', category: 'General', name: 'Trophy' },
+  { class: 'ri-star-line', category: 'General', name: 'Star' },
+  { class: 'ri-lightbulb-line', category: 'General', name: 'Lightbulb' },
+  { class: 'ri-route-line', category: 'General', name: 'Route / Steps' },
+  { class: 'ri-rocket-line', category: 'General', name: 'Rocket' },
+  { class: 'ri-heart-pulse-line', category: 'General', name: 'Healthcare / Heart' },
+  { class: 'ri-book-open-line', category: 'General', name: 'Education / Book' },
+  { class: 'ri-shopping-cart-2-line', category: 'General', name: 'E-commerce Cart' }
+];
+
 const AdminDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'home';
@@ -231,6 +329,11 @@ const AdminDashboard = () => {
   const [projects, setProjects] = useState([]);
   const [techItems, setTechItems] = useState([]);
   const [leads, setLeads] = useState([]);
+
+  // Icons tab states
+  const [iconSearch, setIconSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [copiedIcon, setCopiedIcon] = useState(null);
 
   // Editor states
   const [sectionContent, setSectionContent] = useState(null);
@@ -1262,7 +1365,7 @@ const AdminDashboard = () => {
       }
     };
 
-    if (PAGE_TABS.includes(activeTab) && !['sections_manager', 'services_manager'].includes(activeSection)) {
+    if (PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager'].includes(activeSection)) {
       fetchSection();
     }
   }, [activeSection, activeTab, token]);
@@ -1914,6 +2017,7 @@ const AdminDashboard = () => {
     ...allSections
       .filter((section) => section.page === activePageCategory)
       .filter((section) => !configuredSectionIds.has(section._id))
+      .filter((section) => section._id !== 'stats')
       .sort((a, b) => (a.order || 0) - (b.order || 0))
       .map((section) => ({
         id: section._id,
@@ -1948,9 +2052,9 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && !['sections_manager', 'services_manager'].includes(activeSection) ? 'active-split' : ''}`}>
+        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager'].includes(activeSection) ? 'active-split' : ''}`}>
           {/* LIVE PREVIEW (Only for page sections) */}
-          {PAGE_TABS.includes(activeTab) && !['sections_manager', 'services_manager'].includes(activeSection) && sectionContent && (
+          {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager'].includes(activeSection) && sectionContent && (
             <div className="admin-section-preview-block">
               <div className="admin-preview-heading">
                 <small style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Live preview matching website styles</small>
@@ -1980,7 +2084,7 @@ const AdminDashboard = () => {
             {/* =========================================================
                 TAB 1 & 2: SECTIONS FORM EDITORS
                 ========================================================= */}
-            {PAGE_TABS.includes(activeTab) && !['sections_manager', 'services_manager'].includes(activeSection) && sectionContent && (
+            {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager'].includes(activeSection) && sectionContent && (
               <form onSubmit={handleSaveSection} style={{ display: 'grid', gap: '22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <h2 style={{ fontSize: '20px', fontWeight: 800 }}>Edit {activeSection.toUpperCase().replace('_', ' ')}</h2>
@@ -2251,7 +2355,7 @@ const AdminDashboard = () => {
                   </div>
                 )}
 
-                {!['home', 'sections'].includes(activeTab) && PAGE_TABS.includes(activeTab) && sectionContent.metadata && (
+                {!['home', 'sections'].includes(activeTab) && PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && sectionContent.metadata && (
                   <div className="admin-direct-page-editor">
                     <h4>Page Details</h4>
 
@@ -2488,13 +2592,13 @@ const AdminDashboard = () => {
                       </div>
                     )}
 
-                    {['about_why', 'about_qa', 'about_values', 'company_profile_services', 'company_profile_strengths', 'company_profile_quality'].includes(activeSection) && (() => {
+                    {['about_why', 'about_qa', 'about_values', 'services_page_benefits', 'company_profile_services', 'company_profile_strengths', 'company_profile_quality'].includes(activeSection) && (() => {
                       let listKey = 'cards';
                       if (activeSection === 'company_profile_services') listKey = 'services';
                       if (activeSection === 'company_profile_strengths') listKey = 'strengths';
                       if (activeSection === 'company_profile_quality') listKey = 'checks';
 
-                      const hasIcon = ['about_why', 'about_qa', 'about_values', 'company_profile_services'].includes(activeSection);
+                      const hasIcon = ['about_why', 'about_qa', 'about_values', 'services_page_benefits', 'company_profile_services'].includes(activeSection);
                       const isStrengthsSection = ['about_why', 'company_profile_strengths'].includes(activeSection);
                       const currentCount = (sectionContent.metadata?.[listKey] || []).length;
 
@@ -2518,7 +2622,7 @@ const AdminDashboard = () => {
                           </div>
                           {(sectionContent.metadata?.[listKey] || []).map((card, idx) => (
                             <div className="admin-page-card-editor" key={`card-item-${idx}`}>
-                              <div className="admin-page-edit-heading">
+                              <div className="admin-page-edit-heading" style={{ marginBottom: '15px' }}>
                                 <strong>Card #{idx + 1}</strong>
                                 <button
                                   type="button"
@@ -2530,27 +2634,45 @@ const AdminDashboard = () => {
                                 </button>
                               </div>
                               <div style={{ display: 'grid', gap: '15px' }}>
-                                {hasIcon && (
+                                <div style={{ display: 'grid', gridTemplateColumns: hasIcon ? 'repeat(auto-fit, minmax(240px, 1fr))' : '1fr', gap: '15px' }}>
+                                  {hasIcon && (
+                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                      <div style={{ flex: 1 }}>
+                                        <label className="form-label">Card Icon (RemixIcon CSS Class)</label>
+                                        <input
+                                          className="form-control"
+                                          type="text"
+                                          value={card.icon || ''}
+                                          onChange={(e) => updateMetadataArrayObject(listKey, idx, 'icon', e.target.value)}
+                                          placeholder="e.g. ri-lightbulb-line"
+                                        />
+                                      </div>
+                                      <div style={{
+                                        marginTop: '28px',
+                                        width: '42px',
+                                        height: '42px',
+                                        borderRadius: '8px',
+                                        background: 'rgba(20, 184, 166, 0.1)',
+                                        color: 'var(--accent)',
+                                        display: 'grid',
+                                        placeItems: 'center',
+                                        fontSize: '20px',
+                                        border: '1px solid rgba(20, 184, 166, 0.2)'
+                                      }}>
+                                        <i className={card.icon || 'ri-checkbox-blank-circle-line'}></i>
+                                      </div>
+                                    </div>
+                                  )}
                                   <div>
-                                    <label className="form-label">Card Icon (RemixIcon CSS Class)</label>
+                                    <label className="form-label">Card Title</label>
                                     <input
                                       className="form-control"
                                       type="text"
-                                      value={card.icon || ''}
-                                      onChange={(e) => updateMetadataArrayObject(listKey, idx, 'icon', e.target.value)}
-                                      placeholder="e.g. ri-lightbulb-line"
+                                      value={card.title || ''}
+                                      onChange={(e) => updateMetadataArrayObject(listKey, idx, 'title', e.target.value)}
+                                      placeholder="Card title"
                                     />
                                   </div>
-                                )}
-                                <div>
-                                  <label className="form-label">Card Title</label>
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    value={card.title || ''}
-                                    onChange={(e) => updateMetadataArrayObject(listKey, idx, 'title', e.target.value)}
-                                    placeholder="Card title"
-                                  />
                                 </div>
                                 <div>
                                   <label className="form-label">Card Body Copy</label>
@@ -2569,7 +2691,7 @@ const AdminDashboard = () => {
                       );
                     })()}
 
-                    {(activeSection === 'about_lifecycle' || activeSection === 'company_profile_process') && (
+                    {activeSection === 'company_profile_process' && (
                       <div className="admin-page-edit-group">
                         <div className="admin-page-edit-heading">
                           <strong>Lifecycle Steps</strong>
@@ -3609,6 +3731,135 @@ const AdminDashboard = () => {
                                 <i className="ri-delete-bin-line"></i> Delete
                               </button>
                             </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {activeTab === 'icons' && (() => {
+              const categories = ['All', 'Development', 'Business', 'System', 'Device', 'Design', 'Communication', 'General'];
+              
+              const filteredIcons = REMIXICON_LIST.filter(icon => {
+                const matchesSearch = icon.name.toLowerCase().includes(iconSearch.toLowerCase()) || 
+                                      icon.class.toLowerCase().includes(iconSearch.toLowerCase());
+                const matchesCategory = selectedCategory === 'All' || icon.category === selectedCategory;
+                return matchesSearch && matchesCategory;
+              });
+
+              const handleCopyIcon = (iconClass) => {
+                navigator.clipboard.writeText(iconClass);
+                setCopiedIcon(iconClass);
+                setTimeout(() => {
+                  setCopiedIcon(null);
+                }, 2000);
+              };
+
+              return (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', flexWrap: 'wrap', gap: '14px' }}>
+                    <h2 style={{ fontSize: '20px', fontWeight: 800, margin: 0 }}>Remixicon Icon Library Guide</h2>
+                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                      Total Icons: {REMIXICON_LIST.length}
+                    </span>
+                  </div>
+                  
+                  <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '24px' }}>
+                    Click on any card to copy its icon class name (e.g., <code>ri-reactjs-line</code>). You can use these class names directly in services, projects, or technologies forms.
+                  </p>
+
+                  {/* Search and Category Filters */}
+                  <div style={{ display: 'grid', gap: '16px', marginBottom: '28px' }}>
+                    <div className="form-group">
+                      <input 
+                        type="text" 
+                        className="form-control" 
+                        placeholder="Search icons by name or class (e.g. database, phone)..." 
+                        value={iconSearch}
+                        onChange={(e) => setIconSearch(e.target.value)}
+                        style={{ height: '48px', fontSize: '14px' }}
+                      />
+                    </div>
+                    
+                    <div className="admin-lead-filter-panel" style={{ flexWrap: 'wrap', margin: 0, padding: '8px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold' }}>CATEGORIES:</span>
+                      {categories.map(cat => (
+                        <button 
+                          key={cat} 
+                          onClick={() => setSelectedCategory(cat)} 
+                          className={`tech-tab ${selectedCategory === cat ? 'active' : ''}`}
+                          style={{ padding: '4px 10px', fontSize: '12px' }}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Icon grid */}
+                  {filteredIcons.length === 0 ? (
+                    <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px dashed var(--border)', borderRadius: '12px', padding: '50px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                      <i className="ri-search-line" style={{ fontSize: '36px', display: 'block', marginBottom: '10px', color: 'var(--accent)' }}></i>
+                      <p>No icons match your search criteria. Try a different search term or category.</p>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' }}>
+                      {filteredIcons.map((icon) => {
+                        const isCopied = copiedIcon === icon.class;
+                        return (
+                          <div 
+                            key={icon.class} 
+                            onClick={() => handleCopyIcon(icon.class)}
+                            className="glass-card" 
+                            style={{ 
+                              padding: '20px', 
+                              border: isCopied ? '1px solid var(--accent)' : '1px solid var(--border)', 
+                              borderRadius: '10px', 
+                              display: 'flex', 
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              textAlign: 'center',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease',
+                              background: isCopied ? 'rgba(20, 184, 166, 0.05)' : 'var(--bg-card)'
+                            }}
+                          >
+                            <span style={{ 
+                              fontSize: '32px', 
+                              color: isCopied ? 'var(--accent)' : 'var(--text-main)', 
+                              marginBottom: '12px',
+                              display: 'inline-block',
+                              transition: 'transform 0.2s ease'
+                            }} className="icon-preview-wrap">
+                              <i className={icon.class}></i>
+                            </span>
+                            <strong style={{ fontSize: '13px', display: 'block', color: 'var(--text-main)' }}>
+                              {icon.name}
+                            </strong>
+                            <code style={{ 
+                              fontSize: '10px', 
+                              color: isCopied ? 'var(--accent)' : 'var(--text-muted)', 
+                              marginTop: '6px', 
+                              background: 'rgba(0,0,0,0.2)',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              display: 'block',
+                              width: '100%',
+                              textOverflow: 'ellipsis',
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap'
+                            }}>
+                              {icon.class}
+                            </code>
+                            {isCopied && (
+                              <span style={{ fontSize: '10px', color: 'var(--accent)', fontWeight: 'bold', marginTop: '6px' }}>
+                                <i className="ri-checkbox-circle-line"></i> Copied!
+                              </span>
+                            )}
                           </div>
                         );
                       })}

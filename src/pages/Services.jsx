@@ -55,6 +55,24 @@ const AnimatedCounter = ({ value, duration = 1500 }) => {
   return <span ref={ref}>{count}</span>;
 };
 
+const defaultBenefits = [
+  { icon: 'ri-line-chart-line', title: 'More qualified leads', text: 'Attract the right audience and grow consistently.', color: 'var(--accent)', bg: 'rgba(20, 184, 166, 0.08)' },
+  { icon: 'ri-time-line', title: 'Less manual work', text: 'Automate processes and save valuable time.', color: 'var(--secondary)', bg: 'rgba(139, 92, 246, 0.08)' },
+  { icon: 'ri-shield-check-line', title: 'More trust', text: 'Build customer confidence with reliable solutions.', color: 'var(--primary)', bg: 'rgba(59, 130, 246, 0.08)' },
+  { icon: 'ri-bar-chart-box-line', title: 'Clearer reporting', text: 'Get insights that help you make better decisions.', color: '#8fba4a', bg: 'rgba(143, 184, 74, 0.08)' },
+  { icon: 'ri-loop-left-line', title: 'Better Automation', text: 'Integrate tools to run workflows autonomously.', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)' },
+  { icon: 'ri-pulse-line', title: 'Scalable Operations', text: 'Expand capability as transaction volume rises.', color: '#ec4899', bg: 'rgba(236, 72, 153, 0.08)' }
+];
+
+const colorPresets = [
+  { color: 'var(--accent)', bg: 'rgba(20, 184, 166, 0.08)' },
+  { color: 'var(--secondary)', bg: 'rgba(139, 92, 246, 0.08)' },
+  { color: 'var(--primary)', bg: 'rgba(59, 130, 246, 0.08)' },
+  { color: '#8fba4a', bg: 'rgba(143, 184, 74, 0.08)' },
+  { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)' },
+  { color: '#ec4899', bg: 'rgba(236, 72, 153, 0.08)' }
+];
+
 const Services = () => {
   const heroMockupRef = useRef(null);
   const ctaRocketRef = useRef(null);
@@ -255,15 +273,22 @@ const Services = () => {
 
       // Fetch dynamic services
       try {
+        console.log("Services.jsx: Fetching dynamic services...");
         const res = await fetch('/api/services');
+        console.log("Services.jsx: Fetch response status:", res.status);
         if (res.ok) {
           const data = await res.json();
+          console.log("Services.jsx: Total services fetched:", data.length, data);
           if (data && data.length > 0) {
-            setServices(normalizeVisibleServices(data));
+            const normalized = normalizeVisibleServices(data);
+            console.log("Services.jsx: Normalized services:", normalized);
+            setServices(normalized);
           }
+        } else {
+          console.error("Services.jsx: API response not ok:", res.statusText);
         }
       } catch (err) {
-        // Safe fallback active
+        console.error("Services.jsx: Fetch failed:", err);
       }
 
       // Fetch dynamic projects
@@ -485,65 +510,21 @@ const Services = () => {
           </div>
 
           <div className="benefits-premium-horizontal-grid">
-            <div className="benefit-horizontal-card reveal slide-up delay-100">
-              <div className="benefit-left-icon" style={{ background: 'rgba(20, 184, 166, 0.08)', color: 'var(--accent)' }}>
-                <i className="ri-line-chart-line"></i>
-              </div>
-              <div>
-                <h4>More qualified leads</h4>
-                <p>Attract the right audience and grow consistently.</p>
-              </div>
-            </div>
-
-            <div className="benefit-horizontal-card reveal slide-up delay-200">
-              <div className="benefit-left-icon" style={{ background: 'rgba(139, 92, 246, 0.08)', color: 'var(--secondary)' }}>
-                <i className="ri-time-line"></i>
-              </div>
-              <div>
-                <h4>Less manual work</h4>
-                <p>Automate processes and save valuable time.</p>
-              </div>
-            </div>
-
-            <div className="benefit-horizontal-card reveal slide-up delay-300">
-              <div className="benefit-left-icon" style={{ background: 'rgba(59, 130, 246, 0.08)', color: 'var(--primary)' }}>
-                <i className="ri-shield-check-line"></i>
-              </div>
-              <div>
-                <h4>More trust</h4>
-                <p>Build customer confidence with reliable solutions.</p>
-              </div>
-            </div>
-
-            <div className="benefit-horizontal-card reveal slide-up delay-100">
-              <div className="benefit-left-icon" style={{ background: 'rgba(143, 184, 74, 0.08)', color: '#8fba4a' }}>
-                <i className="ri-bar-chart-box-line"></i>
-              </div>
-              <div>
-                <h4>Clearer reporting</h4>
-                <p>Get insights that help you make better decisions.</p>
-              </div>
-            </div>
-
-            <div className="benefit-horizontal-card reveal slide-up delay-200">
-              <div className="benefit-left-icon" style={{ background: 'rgba(245, 158, 11, 0.08)', color: '#f59e0b' }}>
-                <i className="ri-loop-left-line"></i>
-              </div>
-              <div>
-                <h4>Better Automation</h4>
-                <p>Integrate tools to run workflows autonomously.</p>
-              </div>
-            </div>
-
-            <div className="benefit-horizontal-card reveal slide-up delay-300">
-              <div className="benefit-left-icon" style={{ background: 'rgba(236, 72, 153, 0.08)', color: '#ec4899' }}>
-                <i className="ri-pulse-line"></i>
-              </div>
-              <div>
-                <h4>Scalable Operations</h4>
-                <p>Expand capability as transaction volume rises.</p>
-              </div>
-            </div>
+            {(pageContent.benefits?.metadata?.cards || defaultBenefits).map((card, idx) => {
+              const preset = colorPresets[idx % colorPresets.length];
+              const delayClass = `delay-${((idx % 3) + 1) * 100}`;
+              return (
+                <div key={idx} className={`benefit-horizontal-card reveal slide-up ${delayClass}`}>
+                  <div className="benefit-left-icon" style={{ background: preset.bg, color: preset.color }}>
+                    <i className={card.icon || 'ri-checkbox-circle-line'}></i>
+                  </div>
+                  <div>
+                    <h4>{card.title}</h4>
+                    <p>{card.text}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

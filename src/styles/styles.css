@@ -10425,10 +10425,18 @@ body {
 
 .admin-page-card-editor {
     display: grid;
-    gap: 10px;
-    padding: 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    gap: 12px;
+    padding: 20px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.admin-page-card-editor:hover {
+    border-color: var(--primary) !important;
+    box-shadow: 0 8px 24px rgba(107, 78, 155, 0.08) !important;
+    transform: translateY(-2px);
 }
 
 .admin-remove-row-btn {

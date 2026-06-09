@@ -188,6 +188,11 @@ const Header = () => {
                 Global & Footer
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/admin/dashboard?tab=icons" className={`nav-link ${activeTab === 'icons' ? 'active' : ''}`} style={{ borderLeft: '1px solid rgba(255,255,255,0.15)', paddingLeft: '9px', marginLeft: '3px' }}>
+                <i className="ri-remixicon-line" style={{ marginRight: '3px' }}></i> Icons
+              </Link>
+            </li>
             {/* Mobile-Only Log out Option */}
             <li className="nav-item nav-mobile-only" style={{ width: '100%', marginTop: '16px' }}>
               <button 
