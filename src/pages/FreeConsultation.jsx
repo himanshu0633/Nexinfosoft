@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 const FreeConsultation = () => {
   const [formData, setFormData] = useState({
@@ -308,6 +309,11 @@ const FreeConsultation = () => {
         </div>
       </section>
 
+
+      <DynamicPageSections
+        page="consultation"
+        excludeIds={['consultation_hero', 'consultation_info']}
+      />
 
       {/* ==========================================
          SUCCESS MODAL DIALOG

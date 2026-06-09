@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Process from '../components/home/Process';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 // Custom high-performance Animated Counter triggered when element enters the viewport
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -786,6 +787,10 @@ const About = () => {
           </div>
         </div>
       </section>
+      <DynamicPageSections
+        page="about"
+        excludeIds={['about_hero', 'about_overview', 'about_partner', 'about_why', 'about_lifecycle', 'about_qa', 'about_values', 'about_achievements', 'about_cta']}
+      />
     </div>
   );
 };

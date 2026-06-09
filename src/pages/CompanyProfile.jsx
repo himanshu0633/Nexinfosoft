@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 const defaultContact = {
   phone: '+91 99995 30797',
@@ -461,6 +462,10 @@ const CompanyProfile = () => {
           </Link>
         </div>
       </section>
+      <DynamicPageSections
+        page="company_profile"
+        excludeIds={['company_profile_hero', 'company_profile_overview', 'company_profile_capabilities', 'company_profile_services', 'company_profile_strengths', 'company_profile_process', 'company_profile_tech', 'company_profile_quality', 'company_profile_contact']}
+      />
     </div>
   );
 };

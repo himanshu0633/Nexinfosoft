@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 const defaultServiceHighlights = [
   { icon: 'ri-code-box-line', title: 'Custom Web Development', text: 'We offer interactive and visually rich responsive websites.' },
@@ -339,6 +340,10 @@ const Corporate = () => {
           </Link>
         </div>
       </section>
+      <DynamicPageSections
+        page="corporate"
+        excludeIds={['corporate_hero', 'corporate_about', 'corporate_mission']}
+      />
     </div>
   );
 };

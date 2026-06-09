@@ -10251,19 +10251,26 @@ body {
 }
 
 .admin-section-preview-block {
-    margin-bottom: 30px;
-    padding: 20px;
-    border-radius: 12px;
-    overflow: hidden;
+    width: 100vw;
+    margin: 10px 0 30px calc(50% - 50vw);
+    padding: 0;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.admin-section-preview-block > .admin-preview-heading {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 18px var(--container-padding, 20px) 14px;
 }
 
 .admin-section-preview-block .admin-preview-device {
-    max-height: 620px;
-    overflow: auto;
+    max-height: none;
+    overflow: visible;
 }
 
 .admin-real-section-preview {
-    overflow: hidden;
+    overflow: visible;
 }
 
 .admin-real-section-preview .corporate-hero {
@@ -10273,6 +10280,58 @@ body {
 .admin-real-section-preview .corporate-section {
     padding-top: 70px;
     padding-bottom: 70px;
+}
+
+.custom-dynamic-section {
+    position: relative;
+    overflow: hidden;
+    padding: 110px 0;
+    background:
+        radial-gradient(circle at 12% 18%, rgba(20, 184, 166, 0.08), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(107, 78, 155, 0.08), transparent 30%),
+        linear-gradient(180deg, #fbfcff 0%, #f3f8f7 100%);
+}
+
+.custom-dynamic-section-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px;
+    align-items: center;
+}
+
+.custom-dynamic-section-grid.has-image {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+}
+
+.custom-dynamic-copy {
+    max-width: 760px;
+}
+
+.custom-dynamic-media {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+}
+
+.custom-dynamic-media img {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    display: block;
+    object-fit: cover;
+}
+
+@media (max-width: 900px) {
+    .custom-dynamic-section {
+        padding: 78px 0;
+    }
+
+    .custom-dynamic-section-grid.has-image {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
 .admin-footer-links-preview {
@@ -10404,12 +10463,12 @@ body {
 }
 
 .admin-preview-device {
-    background: #f8fbff;
-    border: 1px solid rgba(29, 92, 99, 0.12);
-    border-radius: 10px;
-    overflow: hidden;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
     color: #071226;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    box-shadow: none;
 }
 
 .admin-preview-hero {
@@ -10633,6 +10692,20 @@ body {
 
 .admin-inline-live-preview-top {
     margin-top: 0;
+}
+
+.admin-add-section-preview {
+    width: 100vw;
+    margin: 8px 0 4px calc(50% - 50vw);
+    background: #f8fbff;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.admin-add-section-preview .admin-preview-heading {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 18px var(--container-padding, 20px) 0;
 }
 
 .admin-form-preview-card {
@@ -23934,6 +24007,10 @@ strong {
     transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 }
 
+.admin-login-password-wrap {
+    grid-template-columns: 48px 1fr 48px;
+}
+
 .admin-login-input-wrap:focus-within {
     border-color: rgba(15, 139, 141, 0.6);
     background: #ffffff;
@@ -23963,6 +24040,37 @@ strong {
 .admin-login-input-wrap input::placeholder {
     color: #94a3b8;
     font-weight: 600;
+}
+
+.admin-login-password-toggle {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    transition: color 0.25s ease, background-color 0.25s ease;
+}
+
+.admin-login-password-toggle:hover,
+.admin-login-password-toggle:focus-visible {
+    background: rgba(15, 139, 141, 0.1);
+    color: #0f8b8d;
+}
+
+.admin-login-password-toggle:focus-visible {
+    outline: 2px solid rgba(15, 139, 141, 0.45);
+    outline-offset: 2px;
+}
+
+.admin-login-password-toggle i {
+    color: currentColor;
+    font-size: 20px;
 }
 
 .admin-login-submit {
@@ -24859,9 +24967,32 @@ body.admin-body-theme {
 }
 
 /* Subnav items inside admin panel */
+.admin-page-navigation {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.admin-section-subnav {
+    padding: 18px;
+    border-radius: 12px;
+}
+
+.admin-section-subnav-title {
+    margin-bottom: 12px;
+}
+
 .admin-section-subnav-title span {
     color: #0f172a !important;
     font-weight: 850 !important;
+}
+
+.admin-section-subnav-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
 }
 
 .admin-dashboard-page .tech-tab {
@@ -24909,10 +25040,13 @@ body.admin-body-theme {
 
 /* Live Preview Device (Standard Web View Frame) */
 .admin-preview-device {
-    background: #f8fbff !important;
-    border: 1px solid rgba(15, 23, 42, 0.1) !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
     color: #0f172a !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 12px 36px rgba(15, 23, 42, 0.06) !important;
+    box-shadow: none !important;
+    max-height: none !important;
+    overflow: visible !important;
 }
 
 .admin-preview-heading span {
@@ -25026,6 +25160,6 @@ body.admin-body-theme {
 
 @media (min-width: 1024px) {
     .admin-split-grid.active-split {
-        grid-template-columns: 1.15fr 0.85fr !important;
+        grid-template-columns: 1fr !important;
     }
 }

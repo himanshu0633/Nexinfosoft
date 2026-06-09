@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import techStackData from '../data/techStackData';
 import InquireSystemSection from '../components/InquireSystemSection';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 // Custom scroll-triggered animated counter component
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -58,6 +59,32 @@ const TechStack = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('frontend');
   const [data, setData] = useState(techStackData);
+  const [pageContent, setPageContent] = useState({
+    hero: {
+      title: 'Technology Chosen For Performance, Scale & Growth',
+      subtitle: 'TECHNOLOGY STACK',
+      description: 'Every project is different. We select technologies based on business goals, scalability requirements, integrations, security, and future growth.'
+    },
+    selection: {
+      title: 'How We Choose The Right Stack',
+      subtitle: 'STACK SELECTION',
+      description: 'We never enforce generic templates. We follow a highly structured engineering checklist to identify the perfect tools for your needs.'
+    },
+    projects: {
+      title: 'Real Solutions. Real Impact.',
+      subtitle: 'PROJECTS BUILT WITH MODERN STACK',
+      description: 'Check out these live, highly robust platforms built utilizing our premium technology frameworks.'
+    },
+    matters: {
+      title: 'Why Choice of Tech Stack Defines Success',
+      subtitle: 'WHY TECHNOLOGY MATTERS',
+      description: 'Picking modern tech tools protects your investments, guarantees scalability, and accelerates development.'
+    },
+    cta: {
+      title: 'Not Sure Which Technology Is Right For Your Project?',
+      description: 'Our experts will suggest the perfect technology stack based on your goals, budget, integrations, and future plans.'
+    }
+  });
 
   // Refs for tilt parallax
   const heroIllustrationRef = useRef(null);
@@ -77,6 +104,34 @@ const TechStack = () => {
     const revealElements = document.querySelectorAll('.reveal');
     revealElements.forEach(el => el.classList.add('active'));
     window.scrollTo(0, 0);
+
+    const fetchPageContent = async () => {
+      const contentMap = {
+        tech_page_hero: 'hero',
+        tech_page_selection: 'selection',
+        tech_page_projects: 'projects',
+        tech_page_matters: 'matters',
+        tech_page_cta: 'cta'
+      };
+
+      try {
+        const entries = await Promise.all(Object.keys(contentMap).map(async (id) => {
+          const res = await fetch(`/api/content/${id}`);
+          if (!res.ok) return null;
+          const section = await res.json();
+          if (section.visible === false) return null;
+          return [contentMap[id], section];
+        }));
+        const nextContent = Object.fromEntries(entries.filter(Boolean));
+        if (Object.keys(nextContent).length > 0) {
+          setPageContent(prev => ({ ...prev, ...nextContent }));
+        }
+      } catch (err) {
+        // Fallback content remains active
+      }
+    };
+
+    fetchPageContent();
   }, []);
 
   useEffect(() => {
@@ -360,12 +415,12 @@ const TechStack = () => {
         <div className="container">
           <div className="tech-hero-grid">
             <div className="tech-hero-left reveal slide-left">
-              <span className="section-tag-premium">TECHNOLOGY STACK</span>
+              <span className="section-tag-premium">{pageContent.hero.subtitle}</span>
               <h1 className="tech-hero-title">
-                Technology Chosen For Performance, Scale & Growth
+                {pageContent.hero.title}
               </h1>
               <p className="tech-hero-desc">
-                Every project is different. We select technologies based on business goals, scalability requirements, integrations, security, and future growth.
+                {pageContent.hero.description}
               </p>
 
               {/* Action Buttons */}
@@ -581,12 +636,12 @@ const TechStack = () => {
       <section className="tech-process-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">STACK SELECTION</span>
+            <span className="section-tag-premium text-center">{pageContent.selection.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              How We Choose The Right Stack
+              {pageContent.selection.title}
             </h2>
             <p className="section-desc-premium text-center">
-              We never enforce generic templates. We follow a highly structured engineering checklist to identify the perfect tools for your needs.
+              {pageContent.selection.description}
             </p>
           </div>
 
@@ -621,12 +676,12 @@ const TechStack = () => {
       <section className="tech-projects-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">PROJECTS BUILT WITH MODERN STACK</span>
+            <span className="section-tag-premium text-center">{pageContent.projects.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Real Solutions. Real Impact.
+              {pageContent.projects.title}
             </h2>
             <p className="section-desc-premium text-center">
-              Check out these live, highly robust platforms built utilizing our premium technology frameworks.
+              {pageContent.projects.description}
             </p>
           </div>
 
@@ -665,12 +720,12 @@ const TechStack = () => {
       <section className="tech-matters-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">WHY TECHNOLOGY MATTERS</span>
+            <span className="section-tag-premium text-center">{pageContent.matters.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Why Choice of Tech Stack Defines Success
+              {pageContent.matters.title}
             </h2>
             <p className="section-desc-premium text-center">
-              Picking modern tech tools protects your investments, guarantees scalability, and accelerates development.
+              {pageContent.matters.description}
             </p>
           </div>
 
@@ -699,11 +754,9 @@ const TechStack = () => {
 
             <div className="final-cta-inner-grid">
               <div className="final-cta-left">
-                <h2 className="final-cta-title">
-                  Not Sure Which Technology Is Right For Your Project?
-                </h2>
+                <h2 className="final-cta-title">{pageContent.cta.title}</h2>
                 <p className="final-cta-desc">
-                  Our experts will suggest the perfect technology stack based on your goals, budget, integrations, and future plans.
+                  {pageContent.cta.description}
                 </p>
 
                 <div className="final-cta-buttons">
@@ -741,6 +794,10 @@ const TechStack = () => {
           </div>
         </div>
       </section>
+      <DynamicPageSections
+        page="technology_stack"
+        excludeIds={['tech_page_hero', 'tech_page_selection', 'tech_page_projects', 'tech_page_matters', 'tech_page_cta']}
+      />
     </div>
   );
 };

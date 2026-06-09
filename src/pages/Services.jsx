@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { normalizeVisibleServices } from '../utils/services';
 import Process from '../components/home/Process';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 // Custom scroll-triggered animated counter component
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -57,6 +58,35 @@ const AnimatedCounter = ({ value, duration = 1500 }) => {
 const Services = () => {
   const heroMockupRef = useRef(null);
   const ctaRocketRef = useRef(null);
+  const [pageContent, setPageContent] = useState({
+    hero: {
+      title: 'Digital Solutions <br /><span class="gradient-text-accent">That Drive Business Growth</span>',
+      subtitle: 'OUR EXPERTISE',
+      description: 'We build scalable web applications, mobile apps, ERP systems, CRM solutions, AI automation platforms, and custom software that help businesses streamline operations and grow faster.'
+    },
+    index: {
+      title: 'Choose The Service Your Business Needs',
+      subtitle: 'OUR SERVICES',
+      description: 'Explore our core competencies designed to boost your operational intelligence, streamline process delivery, and capture market authority.'
+    },
+    benefits: {
+      title: 'Everything Your Business Needs To Build, Scale & Automate',
+      subtitle: 'BUSINESS BENEFITS'
+    },
+    tech: {
+      title: 'Powering Solutions With Modern Technologies',
+      subtitle: 'TECHNOLOGY WE USE'
+    },
+    portfolio: {
+      title: 'Recent Solutions Delivered By Our Team',
+      subtitle: 'RECENT SOLUTIONS',
+      description: 'A quick look at practical systems we build for operations, automation, and growth.'
+    },
+    cta: {
+      title: 'Ready To Build A Scalable Digital Solution?',
+      description: "Let's build a scalable digital solution tailored for your business goals. Discuss your architecture blueprints with our tech architects."
+    }
+  });
 
   const [services, setServices] = useState([
     {
@@ -198,6 +228,31 @@ const Services = () => {
     window.scrollTo(0, 0);
 
     const fetchDynamicData = async () => {
+      const contentMap = {
+        services_page_hero: 'hero',
+        services_page_index: 'index',
+        services_page_benefits: 'benefits',
+        services_page_tech: 'tech',
+        services_page_portfolio: 'portfolio',
+        services_page_cta: 'cta'
+      };
+
+      try {
+        const entries = await Promise.all(Object.keys(contentMap).map(async (id) => {
+          const res = await fetch(`/api/content/${id}`);
+          if (!res.ok) return null;
+          const data = await res.json();
+          if (data.visible === false) return null;
+          return [contentMap[id], data];
+        }));
+        const nextContent = Object.fromEntries(entries.filter(Boolean));
+        if (Object.keys(nextContent).length > 0) {
+          setPageContent(prev => ({ ...prev, ...nextContent }));
+        }
+      } catch (err) {
+        // Safe fallback active
+      }
+
       // Fetch dynamic services
       try {
         const res = await fetch('/api/services');
@@ -252,13 +307,10 @@ const Services = () => {
         <div className="container">
           <div className="services-hero-grid">
             <div className="services-hero-left reveal slide-left">
-              <span className="section-tag-premium">OUR EXPERTISE</span>
-              <h1 className="hero-title-premium">
-                Digital Solutions <br />
-                <span className="gradient-text-accent">That Drive Business Growth</span>
-              </h1>
+              <span className="section-tag-premium">{pageContent.hero.subtitle}</span>
+              <h1 className="hero-title-premium" dangerouslySetInnerHTML={{ __html: pageContent.hero.title }}></h1>
               <p className="hero-desc-premium">
-                We build scalable web applications, mobile apps, ERP systems, CRM solutions, AI automation platforms, and custom software that help businesses streamline operations and grow faster.
+                {pageContent.hero.description}
               </p>
               
               <div className="hero-cta-btns">
@@ -383,12 +435,12 @@ const Services = () => {
       <section id="services-grid" className="services-index-section">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">OUR SERVICES</span>
+            <span className="section-tag-premium text-center">{pageContent.index.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Choose The Service Your Business Needs
+              {pageContent.index.title}
             </h2>
             <p className="section-desc-premium text-center">
-              Explore our core competencies designed to boost your operational intelligence, streamline process delivery, and capture market authority.
+              {pageContent.index.description}
             </p>
           </div>
 
@@ -426,9 +478,9 @@ const Services = () => {
       <section className="services-benefits-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">BUSINESS BENEFITS</span>
+            <span className="section-tag-premium text-center">{pageContent.benefits.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Everything Your Business Needs To Build, Scale & Automate
+              {pageContent.benefits.title}
             </h2>
           </div>
 
@@ -507,9 +559,9 @@ const Services = () => {
       <section className="services-tech-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">TECHNOLOGY WE USE</span>
+            <span className="section-tag-premium text-center">{pageContent.tech.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Powering Solutions With Modern Technologies
+              {pageContent.tech.title}
             </h2>
           </div>
 
@@ -567,10 +619,13 @@ const Services = () => {
       <section className="services-portfolio-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">RECENT SOLUTIONS</span>
+            <span className="section-tag-premium text-center">{pageContent.portfolio.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Explore Our Recent Success Stories
+              {pageContent.portfolio.title}
             </h2>
+            {pageContent.portfolio.description && (
+              <p className="section-desc-premium text-center">{pageContent.portfolio.description}</p>
+            )}
           </div>
 
           <div className="portfolio-showcase-grid">
@@ -628,12 +683,9 @@ const Services = () => {
             <div className="cta-mesh-bubble bubble-purple"></div>
 
             <div className="cta-content-left">
-              <h2 className="cta-title-premium">
-                Ready To Kickstart <br />
-                <span className="gradient-text-accent">Your Project?</span>
-              </h2>
+              <h2 className="cta-title-premium" dangerouslySetInnerHTML={{ __html: pageContent.cta.title }}></h2>
               <p className="cta-desc-premium">
-                Let's build a scalable digital solution tailored for your business goals. Discuss your architecture blueprints with our tech architects.
+                {pageContent.cta.description}
               </p>
               <div className="cta-buttons-premium">
                 <Link to="/contact" className="btn btn-primary">
@@ -668,6 +720,10 @@ const Services = () => {
           </div>
         </div>
       </section>
+      <DynamicPageSections
+        page="services"
+        excludeIds={['services_page_hero', 'services_page_index', 'services_page_benefits', 'services_page_tech', 'services_page_portfolio', 'services_page_cta']}
+      />
     </div>
   );
 };

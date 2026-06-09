@@ -4,6 +4,7 @@ import portfolioData from '../data/portfolioData';
 import Process from '../components/home/Process';
 import InquireSystemSection from '../components/InquireSystemSection';
 import { getProjectSlug } from '../utils/projects';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 // Custom scroll-triggered animated counter component
 const AnimatedCounter = ({ value, duration = 1500 }) => {
@@ -72,6 +73,32 @@ const Portfolio = () => {
   const [filter, setFilter] = useState('all');
   const [data, setData] = useState({ ...portfolioData, projects: [] });
   const [activeFilterPage, setActiveFilterPage] = useState(0);
+  const [pageContent, setPageContent] = useState({
+    hero: {
+      title: 'Real Projects. Real Results.',
+      subtitle: 'OUR PORTFOLIO',
+      description: 'Explore custom software solutions, web applications, mobile apps, ERP systems, CRM platforms, and AI-powered products built for businesses across multiple industries.'
+    },
+    tech: {
+      title: 'Technologies Behind Our Solutions',
+      subtitle: 'OUR ENGINE',
+      description: 'We leverage the most stable, performant, and advanced technology stacks to secure and scale your software assets.'
+    },
+    testimonials: {
+      title: 'What Our Clients Say',
+      subtitle: 'TESTIMONIALS',
+      description: 'Nexinfosoft reviewed by company leaders and startup founders driving automation workflows.'
+    },
+    industries: {
+      title: 'Industries We Serve',
+      subtitle: 'INDUSTRIES',
+      description: 'We engineer specialized software systems for diverse global business categories.'
+    },
+    cta: {
+      title: 'Ready To Build Your Next Digital Product?',
+      description: "Let's transform your idea into a scalable digital solution."
+    }
+  });
 
   // Refs for tilt parallax
   const heroIllustrationRef = useRef(null);
@@ -141,6 +168,32 @@ const Portfolio = () => {
   }, [filter]);
 
   useEffect(() => {
+    const fetchPageContent = async () => {
+      const contentMap = {
+        portfolio_page_hero: 'hero',
+        portfolio_page_tech: 'tech',
+        portfolio_page_testimonials: 'testimonials',
+        portfolio_page_industries: 'industries',
+        portfolio_page_cta: 'cta'
+      };
+
+      try {
+        const entries = await Promise.all(Object.keys(contentMap).map(async (id) => {
+          const res = await fetch(`/api/content/${id}`);
+          if (!res.ok) return null;
+          const section = await res.json();
+          if (section.visible === false) return null;
+          return [contentMap[id], section];
+        }));
+        const nextContent = Object.fromEntries(entries.filter(Boolean));
+        if (Object.keys(nextContent).length > 0) {
+          setPageContent(prev => ({ ...prev, ...nextContent }));
+        }
+      } catch (err) {
+        // Fallback content remains active
+      }
+    };
+
     const fetchDynamicProjects = async () => {
       try {
         const res = await fetch('/api/projects');
@@ -152,6 +205,7 @@ const Portfolio = () => {
         // Fallback active
       }
     };
+    fetchPageContent();
     fetchDynamicProjects();
   }, []);
 
@@ -237,12 +291,12 @@ const Portfolio = () => {
         <div className="container">
           <div className="portfolio-hero-grid">
             <div className="portfolio-hero-left reveal slide-left">
-              <span className="section-tag-premium">OUR PORTFOLIO</span>
+              <span className="section-tag-premium">{pageContent.hero.subtitle}</span>
               <h1 className="portfolio-hero-title">
-                Real Projects. Real Results.
+                {pageContent.hero.title}
               </h1>
               <p className="portfolio-hero-desc">
-                Explore custom software solutions, web applications, mobile apps, ERP systems, CRM platforms, and AI-powered products built for businesses across multiple industries.
+                {pageContent.hero.description}
               </p>
 
               {/* Action Buttons */}
@@ -472,12 +526,12 @@ const Portfolio = () => {
       <section className="portfolio-techs-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">OUR ENGINE</span>
+            <span className="section-tag-premium text-center">{pageContent.tech.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Technologies Behind Our Solutions
+              {pageContent.tech.title}
             </h2>
             <p className="section-desc-premium text-center">
-              We leverage the most stable, performant, and advanced technology stacks to secure and scale your software assets.
+              {pageContent.tech.description}
             </p>
           </div>
 
@@ -504,12 +558,12 @@ const Portfolio = () => {
       <section className="portfolio-testimonials-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">TESTIMONIALS</span>
+            <span className="section-tag-premium text-center">{pageContent.testimonials.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              What Our Clients Say
+              {pageContent.testimonials.title}
             </h2>
             <p className="section-desc-premium text-center">
-              Nexinfosoft reviewed by company leaders and startup founders driving automation workflows.
+              {pageContent.testimonials.description}
             </p>
           </div>
 
@@ -545,12 +599,12 @@ const Portfolio = () => {
       <section className="portfolio-industries-sec">
         <div className="container">
           <div className="section-header-premium reveal slide-up">
-            <span className="section-tag-premium text-center">INDUSTRIES</span>
+            <span className="section-tag-premium text-center">{pageContent.industries.subtitle}</span>
             <h2 className="section-title-premium text-center">
-              Industries We Serve
+              {pageContent.industries.title}
             </h2>
             <p className="section-desc-premium text-center">
-              We engineer specialized software systems for diverse global business categories.
+              {pageContent.industries.description}
             </p>
           </div>
 
@@ -583,11 +637,9 @@ const Portfolio = () => {
 
             <div className="final-cta-inner-grid">
               <div className="final-cta-left">
-                <h2 className="final-cta-title">
-                  Ready To Build Your Next Digital Product?
-                </h2>
+                <h2 className="final-cta-title">{pageContent.cta.title}</h2>
                 <p className="final-cta-desc">
-                  Let's transform your idea into a scalable digital solution.
+                  {pageContent.cta.description}
                 </p>
 
                 <div className="final-cta-buttons">
@@ -624,6 +676,10 @@ const Portfolio = () => {
           </div>
         </div>
       </section>
+      <DynamicPageSections
+        page="portfolio"
+        excludeIds={['portfolio_page_hero', 'portfolio_page_tech', 'portfolio_page_testimonials', 'portfolio_page_industries', 'portfolio_page_cta']}
+      />
     </div>
   );
 };

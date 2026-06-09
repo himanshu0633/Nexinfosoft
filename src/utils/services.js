@@ -35,6 +35,6 @@ export const sortServicesByDisplayOrder = (services = []) => {
 
 export const normalizeVisibleServices = (services = []) => {
   return sortServicesByDisplayOrder(
-    services.filter((service) => service.slug && service.slug !== 'recruitment-services')
+    services.filter((service) => service.slug && service.slug !== 'recruitment-services' && service.visible !== false)
   );
 };

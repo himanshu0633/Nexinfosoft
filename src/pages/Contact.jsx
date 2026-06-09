@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import contactData from '../data/contactData';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 const Contact = () => {
   // Form state
@@ -527,6 +528,10 @@ const Contact = () => {
           </button>
         </div>
       </div>
+      <DynamicPageSections
+        page="contact"
+        excludeIds={['contact_hero', 'contact_methods']}
+      />
     </div>
   );
 };

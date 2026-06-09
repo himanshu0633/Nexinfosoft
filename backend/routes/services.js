@@ -6,7 +6,11 @@ const authMiddleware = require('../middleware/auth');
 // GET /api/services - Public endpoint to retrieve all services
 router.get('/', async (req, res) => {
   try {
-    const services = await Service.find({ slug: { $ne: 'recruitment-services' } }).sort({ createdAt: 1 });
+    const filter = { slug: { $ne: 'recruitment-services' } };
+    if (req.query.all !== 'true') {
+      filter.visible = { $ne: false };
+    }
+    const services = await Service.find(filter).sort({ createdAt: 1 });
     res.json(services);
   } catch (err) {
     res.status(500).json({ error: 'Failed to retrieve services.' });
@@ -18,7 +22,7 @@ router.get('/:slug', async (req, res) => {
   try {
     const service = await Service.findOne({ slug: req.params.slug });
 
-    if (!service || service.slug === 'recruitment-services') {
+    if (!service || service.slug === 'recruitment-services' || service.visible === false) {
       return res.status(404).json({ error: 'Service not found.' });
     }
 
@@ -30,7 +34,7 @@ router.get('/:slug', async (req, res) => {
 
 // POST /api/services - Protected endpoint to add a new service
 router.post('/', authMiddleware, async (req, res) => {
-  const { slug, title, subtitle, icon, intro, benefits, deliverables, image_url } = req.body;
+  const { slug, title, subtitle, icon, intro, benefits, deliverables, image_url, visible } = req.body;
 
   if (!slug || !title) {
     return res.status(400).json({ error: 'Service slug and title are required.' });
@@ -50,7 +54,8 @@ router.post('/', authMiddleware, async (req, res) => {
       intro,
       benefits: benefits || [],
       deliverables: deliverables || [],
-      image_url: image_url || ''
+      image_url: image_url || '',
+      visible: visible !== undefined ? visible : true
     });
 
     res.status(201).json({ message: 'Service successfully created', data: newService });
@@ -62,12 +67,12 @@ router.post('/', authMiddleware, async (req, res) => {
 // PUT /api/services/:id - Protected endpoint to update a service
 router.put('/:id', authMiddleware, async (req, res) => {
   const { id } = req.params;
-  const { slug, title, subtitle, icon, intro, benefits, deliverables, image_url } = req.body;
+  const { slug, title, subtitle, icon, intro, benefits, deliverables, image_url, visible } = req.body;
 
   try {
     const updatedService = await Service.findByIdAndUpdate(
       id,
-      { slug, title, subtitle, icon, intro, benefits, deliverables, image_url },
+      { slug, title, subtitle, icon, intro, benefits, deliverables, image_url, visible },
       { new: true, runValidators: true }
     );
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 const Faqs = () => {
   const [faqsSec, setFaqsSec] = useState({
@@ -55,6 +56,7 @@ const Faqs = () => {
           ))}
         </div>
       </section>
+      <DynamicPageSections page="faqs" excludeIds={['faqs']} />
     </>
   );
 };

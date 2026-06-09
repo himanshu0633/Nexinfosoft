@@ -7,28 +7,54 @@ import Technologies from '../components/home/Technologies';
 import Industries from '../components/home/Industries';
 import Process from '../components/home/Process';
 import PortfolioPreview from '../components/home/PortfolioPreview';
+import { CustomDynamicSection } from '../components/DynamicPageSections';
 
-const PAGE_TABS = ['home', 'sections', 'about', 'corporate', 'company_profile', 'contact', 'consultation', 'faqs', 'policies', 'global'];
+const PAGE_TABS = ['home', 'sections', 'about', 'service_page', 'tech_page', 'portfolio_page', 'corporate', 'company_profile', 'contact', 'consultation', 'faqs', 'policies', 'global'];
+
+const PAGE_CATEGORY_BY_TAB = {
+  home: 'home',
+  sections: 'home',
+  about: 'about',
+  service_page: 'services',
+  tech_page: 'technology_stack',
+  portfolio_page: 'portfolio',
+  corporate: 'corporate',
+  company_profile: 'company_profile',
+  contact: 'contact',
+  consultation: 'consultation',
+  faqs: 'faqs',
+  policies: 'policy',
+  global: 'global'
+};
+
+const TAB_BY_PAGE_CATEGORY = Object.entries(PAGE_CATEGORY_BY_TAB).reduce((acc, [tab, page]) => {
+  if (tab !== 'sections') {
+    acc[page] = tab;
+  }
+  return acc;
+}, {});
+
+const getTabForPageCategory = (page) => TAB_BY_PAGE_CATEGORY[page] || 'home';
 
 const TAB_SECTIONS = {
   home: [
-    { id: 'hero', label: 'Hero Banner', icon: 'ri-home-line' },
-    { id: 'services', label: 'Core Services Header', icon: 'ri-database-2-line' },
+    { id: 'hero', label: 'Hero', icon: 'ri-home-line' },
+    { id: 'services', label: 'Core Services', icon: 'ri-database-2-line' },
     { id: 'whychooseus', label: 'Why Choose Us', icon: 'ri-star-line' },
-    { id: 'technologies', label: 'Technologies Stack', icon: 'ri-cpu-line' },
-    { id: 'industries', label: 'Verticals/Industries', icon: 'ri-building-4-line' },
-    { id: 'process', label: 'Process Blueprint', icon: 'ri-route-line' },
-    { id: 'portfoliopreview', label: 'Portfolio Preview Header', icon: 'ri-briefcase-line' },
+    { id: 'technologies', label: 'Technologies', icon: 'ri-cpu-line' },
+    { id: 'industries', label: 'Industries', icon: 'ri-building-4-line' },
+    { id: 'process', label: 'Process', icon: 'ri-route-line' },
+    { id: 'portfoliopreview', label: 'Portfolio Preview', icon: 'ri-briefcase-line' },
     { id: 'sections_manager', label: 'Section Manager', icon: 'ri-settings-line', style: { borderLeft: '2px solid var(--accent)' } }
   ],
   sections: [
-    { id: 'hero', label: 'Hero Banner', icon: 'ri-home-line' },
-    { id: 'services', label: 'Core Services Header', icon: 'ri-database-2-line' },
+    { id: 'hero', label: 'Hero', icon: 'ri-home-line' },
+    { id: 'services', label: 'Core Services', icon: 'ri-database-2-line' },
     { id: 'whychooseus', label: 'Why Choose Us', icon: 'ri-star-line' },
-    { id: 'technologies', label: 'Technologies Stack', icon: 'ri-cpu-line' },
-    { id: 'industries', label: 'Verticals/Industries', icon: 'ri-building-4-line' },
-    { id: 'process', label: 'Process Blueprint', icon: 'ri-route-line' },
-    { id: 'portfoliopreview', label: 'Portfolio Preview Header', icon: 'ri-briefcase-line' },
+    { id: 'technologies', label: 'Technologies', icon: 'ri-cpu-line' },
+    { id: 'industries', label: 'Industries', icon: 'ri-building-4-line' },
+    { id: 'process', label: 'Process', icon: 'ri-route-line' },
+    { id: 'portfoliopreview', label: 'Portfolio Preview', icon: 'ri-briefcase-line' },
     { id: 'sections_manager', label: 'Section Manager', icon: 'ri-settings-line', style: { borderLeft: '2px solid var(--accent)' } }
   ],
   about: [
@@ -42,10 +68,33 @@ const TAB_SECTIONS = {
     { id: 'about_achievements', label: 'Achievements', icon: 'ri-trophy-line' },
     { id: 'about_cta', label: 'About CTA Banner', icon: 'ri-chat-voice-line' }
   ],
+  service_page: [
+    { id: 'services_page_hero', label: 'Hero', icon: 'ri-service-line' },
+    { id: 'services_page_index', label: 'Services Listing', icon: 'ri-grid-line' },
+    { id: 'services_page_benefits', label: 'Business Benefits', icon: 'ri-line-chart-line' },
+    { id: 'services_page_tech', label: 'Technology', icon: 'ri-stack-line' },
+    { id: 'services_page_portfolio', label: 'Recent Solutions', icon: 'ri-briefcase-line' },
+    { id: 'services_page_cta', label: 'CTA', icon: 'ri-rocket-line' },
+    { id: 'services_manager', label: 'Services Manager', icon: 'ri-list-settings-line', style: { borderLeft: '2px solid var(--accent)' } }
+  ],
+  tech_page: [
+    { id: 'tech_page_hero', label: 'Hero', icon: 'ri-cpu-line' },
+    { id: 'tech_page_selection', label: 'Stack Selection', icon: 'ri-list-check-3' },
+    { id: 'tech_page_projects', label: 'Projects', icon: 'ri-window-line' },
+    { id: 'tech_page_matters', label: 'Why Tech Matters', icon: 'ri-lightbulb-line' },
+    { id: 'tech_page_cta', label: 'CTA', icon: 'ri-chat-smile-line' }
+  ],
+  portfolio_page: [
+    { id: 'portfolio_page_hero', label: 'Hero', icon: 'ri-briefcase-4-line' },
+    { id: 'portfolio_page_tech', label: 'Technology', icon: 'ri-stack-line' },
+    { id: 'portfolio_page_testimonials', label: 'Testimonials', icon: 'ri-chat-quote-line' },
+    { id: 'portfolio_page_industries', label: 'Industries', icon: 'ri-building-4-line' },
+    { id: 'portfolio_page_cta', label: 'CTA', icon: 'ri-rocket-line' }
+  ],
   corporate: [
-    { id: 'corporate_hero', label: 'Corporate Hero', icon: 'ri-flag-line' },
-    { id: 'corporate_about', label: 'Corporate About', icon: 'ri-building-line' },
-    { id: 'corporate_mission', label: 'Corporate Mission & Vision', icon: 'ri-lightbulb-line' }
+    { id: 'corporate_hero', label: 'Hero', icon: 'ri-flag-line' },
+    { id: 'corporate_about', label: 'About', icon: 'ri-building-line' },
+    { id: 'corporate_mission', label: 'Mission & Vision', icon: 'ri-lightbulb-line' }
   ],
   company_profile: [
     { id: 'company_profile_hero', label: 'Profile Hero', icon: 'ri-profile-line' },
@@ -59,12 +108,12 @@ const TAB_SECTIONS = {
     { id: 'company_profile_contact', label: 'Profile Contact', icon: 'ri-contacts-book-line' }
   ],
   contact: [
-    { id: 'contact_hero', label: 'Contact Hero', icon: 'ri-contacts-line' },
+    { id: 'contact_hero', label: 'Hero', icon: 'ri-contacts-line' },
     { id: 'contact_methods', label: 'Contact Channels', icon: 'ri-mail-send-line' }
   ],
   consultation: [
-    { id: 'consultation_hero', label: 'Consultation Hero', icon: 'ri-user-voice-line' },
-    { id: 'consultation_info', label: 'Consultation What You Get', icon: 'ri-task-line' }
+    { id: 'consultation_hero', label: 'Hero', icon: 'ri-user-voice-line' },
+    { id: 'consultation_info', label: 'What You Get', icon: 'ri-task-line' }
   ],
   faqs: [
     { id: 'faqs', label: 'FAQ Q&A List', icon: 'ri-questionnaire-line' }
@@ -85,6 +134,12 @@ const getTabLabel = (tab) => {
       return 'Home Page';
     case 'about':
       return 'About Us Page';
+    case 'service_page':
+      return 'Services Page';
+    case 'tech_page':
+      return 'Technology Stack Page';
+    case 'portfolio_page':
+      return 'Portfolio Page';
     case 'corporate':
       return 'Corporate Page';
     case 'company_profile':
@@ -111,6 +166,12 @@ const getDefaultSectionForTab = (tab) => {
       return 'hero';
     case 'about':
       return 'about_hero';
+    case 'service_page':
+      return 'services_page_hero';
+    case 'tech_page':
+      return 'tech_page_hero';
+    case 'portfolio_page':
+      return 'portfolio_page_hero';
     case 'corporate':
       return 'corporate_hero';
     case 'company_profile':
@@ -160,7 +221,8 @@ const AdminDashboard = () => {
 
   // Editor states
   const [sectionContent, setSectionContent] = useState(null);
-  const [serviceForm, setServiceForm] = useState({ slug: '', title: '', subtitle: '', icon: 'ri-window-line', intro: '', benefits: '', deliverables: '', image_url: '' });
+  const emptyServiceForm = { slug: '', title: '', subtitle: '', icon: 'ri-window-line', intro: '', benefits: '', deliverables: '', image_url: '', visible: true };
+  const [serviceForm, setServiceForm] = useState(emptyServiceForm);
   const emptyProjectForm = { name: '', category: 'web', tag: '', techs: '', desc: '', icon: 'ri-briefcase-4-line', image_url: '', overview: '', challenges: '', solution: '', results: '', clientName: '', clientRole: '', clientCompany: '', clientReview: '', clientRating: 5 };
   const [projectForm, setProjectForm] = useState(emptyProjectForm);
   const [techForm, setTechForm] = useState({ category: 'frontend', name: '', icon: 'ri-code-line', desc: '', color: 'rgba(20, 184, 166, 0.1)', bestFor: '', projects: '', performance: '95%' });
@@ -213,6 +275,22 @@ const AdminDashboard = () => {
       about_values: 'About Us Values',
       about_achievements: 'About Us Achievements',
       about_cta: 'About Us CTA banner',
+      services_page_hero: 'Services Page Hero',
+      services_page_index: 'Services Listing Header',
+      services_page_benefits: 'Services Business Benefits',
+      services_page_tech: 'Services Technology Header',
+      services_page_portfolio: 'Services Recent Solutions Header',
+      services_page_cta: 'Services CTA Banner',
+      tech_page_hero: 'Technology Stack Hero',
+      tech_page_selection: 'Technology Stack Selection',
+      tech_page_projects: 'Technology Projects Header',
+      tech_page_matters: 'Why Technology Matters',
+      tech_page_cta: 'Technology CTA Banner',
+      portfolio_page_hero: 'Portfolio Hero',
+      portfolio_page_tech: 'Portfolio Technology Header',
+      portfolio_page_testimonials: 'Portfolio Testimonials Header',
+      portfolio_page_industries: 'Portfolio Industries Header',
+      portfolio_page_cta: 'Portfolio CTA Banner',
       faqs: 'FAQs Page Content',
       footer_links: 'Footer Links',
       company_profile_hero: 'Company Profile',
@@ -375,6 +453,150 @@ const AdminDashboard = () => {
         description: 'Trusted technology partner for business and government organizations. We provide structured web, mobile, ERP, enterprise software, AI/ML and digital transformation services with clear documentation and measurable outcomes.',
         metadata: {}
       },
+      services_page_hero: {
+        _id: 'services_page_hero',
+        title: 'Digital Solutions <br /><span class="gradient-text-accent">That Drive Business Growth</span>',
+        subtitle: 'OUR EXPERTISE',
+        description: 'We build scalable web applications, mobile apps, ERP systems, CRM solutions, AI automation platforms, and custom software that help businesses streamline operations and grow faster.',
+        page: 'services',
+        order: 0,
+        metadata: {}
+      },
+      services_page_index: {
+        _id: 'services_page_index',
+        title: 'Choose The Service Your Business Needs',
+        subtitle: 'OUR SERVICES',
+        description: 'Explore our core competencies designed to boost your operational intelligence, streamline process delivery, and capture market authority.',
+        page: 'services',
+        order: 1,
+        metadata: {}
+      },
+      services_page_benefits: {
+        _id: 'services_page_benefits',
+        title: 'Everything Your Business Needs To Build, Scale & Automate',
+        subtitle: 'BUSINESS BENEFITS',
+        description: '',
+        page: 'services',
+        order: 2,
+        metadata: {}
+      },
+      services_page_tech: {
+        _id: 'services_page_tech',
+        title: 'Powering Solutions With Modern Technologies',
+        subtitle: 'TECHNOLOGY WE USE',
+        description: '',
+        page: 'services',
+        order: 3,
+        metadata: {}
+      },
+      services_page_portfolio: {
+        _id: 'services_page_portfolio',
+        title: 'Recent Solutions Delivered By Our Team',
+        subtitle: 'RECENT SOLUTIONS',
+        description: 'A quick look at practical systems we build for operations, automation, and growth.',
+        page: 'services',
+        order: 4,
+        metadata: {}
+      },
+      services_page_cta: {
+        _id: 'services_page_cta',
+        title: 'Ready To Build A Scalable Digital Solution?',
+        subtitle: 'START YOUR PROJECT',
+        description: "Let's build a scalable digital solution tailored for your business goals. Discuss your architecture blueprints with our tech architects.",
+        page: 'services',
+        order: 5,
+        metadata: {}
+      },
+      tech_page_hero: {
+        _id: 'tech_page_hero',
+        title: 'Technology Chosen For Performance, Scale & Growth',
+        subtitle: 'TECHNOLOGY STACK',
+        description: 'Every project is different. We select technologies based on business goals, scalability requirements, integrations, security, and future growth.',
+        page: 'technology_stack',
+        order: 0,
+        metadata: {}
+      },
+      tech_page_selection: {
+        _id: 'tech_page_selection',
+        title: 'How We Choose The Right Stack',
+        subtitle: 'STACK SELECTION',
+        description: 'We never enforce generic templates. We follow a highly structured engineering checklist to identify the perfect tools for your needs.',
+        page: 'technology_stack',
+        order: 1,
+        metadata: {}
+      },
+      tech_page_projects: {
+        _id: 'tech_page_projects',
+        title: 'Real Solutions. Real Impact.',
+        subtitle: 'PROJECTS BUILT WITH MODERN STACK',
+        description: 'Check out these live, highly robust platforms built utilizing our premium technology frameworks.',
+        page: 'technology_stack',
+        order: 2,
+        metadata: {}
+      },
+      tech_page_matters: {
+        _id: 'tech_page_matters',
+        title: 'Why Choice of Tech Stack Defines Success',
+        subtitle: 'WHY TECHNOLOGY MATTERS',
+        description: 'Picking modern tech tools protects your investments, guarantees scalability, and accelerates development.',
+        page: 'technology_stack',
+        order: 3,
+        metadata: {}
+      },
+      tech_page_cta: {
+        _id: 'tech_page_cta',
+        title: 'Not Sure Which Technology Is Right For Your Project?',
+        subtitle: 'TECH CONSULTATION',
+        description: 'Our experts will suggest the perfect technology stack based on your goals, budget, integrations, and future plans.',
+        page: 'technology_stack',
+        order: 4,
+        metadata: {}
+      },
+      portfolio_page_hero: {
+        _id: 'portfolio_page_hero',
+        title: 'Real Projects. Real Results.',
+        subtitle: 'OUR PORTFOLIO',
+        description: 'Explore custom software solutions, web applications, mobile apps, ERP systems, CRM platforms, and AI-powered products built for businesses across multiple industries.',
+        page: 'portfolio',
+        order: 0,
+        metadata: {}
+      },
+      portfolio_page_tech: {
+        _id: 'portfolio_page_tech',
+        title: 'Technologies Behind Our Solutions',
+        subtitle: 'OUR ENGINE',
+        description: 'We leverage the most stable, performant, and advanced technology stacks to secure and scale your software assets.',
+        page: 'portfolio',
+        order: 1,
+        metadata: {}
+      },
+      portfolio_page_testimonials: {
+        _id: 'portfolio_page_testimonials',
+        title: 'What Our Clients Say',
+        subtitle: 'TESTIMONIALS',
+        description: 'Nexinfosoft reviewed by company leaders and startup founders driving automation workflows.',
+        page: 'portfolio',
+        order: 2,
+        metadata: {}
+      },
+      portfolio_page_industries: {
+        _id: 'portfolio_page_industries',
+        title: 'Industries We Serve',
+        subtitle: 'INDUSTRIES',
+        description: 'We engineer specialized software systems for diverse global business categories.',
+        page: 'portfolio',
+        order: 3,
+        metadata: {}
+      },
+      portfolio_page_cta: {
+        _id: 'portfolio_page_cta',
+        title: 'Ready To Build Your Next Digital Product?',
+        subtitle: 'START YOUR PROJECT',
+        description: "Let's transform your idea into a scalable digital solution.",
+        page: 'portfolio',
+        order: 4,
+        metadata: {}
+      },
       technologies: {
         _id: 'technologies',
         title: 'Requirement-Based Technology Selection',
@@ -498,6 +720,52 @@ const AdminDashboard = () => {
     const subtitle = sectionContent.subtitle || sectionContent.metadata?.badge || 'SECTION BADGE';
     const description = sectionContent.description || 'Preview description will appear here while admin edits this section.';
     const imageUrl = sectionContent.image_url || '/assets/images/herobanner.png';
+    const renderWebsiteSectionShell = ({
+      pageClass,
+      sectionClass,
+      titleClass = 'section-title-premium',
+      descClass = 'section-desc-premium',
+      titleTag: TitleTag = 'h2'
+    }) => (
+      <div className={`${pageClass} admin-real-section-preview`}>
+        <section className={sectionClass}>
+          <div className="container">
+            <div className="section-header-premium text-center">
+              <span className="section-tag-premium text-center">{subtitle || 'PAGE DETAILS'}</span>
+              <TitleTag className={titleClass} dangerouslySetInnerHTML={{ __html: title }}></TitleTag>
+              <p className={descClass}>{description}</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+    const shellPreviewMap = {
+      about_hero: { pageClass: 'about-page-wrapper', sectionClass: 'about-hero-sec', titleClass: 'hero-title-premium', descClass: 'hero-desc-premium', titleTag: 'h1' },
+      about_overview: { pageClass: 'about-page-wrapper', sectionClass: 'about-overview-sec', descClass: 'overview-desc-premium' },
+      about_partner: { pageClass: 'about-page-wrapper', sectionClass: 'about-partner-sec', descClass: 'partner-desc-premium' },
+      about_why: { pageClass: 'about-page-wrapper', sectionClass: 'about-why-sec' },
+      about_lifecycle: { pageClass: 'about-page-wrapper', sectionClass: 'about-lifecycle-sec' },
+      about_qa: { pageClass: 'about-page-wrapper', sectionClass: 'about-qa-sec', descClass: 'qa-desc-premium' },
+      about_values: { pageClass: 'about-page-wrapper', sectionClass: 'about-values-sec' },
+      about_achievements: { pageClass: 'about-page-wrapper', sectionClass: 'about-achievements-sec' },
+      about_cta: { pageClass: 'about-page-wrapper', sectionClass: 'about-premium-cta' },
+      services_page_hero: { pageClass: 'services-page-wrapper', sectionClass: 'services-hero-sec', titleClass: 'services-hero-title', descClass: 'services-hero-desc', titleTag: 'h1' },
+      services_page_index: { pageClass: 'services-page-wrapper', sectionClass: 'services-index-section' },
+      services_page_benefits: { pageClass: 'services-page-wrapper', sectionClass: 'services-benefits-sec' },
+      services_page_tech: { pageClass: 'services-page-wrapper', sectionClass: 'services-tech-sec' },
+      services_page_portfolio: { pageClass: 'services-page-wrapper', sectionClass: 'services-portfolio-sec' },
+      services_page_cta: { pageClass: 'services-page-wrapper', sectionClass: 'services-premium-cta' },
+      tech_page_hero: { pageClass: 'tech-page-wrapper', sectionClass: 'tech-hero-sec', titleClass: 'tech-hero-title', descClass: 'tech-hero-desc', titleTag: 'h1' },
+      tech_page_selection: { pageClass: 'tech-page-wrapper', sectionClass: 'tech-showcase-sec' },
+      tech_page_projects: { pageClass: 'tech-page-wrapper', sectionClass: 'tech-projects-sec' },
+      tech_page_matters: { pageClass: 'tech-page-wrapper', sectionClass: 'tech-matters-sec' },
+      tech_page_cta: { pageClass: 'tech-page-wrapper', sectionClass: 'tech-final-cta-sec' },
+      portfolio_page_hero: { pageClass: 'portfolio-page-wrapper', sectionClass: 'portfolio-hero-sec', titleClass: 'portfolio-hero-title', descClass: 'portfolio-hero-desc', titleTag: 'h1' },
+      portfolio_page_tech: { pageClass: 'portfolio-page-wrapper', sectionClass: 'portfolio-techs-sec' },
+      portfolio_page_testimonials: { pageClass: 'portfolio-page-wrapper', sectionClass: 'portfolio-testimonials-sec' },
+      portfolio_page_industries: { pageClass: 'portfolio-page-wrapper', sectionClass: 'portfolio-industries-sec' },
+      portfolio_page_cta: { pageClass: 'portfolio-page-wrapper', sectionClass: 'portfolio-final-cta-sec' }
+    };
 
     if (activeSection === 'corporate_hero') {
       return (
@@ -660,16 +928,22 @@ const AdminDashboard = () => {
       );
     }
 
-    if (activeSection.startsWith('about_') || activeSection.startsWith('contact_') || activeSection.startsWith('consultation_') || activeSection === 'faqs') {
+    if (shellPreviewMap[activeSection]) {
+      return renderWebsiteSectionShell(shellPreviewMap[activeSection]);
+    }
+
+    if (activeSection.startsWith('contact_') || activeSection.startsWith('consultation_') || activeSection === 'faqs') {
       return (
-        <div className="about-page admin-real-section-preview" style={{ padding: '34px 0', background: 'var(--bg-dark)' }}>
-          <div className="container" style={{ pointerEvents: 'none' }}>
-            <div className="section-header-premium text-center" style={{ marginBottom: 0 }}>
-              <span className="section-tag-premium text-center">{subtitle || 'PAGE DETAILS'}</span>
-              <h2 className="section-title-premium" dangerouslySetInnerHTML={{ __html: title }}></h2>
-              <p className="section-desc-premium">{description}</p>
+        <div className="about-page-wrapper admin-real-section-preview">
+          <section className="about-overview-sec">
+            <div className="container">
+              <div className="section-header-premium text-center">
+                <span className="section-tag-premium text-center">{subtitle || 'PAGE DETAILS'}</span>
+                <h2 className="section-title-premium" dangerouslySetInnerHTML={{ __html: title }}></h2>
+                <p className="section-desc-premium">{description}</p>
+              </div>
             </div>
-          </div>
+          </section>
         </div>
       );
     }
@@ -690,7 +964,7 @@ const AdminDashboard = () => {
       );
     }
 
-    return null;
+    return <CustomDynamicSection data={sectionContent} />;
   };
 
   const renderServiceFormPreview = () => {
@@ -787,10 +1061,27 @@ const AdminDashboard = () => {
         { id: 'company_profile_tech', page: 'company_profile', order: 6 },
         { id: 'company_profile_quality', page: 'company_profile', order: 7 },
         { id: 'company_profile_contact', page: 'company_profile', order: 8 },
+        { id: 'services_page_hero', page: 'services', order: 0 },
+        { id: 'services_page_index', page: 'services', order: 1 },
+        { id: 'services_page_benefits', page: 'services', order: 2 },
+        { id: 'services_page_tech', page: 'services', order: 3 },
+        { id: 'services_page_portfolio', page: 'services', order: 4 },
+        { id: 'services_page_cta', page: 'services', order: 5 },
+        { id: 'tech_page_hero', page: 'technology_stack', order: 0 },
+        { id: 'tech_page_selection', page: 'technology_stack', order: 1 },
+        { id: 'tech_page_projects', page: 'technology_stack', order: 2 },
+        { id: 'tech_page_matters', page: 'technology_stack', order: 3 },
+        { id: 'tech_page_cta', page: 'technology_stack', order: 4 },
+        { id: 'portfolio_page_hero', page: 'portfolio', order: 0 },
+        { id: 'portfolio_page_tech', page: 'portfolio', order: 1 },
+        { id: 'portfolio_page_testimonials', page: 'portfolio', order: 2 },
+        { id: 'portfolio_page_industries', page: 'portfolio', order: 3 },
+        { id: 'portfolio_page_cta', page: 'portfolio', order: 4 },
         { id: 'contact_hero', page: 'contact', order: 0 },
         { id: 'contact_methods', page: 'contact', order: 1 },
         { id: 'consultation_hero', page: 'consultation', order: 0 },
-        { id: 'consultation_info', page: 'consultation', order: 1 }
+        { id: 'consultation_info', page: 'consultation', order: 1 },
+        { id: 'faqs', page: 'faqs', order: 0 }
       ];
 
       let successCount = 0;
@@ -904,6 +1195,10 @@ const AdminDashboard = () => {
       if (!res.ok) throw new Error(data.error || 'Failed to create custom section.');
       
       setMessage('Custom section successfully created!');
+      if (data.data) {
+        setSectionContent(data.data);
+        setSearchParams({ tab: getTabForPageCategory(data.data.page), section: data.data._id });
+      }
       setCustomSectionForm({ _id: '', title: '', subtitle: '', description: '', image_url: '', page: 'home', order: 0, visible: true });
       loadAllSections();
     } catch (err) {
@@ -948,7 +1243,7 @@ const AdminDashboard = () => {
       }
     };
 
-    if (PAGE_TABS.includes(activeTab) && activeSection !== 'sections_manager') {
+    if (PAGE_TABS.includes(activeTab) && !['sections_manager', 'services_manager'].includes(activeSection)) {
       fetchSection();
     }
   }, [activeSection, activeTab, token]);
@@ -956,7 +1251,7 @@ const AdminDashboard = () => {
   // Fetch Services, Projects, Tech Items
   const loadServices = async () => {
     try {
-      const res = await fetch('/api/services');
+      const res = await fetch('/api/services?all=true');
       if (res.ok) {
         const data = await res.json();
         setServices(data);
@@ -998,7 +1293,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (!token) return;
-    if (activeTab === 'services') loadServices();
+    if (activeTab === 'services' || activeTab === 'service_page') loadServices();
     if (activeTab === 'projects') loadProjects();
     if (activeTab === 'techstack') loadTechItems();
     if (activeTab === 'leads') loadLeads();
@@ -1191,7 +1486,7 @@ const AdminDashboard = () => {
       if (!res.ok) throw new Error(data.error || 'Failed to submit service.');
 
       setMessage(editingId ? 'Service successfully updated!' : 'Service successfully created!');
-      setServiceForm({ slug: '', title: '', subtitle: '', icon: 'ri-window-line', intro: '', benefits: '', deliverables: '', image_url: '' });
+      setServiceForm(emptyServiceForm);
       setEditingId(null);
       loadServices();
     } catch (err) {
@@ -1211,8 +1506,28 @@ const AdminDashboard = () => {
       intro: srv.intro || '',
       benefits: (srv.benefits || []).join(', '),
       deliverables: (srv.deliverables || []).join(', '),
-      image_url: srv.image_url || ''
+      image_url: srv.image_url || '',
+      visible: srv.visible !== false
     });
+  };
+
+  const handleToggleServiceVisibility = async (srv) => {
+    try {
+      const res = await fetch(`/api/services/${srv._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ ...srv, visible: srv.visible === false })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update service visibility.');
+      setMessage('Service visibility updated successfully.');
+      loadServices();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const handleDeleteService = async (id) => {
@@ -1532,17 +1847,33 @@ const AdminDashboard = () => {
     navigate('/admin-login');
   };
 
+  const activePageCategory = PAGE_CATEGORY_BY_TAB[activeTab] || 'home';
+  const configuredSections = TAB_SECTIONS[activeTab] || [];
+  const configuredSectionIds = new Set(configuredSections.map((section) => section.id));
+  const activeTabSections = [
+    ...configuredSections,
+    ...allSections
+      .filter((section) => section.page === activePageCategory)
+      .filter((section) => !configuredSectionIds.has(section._id))
+      .sort((a, b) => (a.order || 0) - (b.order || 0))
+      .map((section) => ({
+        id: section._id,
+        label: section.title || section._id,
+        icon: 'ri-layout-row-line'
+      }))
+  ];
+
   return (
     <>
       <section className="content-page admin-dashboard-page" style={{ paddingTop: '130px', paddingBottom: '120px' }}>
         {PAGE_TABS.includes(activeTab) && (
-          <div className="container">
+          <div className="container admin-page-navigation">
             <div className="glass-card admin-section-subnav">
               <div className="admin-section-subnav-title">
                 <span>{getTabLabel(activeTab)} Sections</span>
               </div>
               <div className="admin-section-subnav-scroll">
-                {(TAB_SECTIONS[activeTab] || []).map((sec) => (
+                {activeTabSections.map((sec) => (
                   <button 
                     key={sec.id}
                     onClick={() => setActiveSection(sec.id)} 
@@ -1558,7 +1889,20 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && activeSection !== 'sections_manager' ? 'active-split' : ''}`}>
+        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && !['sections_manager', 'services_manager'].includes(activeSection) ? 'active-split' : ''}`}>
+          {/* LIVE PREVIEW (Only for page sections) */}
+          {PAGE_TABS.includes(activeTab) && !['sections_manager', 'services_manager'].includes(activeSection) && sectionContent && (
+            <div className="admin-section-preview-block">
+              <div className="admin-preview-heading">
+                <small style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Live preview matching website styles</small>
+                <span style={{ fontSize: '16px', fontWeight: 800 }}>{getSectionLabel()}</span>
+              </div>
+              <div className="admin-preview-device">
+                {renderSectionPreview()}
+              </div>
+            </div>
+          )}
+
           {/* MAIN FORM OR DATA MANAGER */}
           <div className="glass-card" style={{ padding: '34px', borderRadius: '12px' }}>
             
@@ -1577,7 +1921,7 @@ const AdminDashboard = () => {
             {/* =========================================================
                 TAB 1 & 2: SECTIONS FORM EDITORS
                 ========================================================= */}
-            {PAGE_TABS.includes(activeTab) && sectionContent && (
+            {PAGE_TABS.includes(activeTab) && !['sections_manager', 'services_manager'].includes(activeSection) && sectionContent && (
               <form onSubmit={handleSaveSection} style={{ display: 'grid', gap: '22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <h2 style={{ fontSize: '20px', fontWeight: 800 }}>Edit {activeSection.toUpperCase().replace('_', ' ')}</h2>
@@ -1611,10 +1955,17 @@ const AdminDashboard = () => {
                       required
                     >
                       <option value="home">Home Page (home)</option>
+                      <option value="services">Services Page (services)</option>
+                      <option value="technology_stack">Technology Stack Page (technology_stack)</option>
+                      <option value="portfolio">Portfolio Page (portfolio)</option>
+                      <option value="about">About Page (about)</option>
                       <option value="corporate">Corporate Page (corporate)</option>
                       <option value="policy">Policies Page (policy)</option>
                       <option value="global">Global / Footer (global)</option>
                       <option value="company_profile">Company Profile (company_profile)</option>
+                      <option value="contact">Contact Page (contact)</option>
+                      <option value="consultation">Consultation Page (consultation)</option>
+                      <option value="faqs">FAQs Page (faqs)</option>
                     </select>
                   </div>
                   <div className="form-group">
@@ -1640,7 +1991,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Section Image Uploader (Editable for all photo sections!) */}
-                {['hero', 'corporate_hero', 'corporate_about', 'corporate_mission'].includes(activeSection) && (
+                {sectionContent && (
                   <div className="form-group" style={{ background: 'rgba(255,255,255,0.01)', padding: '20px', borderRadius: '10px', border: '1px dashed var(--border)' }}>
                     <label className="form-label" style={{ marginBottom: '8px', display: 'block' }}>Section Artwork / Photo (Image upload)</label>
                     {sectionContent.image_url && (
@@ -2363,12 +2714,17 @@ const AdminDashboard = () => {
                       >
                         <option value="all">All Pages</option>
                         <option value="home">Home Page (home)</option>
+                        <option value="services">Services Page (services)</option>
+                        <option value="technology_stack">Technology Stack Page (technology_stack)</option>
+                        <option value="portfolio">Portfolio Page (portfolio)</option>
+                        <option value="about">About Page (about)</option>
                         <option value="corporate">Corporate Page (corporate)</option>
                         <option value="policy">Policies Page (policy)</option>
                         <option value="global">Global (global)</option>
                         <option value="company_profile">Company Profile (company_profile)</option>
                         <option value="contact">Contact Page (contact)</option>
                         <option value="consultation">Consultation Page (consultation)</option>
+                        <option value="faqs">FAQs Page (faqs)</option>
                       </select>
                     </div>
 
@@ -2433,7 +2789,7 @@ const AdminDashboard = () => {
                               <td style={{ padding: '12px', textAlign: 'right' }}>
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                                   <button 
-                                    onClick={() => setActiveSection(sec._id)} 
+                                    onClick={() => setSearchParams({ tab: getTabForPageCategory(sec.page), section: sec._id })} 
                                     className="btn btn-secondary" 
                                     style={{ padding: '4px 10px', fontSize: '11px', height: '30px', margin: 0 }}
                                   >
@@ -2524,6 +2880,28 @@ const AdminDashboard = () => {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
                     <div className="form-group">
+                      <label className="form-label">Page Category</label>
+                      <select
+                        className="form-control"
+                        value={customSectionForm.page}
+                        onChange={(e) => setCustomSectionForm(prev => ({ ...prev, page: e.target.value }))}
+                        style={{ background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '6px', height: '48px', padding: '0 12px' }}
+                      >
+                        <option value="home">Home Page (home)</option>
+                        <option value="services">Services Page (services)</option>
+                        <option value="technology_stack">Technology Stack Page (technology_stack)</option>
+                        <option value="portfolio">Portfolio Page (portfolio)</option>
+                        <option value="about">About Page (about)</option>
+                        <option value="corporate">Corporate Page (corporate)</option>
+                        <option value="company_profile">Company Profile (company_profile)</option>
+                        <option value="contact">Contact Page (contact)</option>
+                        <option value="consultation">Consultation Page (consultation)</option>
+                        <option value="faqs">FAQs Page (faqs)</option>
+                        <option value="policy">Policies Page (policy)</option>
+                        <option value="global">Global / Footer (global)</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
                       <label className="form-label">Display Order</label>
                       <input 
                         className="form-control" 
@@ -2544,6 +2922,14 @@ const AdminDashboard = () => {
                     </div>
                   </div>
 
+                  <div className="admin-add-section-preview">
+                    <div className="admin-preview-heading">
+                      <span style={{ fontSize: '16px', fontWeight: 800 }}>New Section Live Preview</span>
+                      <small style={{ color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Same renderer used on website after save</small>
+                    </div>
+                    <CustomDynamicSection data={customSectionForm} />
+                  </div>
+
                   <button type="submit" className="btn btn-primary" style={{ padding: '12px 30px', border: 'none', height: '48px' }}>
                     <span>Add Custom Section</span>
                   </button>
@@ -2554,7 +2940,7 @@ const AdminDashboard = () => {
             {/* =========================================================
                 TAB 3: SERVICES CRUD MANAGER
                 ========================================================= */}
-            {activeTab === 'services' && (
+            {activeTab === 'services' || (activeTab === 'service_page' && activeSection === 'services_manager') ? (
               <div>
                 <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '18px' }}>
                   {editingId ? 'Edit Service' : 'Add New Service'}
@@ -2607,12 +2993,23 @@ const AdminDashboard = () => {
                     </div>
                   </div>
 
+                  <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <input
+                      type="checkbox"
+                      id="serviceVisibleInput"
+                      checked={serviceForm.visible !== false}
+                      onChange={(e) => setServiceForm(prev => ({ ...prev, visible: e.target.checked }))}
+                      style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                    />
+                    <label htmlFor="serviceVisibleInput" style={{ cursor: 'pointer', fontSize: '13px' }}>Show this service on Services page</label>
+                  </div>
+
                   <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
                     <button type="submit" className="btn btn-primary" style={{ padding: '12px 30px', border: 'none', height: '48px' }}>
                       <span>{editingId ? 'Update Service' : 'Add Service'}</span>
                     </button>
                     {editingId && (
-                      <button type="button" onClick={() => { setEditingId(null); setServiceForm({ slug: '', title: '', subtitle: '', icon: 'ri-window-line', intro: '', benefits: '', deliverables: '', image_url: '' }); }} className="btn btn-secondary" style={{ padding: '12px 20px', height: '48px' }}>
+                      <button type="button" onClick={() => { setEditingId(null); setServiceForm(emptyServiceForm); }} className="btn btn-secondary" style={{ padding: '12px 20px', height: '48px' }}>
                         Cancel
                       </button>
                     )}
@@ -2627,10 +3024,16 @@ const AdminDashboard = () => {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <span style={{ fontSize: '18px', color: 'var(--accent)' }}><i className={srv.icon}></i></span>
                           <strong style={{ fontSize: '16px' }}>{srv.title}</strong>
+                          <span style={{ fontSize: '11px', fontWeight: 800, color: srv.visible === false ? '#ef4444' : 'var(--accent)', background: srv.visible === false ? 'rgba(239,68,68,0.1)' : 'rgba(20,184,166,0.1)', padding: '3px 8px', borderRadius: '999px' }}>
+                            {srv.visible === false ? 'Hidden' : 'Visible'}
+                          </span>
                         </div>
                         <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Slug: {srv.slug}</span>
                       </div>
                       <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => handleToggleServiceVisibility(srv)} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px' }}>
+                          {srv.visible === false ? 'Show' : 'Hide'}
+                        </button>
                         <button onClick={() => handleEditService(srv)} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px' }}>Edit</button>
                         <button onClick={() => handleDeleteService(srv._id)} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px', background: 'rgba(239,68,68,0.1)', color: '#ef4444', borderColor: 'rgba(239,68,68,0.2)' }}>Delete</button>
                       </div>
@@ -2638,7 +3041,7 @@ const AdminDashboard = () => {
                   ))}
                 </div>
               </div>
-            )}
+            ) : null}
 
             {/* =========================================================
                 TAB 4: PROJECTS CRUD MANAGER
@@ -3059,18 +3462,6 @@ const AdminDashboard = () => {
 
           </div>
 
-          {/* RIGHT SIDE: LIVE PREVIEW (Only for page sections) */}
-          {PAGE_TABS.includes(activeTab) && activeSection !== 'sections_manager' && sectionContent && (
-            <div className="glass-card admin-section-preview-block" style={{ margin: 0, padding: '24px', position: 'sticky', top: '120px' }}>
-              <div className="admin-preview-heading" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '16px' }}>
-                <span style={{ fontSize: '16px', fontWeight: 800 }}>{getSectionLabel()}</span>
-                <small style={{ color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Live preview matching website styles</small>
-              </div>
-              <div className="admin-preview-device" style={{ maxHeight: 'calc(100vh - 280px)', overflowY: 'auto' }}>
-                {renderSectionPreview()}
-              </div>
-            </div>
-          )}
         </div>
       </section>
     </>

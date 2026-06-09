@@ -726,6 +726,182 @@ async function initializeDatabase() {
             'SEO, conversion, and launch suggestions'
           ]
         }
+      },
+      {
+        _id: 'services_page_hero',
+        title: 'Digital Solutions <br /><span class="gradient-text-accent">That Drive Business Growth</span>',
+        subtitle: 'OUR EXPERTISE',
+        description: 'We build scalable web applications, mobile apps, ERP systems, CRM solutions, AI automation platforms, and custom software that help businesses streamline operations and grow faster.',
+        image_url: '',
+        page: 'services',
+        order: 0,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'services_page_index',
+        title: 'Choose The Service Your Business Needs',
+        subtitle: 'OUR SERVICES',
+        description: 'Explore our core competencies designed to boost your operational intelligence, streamline process delivery, and capture market authority.',
+        image_url: '',
+        page: 'services',
+        order: 1,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'services_page_benefits',
+        title: 'Everything Your Business Needs To Build, Scale & Automate',
+        subtitle: 'BUSINESS BENEFITS',
+        description: '',
+        image_url: '',
+        page: 'services',
+        order: 2,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'services_page_tech',
+        title: 'Powering Solutions With Modern Technologies',
+        subtitle: 'TECHNOLOGY WE USE',
+        description: '',
+        image_url: '',
+        page: 'services',
+        order: 3,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'services_page_portfolio',
+        title: 'Recent Solutions Delivered By Our Team',
+        subtitle: 'RECENT SOLUTIONS',
+        description: 'A quick look at practical systems we build for operations, automation, and growth.',
+        image_url: '',
+        page: 'services',
+        order: 4,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'services_page_cta',
+        title: 'Ready To Build A Scalable Digital Solution?',
+        subtitle: 'START YOUR PROJECT',
+        description: "Let's build a scalable digital solution tailored for your business goals. Discuss your architecture blueprints with our tech architects.",
+        image_url: '',
+        page: 'services',
+        order: 5,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'tech_page_hero',
+        title: 'Technology Chosen For Performance, Scale & Growth',
+        subtitle: 'TECHNOLOGY STACK',
+        description: 'Every project is different. We select technologies based on business goals, scalability requirements, integrations, security, and future growth.',
+        image_url: '',
+        page: 'technology_stack',
+        order: 0,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'tech_page_selection',
+        title: 'How We Choose The Right Stack',
+        subtitle: 'STACK SELECTION',
+        description: 'We never enforce generic templates. We follow a highly structured engineering checklist to identify the perfect tools for your needs.',
+        image_url: '',
+        page: 'technology_stack',
+        order: 1,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'tech_page_projects',
+        title: 'Real Solutions. Real Impact.',
+        subtitle: 'PROJECTS BUILT WITH MODERN STACK',
+        description: 'Check out these live, highly robust platforms built utilizing our premium technology frameworks.',
+        image_url: '',
+        page: 'technology_stack',
+        order: 2,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'tech_page_matters',
+        title: 'Why Choice of Tech Stack Defines Success',
+        subtitle: 'WHY TECHNOLOGY MATTERS',
+        description: 'Picking modern tech tools protects your investments, guarantees scalability, and accelerates development.',
+        image_url: '',
+        page: 'technology_stack',
+        order: 3,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'tech_page_cta',
+        title: 'Not Sure Which Technology Is Right For Your Project?',
+        subtitle: 'TECH CONSULTATION',
+        description: 'Our experts will suggest the perfect technology stack based on your goals, budget, integrations, and future plans.',
+        image_url: '',
+        page: 'technology_stack',
+        order: 4,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'portfolio_page_hero',
+        title: 'Real Projects. Real Results.',
+        subtitle: 'OUR PORTFOLIO',
+        description: 'Explore custom software solutions, web applications, mobile apps, ERP systems, CRM platforms, and AI-powered products built for businesses across multiple industries.',
+        image_url: '',
+        page: 'portfolio',
+        order: 0,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'portfolio_page_tech',
+        title: 'Technologies Behind Our Solutions',
+        subtitle: 'OUR ENGINE',
+        description: 'We leverage the most stable, performant, and advanced technology stacks to secure and scale your software assets.',
+        image_url: '',
+        page: 'portfolio',
+        order: 1,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'portfolio_page_testimonials',
+        title: 'What Our Clients Say',
+        subtitle: 'TESTIMONIALS',
+        description: 'Nexinfosoft reviewed by company leaders and startup founders driving automation workflows.',
+        image_url: '',
+        page: 'portfolio',
+        order: 2,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'portfolio_page_industries',
+        title: 'Industries We Serve',
+        subtitle: 'INDUSTRIES',
+        description: 'We engineer specialized software systems for diverse global business categories.',
+        image_url: '',
+        page: 'portfolio',
+        order: 3,
+        visible: true,
+        metadata: {}
+      },
+      {
+        _id: 'portfolio_page_cta',
+        title: 'Ready To Build Your Next Digital Product?',
+        subtitle: 'START YOUR PROJECT',
+        description: "Let's transform your idea into a scalable digital solution.",
+        image_url: '',
+        page: 'portfolio',
+        order: 4,
+        visible: true,
+        metadata: {}
       }
     ];
 

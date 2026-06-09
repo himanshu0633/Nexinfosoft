@@ -13,6 +13,7 @@ const isTokenExpired = (token) => {
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -122,10 +123,10 @@ const AdminLogin = () => {
 
             <div className="admin-login-field">
               <label htmlFor="password">Password</label>
-              <div className="admin-login-input-wrap">
+              <div className="admin-login-input-wrap admin-login-password-wrap">
                 <i className="ri-lock-password-line"></i>
                 <input 
-                  type="password" 
+                  type={showPassword ? 'text' : 'password'} 
                   id="password" 
                   placeholder="Enter security password"
                   value={password}
@@ -133,6 +134,15 @@ const AdminLogin = () => {
                   autoComplete="current-password"
                   required 
                 />
+                <button
+                  type="button"
+                  className="admin-login-password-toggle"
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-pressed={showPassword}
+                >
+                  <i className={showPassword ? 'ri-eye-off-line' : 'ri-eye-line'}></i>
+                </button>
               </div>
             </div>
 

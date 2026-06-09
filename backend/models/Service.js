@@ -36,6 +36,10 @@ const serviceSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: ''
+  },
+  visible: {
+    type: Boolean,
+    default: true
   }
 }, { timestamps: true });
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import DynamicPageSections from '../components/DynamicPageSections';
 
 const TermsConditions = () => {
   const [content, setContent] = useState({
@@ -52,6 +53,7 @@ const TermsConditions = () => {
           ))}
         </div>
       </section>
+      <DynamicPageSections page="policy" excludeIds={['privacy_policy', 'terms_conditions']} />
     </>
   );
 };

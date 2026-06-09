@@ -139,13 +139,28 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
+              <Link to="/admin/dashboard?tab=service_page&section=services_page_hero" className={`nav-link ${activeTab === 'service_page' ? 'active' : ''}`}>
+                Services
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/dashboard?tab=tech_page&section=tech_page_hero" className={`nav-link ${activeTab === 'tech_page' ? 'active' : ''}`}>
+                Technology Stack
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/dashboard?tab=portfolio_page&section=portfolio_page_hero" className={`nav-link ${activeTab === 'portfolio_page' ? 'active' : ''}`}>
+                Portfolio
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to="/admin/dashboard?tab=corporate&section=corporate_hero" className={`nav-link ${activeTab === 'corporate' ? 'active' : ''}`}>
                 Corporate
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/admin/dashboard?tab=company_profile&section=company_profile_hero" className={`nav-link ${activeTab === 'company_profile' ? 'active' : ''}`}>
-                Profile
+                Company Profile
               </Link>
             </li>
             <li className="nav-item">
@@ -170,27 +185,7 @@ const Header = () => {
             </li>
             <li className="nav-item">
               <Link to="/admin/dashboard?tab=global&section=footer_links" className={`nav-link ${activeTab === 'global' ? 'active' : ''}`}>
-                Global
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/admin/dashboard?tab=services" className={`nav-link ${activeTab === 'services' ? 'active' : ''}`}>
-                Services
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/admin/dashboard?tab=projects" className={`nav-link ${activeTab === 'projects' ? 'active' : ''}`}>
-                Projects
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/admin/dashboard?tab=techstack" className={`nav-link ${activeTab === 'techstack' ? 'active' : ''}`}>
-                Tech Stack
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/admin/dashboard?tab=leads" className={`nav-link ${activeTab === 'leads' ? 'active' : ''}`}>
-                Leads
+                Global & Footer
               </Link>
             </li>
             {/* Mobile-Only Log out Option */}
