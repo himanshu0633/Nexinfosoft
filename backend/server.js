@@ -21,6 +21,7 @@ const uploadRoutes = require('./routes/upload');
 const servicesRoutes = require('./routes/services');
 const projectsRoutes = require('./routes/projects');
 const techstackRoutes = require('./routes/techstack');
+const techcategoriesRoutes = require('./routes/techcategories');
 const contactRoutes = require('./routes/contact');
 
 app.use('/api/auth', authRoutes);
@@ -29,6 +30,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/services', servicesRoutes);
 app.use('/api/projects', projectsRoutes);
 app.use('/api/techstack', techstackRoutes);
+app.use('/api/techcategories', techcategoriesRoutes);
 app.use('/api/contact', contactRoutes);
 
 // Simple backend status route

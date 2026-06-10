@@ -133,32 +133,48 @@ const TechStack = () => {
 
     fetchPageContent();
   }, []);
-
   useEffect(() => {
     const fetchDynamicTechStack = async () => {
       try {
-        const res = await fetch('/api/techstack');
-        if (res.ok) {
-          const dbItems = await res.json();
-          if (dbItems && dbItems.length > 0) {
-            // Clone default fallback
-            const base = JSON.parse(JSON.stringify(techStackData));
-            
-            // Build grouped mapping dynamically
-            const grouped = {};
-            
-            // Initialize with empty arrays for standard categories
-            const standardCats = ['frontend', 'backend', 'mobile', 'database', 'cloud', 'ai'];
-            standardCats.forEach(cat => {
-              grouped[cat] = [];
-            });
+        const categoriesRes = await fetch(`/api/techcategories?t=${Date.now()}`, { cache: 'no-store' });
+        let dbCategories = [];
+        if (categoriesRes.ok) {
+          dbCategories = await categoriesRes.json();
+        }
 
+        const itemsRes = await fetch(`/api/techstack?t=${Date.now()}`, { cache: 'no-store' });
+        if (itemsRes.ok) {
+          const dbItems = await itemsRes.json();
+          // We can populate base.categories either from dbCategories or from static techStackData
+          const base = JSON.parse(JSON.stringify(techStackData));
+          
+          if (dbCategories.length > 0) {
+            base.categories = {};
+            dbCategories.forEach(cat => {
+              base.categories[cat.key] = {
+                title: cat.title,
+                desc: cat.desc || '',
+                tag: cat.tag || `${cat.key.toUpperCase()} TECHNOLOGIES`,
+                icon: cat.icon || 'ri-code-s-slash-line',
+                items: []
+              };
+            });
+          }
+
+          if (dbItems && dbItems.length > 0) {
             dbItems.forEach(item => {
-              const cat = item.category.toLowerCase().trim();
-              if (!grouped[cat]) {
-                grouped[cat] = [];
+              const catKey = item.category.toLowerCase().trim();
+              if (!base.categories[catKey]) {
+                const formattedName = catKey.charAt(0).toUpperCase() + catKey.slice(1);
+                base.categories[catKey] = {
+                  title: `${formattedName} Solutions`,
+                  desc: `Explore our advanced ${catKey} technologies and tools.`,
+                  tag: `${catKey.toUpperCase()} TECHNOLOGIES`,
+                  icon: 'ri-code-s-slash-line',
+                  items: []
+                };
               }
-              grouped[cat].push({
+              base.categories[catKey].items.push({
                 name: item.name,
                 icon: item.icon,
                 desc: item.desc,
@@ -166,24 +182,17 @@ const TechStack = () => {
                 ...(item.metadata || {})
               });
             });
+          }
 
-            Object.keys(grouped).forEach(cat => {
-              if (grouped[cat].length > 0) {
-                if (!base.categories[cat]) {
-                  // Custom dynamic category header setup
-                  const formattedName = cat.charAt(0).toUpperCase() + cat.slice(1);
-                  base.categories[cat] = {
-                    title: `${formattedName} Solutions`,
-                    desc: `Explore our advanced ${cat} technologies and enterprise tools catalog.`,
-                    tag: `${cat.toUpperCase()} TECHNOLOGIES`,
-                    items: []
-                  };
-                }
-                base.categories[cat].items = grouped[cat];
-              }
-            });
+          setData(base);
 
-            setData(base);
+          // If current activeTab is not in base.categories, fallback to the first category key
+          const categoryKeys = Object.keys(base.categories);
+          const tabFromUrl = searchParams.get('tab');
+          if (tabFromUrl && base.categories[tabFromUrl.toLowerCase()]) {
+            setActiveTab(tabFromUrl.toLowerCase());
+          } else if (categoryKeys.length > 0 && !base.categories[activeTab]) {
+            setActiveTab(categoryKeys[0]);
           }
         }
       } catch (err) {
@@ -192,7 +201,7 @@ const TechStack = () => {
     };
 
     fetchDynamicTechStack();
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     const scroller = stackSelectionScrollerRef.current;
@@ -507,7 +516,6 @@ const TechStack = () => {
                 <nav className="tech-sidebar-nav">
                   {Object.keys(data.categories).map((catKey) => {
                     const cat = data.categories[catKey];
-                    // Map default categories to their specific icons, or fall back to code icon
                     const categoryIcons = {
                       frontend: 'ri-layout-4-line',
                       backend: 'ri-server-line',
@@ -516,8 +524,8 @@ const TechStack = () => {
                       cloud: 'ri-cloud-line',
                       ai: 'ri-brain-line'
                     };
-                    const iconClass = categoryIcons[catKey] || 'ri-shield-flash-line';
-                    const label = catKey.charAt(0).toUpperCase() + catKey.slice(1);
+                    const iconClass = cat.icon || categoryIcons[catKey] || 'ri-shield-flash-line';
+                    const label = catKey === 'ai' ? 'AI & Analytics' : catKey === 'cloud' ? 'Cloud & DevOps' : (catKey.charAt(0).toUpperCase() + catKey.slice(1));
                     return (
                       <button 
                         key={catKey}
@@ -525,7 +533,7 @@ const TechStack = () => {
                         onClick={() => setActiveTab(catKey)}
                       >
                         <i className={iconClass}></i>
-                        <span>{catKey === 'ai' ? 'AI & Analytics' : catKey === 'cloud' ? 'Cloud & DevOps' : label}</span>
+                        <span>{label}</span>
                       </button>
                     );
                   })}

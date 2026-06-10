@@ -79,14 +79,17 @@ const TAB_SECTIONS = {
     { id: 'tech_page_selection', label: 'Stack Selection', icon: 'ri-list-check-3' },
     { id: 'tech_page_projects', label: 'Projects', icon: 'ri-window-line' },
     { id: 'tech_page_matters', label: 'Why Tech Matters', icon: 'ri-lightbulb-line' },
-    { id: 'tech_page_cta', label: 'CTA', icon: 'ri-chat-smile-line' }
+    { id: 'tech_page_cta', label: 'CTA', icon: 'ri-chat-smile-line' },
+    { id: 'techstack_manager', label: 'Tech & Categories', icon: 'ri-list-settings-line', style: { borderLeft: '2px solid var(--accent)' } }
   ],
   portfolio_page: [
-    { id: 'portfolio_page_hero', label: 'Hero', icon: 'ri-briefcase-4-line' },
-    { id: 'portfolio_page_tech', label: 'Technology', icon: 'ri-stack-line' },
-    { id: 'portfolio_page_testimonials', label: 'Testimonials', icon: 'ri-chat-quote-line' },
-    { id: 'portfolio_page_industries', label: 'Industries', icon: 'ri-building-4-line' },
-    { id: 'portfolio_page_cta', label: 'CTA', icon: 'ri-rocket-line' }
+    { id: 'portfolio_page_hero', label: 'Hero & Stats', icon: 'ri-briefcase-4-line' },
+    { id: 'portfolio_page_featured', label: 'Featured Case Study', icon: 'ri-award-line' },
+    { id: 'projects_manager', label: 'Projects Manager', icon: 'ri-list-settings-line', style: { borderLeft: '2px solid var(--accent)' } },
+    { id: 'portfolio_page_tech', label: 'Technology Engines', icon: 'ri-stack-line' },
+    { id: 'portfolio_page_testimonials', label: 'Client Reviews', icon: 'ri-chat-quote-line' },
+    { id: 'portfolio_page_industries', label: 'Industries Served', icon: 'ri-building-4-line' },
+    { id: 'portfolio_page_cta', label: 'CTA Banner', icon: 'ri-rocket-line' }
   ],
   corporate: [
     { id: 'corporate_hero', label: 'Hero', icon: 'ri-flag-line' },
@@ -328,6 +331,9 @@ const AdminDashboard = () => {
   const [services, setServices] = useState([]);
   const [projects, setProjects] = useState([]);
   const [techItems, setTechItems] = useState([]);
+  const [techCategories, setTechCategories] = useState([]);
+  const [categoryForm, setCategoryForm] = useState({ key: '', title: '', desc: '', tag: '', icon: 'ri-code-s-slash-line', order: 0 });
+  const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [leads, setLeads] = useState([]);
 
   // Icons tab states
@@ -346,6 +352,7 @@ const AdminDashboard = () => {
   const [customCategory, setCustomCategory] = useState('');
   const [leadFilter, setLeadFilter] = useState('all');
   const [managerPageFilter, setManagerPageFilter] = useState('all');
+  const [techManagerSubTab, setTechManagerSubTab] = useState('items'); // 'items' or 'categories'
 
   const [editingId, setEditingId] = useState(null); // ID of item being updated
   
@@ -1126,7 +1133,7 @@ const AdminDashboard = () => {
   };
 
   const renderTechFormPreview = () => {
-    const finalCategory = techForm.category === 'custom' ? customCategory || 'custom' : techForm.category;
+    const finalCategory = techForm.category;
     return (
       <article className="admin-form-preview-card admin-tech-preview-card" style={{ '--previewAccent': techForm.color || 'rgba(20, 184, 166, 0.1)' }}>
         <span><i className={techForm.icon || 'ri-code-line'}></i></span>
@@ -1138,6 +1145,30 @@ const AdminDashboard = () => {
           <small>{techForm.bestFor || 'Best use case'}</small>
         </div>
       </article>
+    );
+  };
+
+  const renderCategoryFormPreview = () => {
+    return (
+      <div className="glass-card" style={{ padding: '18px', border: '1px solid var(--border)', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '300px', background: 'rgba(255,255,255,0.01)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '24px', color: 'var(--accent)' }}>
+            <i className={categoryForm.icon || 'ri-code-s-slash-line'}></i>
+          </span>
+          <div>
+            <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 800 }}>{categoryForm.title || 'Category Title'}</h4>
+            <span style={{ fontSize: '11px', color: 'var(--accent)', background: 'rgba(20,184,166,0.1)', padding: '2px 6px', borderRadius: '4px', display: 'inline-block', marginTop: '3px' }}>
+              {categoryForm.tag || 'TAG_NAME'}
+            </span>
+          </div>
+        </div>
+        <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+          {categoryForm.desc || 'Category description will appear here.'}
+        </p>
+        <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px' }}>
+          Slug Key: <strong>{categoryForm.key || 'key'}</strong> | Order: <strong>{categoryForm.order || 0}</strong>
+        </div>
+      </div>
     );
   };
 
@@ -1387,7 +1418,7 @@ const AdminDashboard = () => {
       }
     };
 
-    if (PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager'].includes(activeSection)) {
+    if (PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager'].includes(activeSection)) {
       fetchSection();
     }
   }, [activeSection, activeTab, token]);
@@ -1423,6 +1454,16 @@ const AdminDashboard = () => {
     } catch (e) {}
   };
 
+  const loadTechCategories = async () => {
+    try {
+      const res = await fetch('/api/techcategories');
+      if (res.ok) {
+        const data = await res.json();
+        setTechCategories(data);
+      }
+    } catch (e) {}
+  };
+
   const loadLeads = async () => {
     try {
       const res = await fetch('/api/contact', {
@@ -1439,9 +1480,12 @@ const AdminDashboard = () => {
     if (!token) return;
     if (activeTab === 'services' || activeTab === 'service_page') loadServices();
     if (activeTab === 'projects') loadProjects();
-    if (activeTab === 'techstack') loadTechItems();
+    if (activeTab === 'techstack' || (activeTab === 'tech_page' && activeSection === 'techstack_manager')) {
+      loadTechItems();
+      loadTechCategories();
+    }
     if (activeTab === 'leads') loadLeads();
-  }, [activeTab, token]);
+  }, [activeTab, activeSection, token]);
 
   // Inputs Handlers
   const handleInputChange = (field, value) => {
@@ -1827,16 +1871,14 @@ const AdminDashboard = () => {
     setError('');
     setMessage('');
 
-    const finalCategory = techForm.category === 'custom' ? customCategory.trim().toLowerCase() : techForm.category;
-
-    if (!finalCategory) {
-      setError('Please provide a valid Category Group.');
+    if (!techForm.category) {
+      setError('Please select a Category Group.');
       setLoading(false);
       return;
     }
 
     const payload = {
-      category: finalCategory,
+      category: techForm.category,
       name: techForm.name,
       icon: techForm.icon,
       desc: techForm.desc,
@@ -1865,9 +1907,7 @@ const AdminDashboard = () => {
       if (!res.ok) throw new Error(data.error || 'Failed to submit tech item.');
 
       setMessage(editingId ? 'Tech stack item successfully updated!' : 'Tech stack item successfully created!');
-      setTechForm({ category: 'frontend', name: '', icon: 'ri-code-line', desc: '', color: 'rgba(20, 184, 166, 0.1)', bestFor: '', projects: '', performance: '95%' });
-      setCustomCategory('');
-      setShowCustomCategory(false);
+      setTechForm({ category: techCategories[0]?.key || 'frontend', name: '', icon: 'ri-code-line', desc: '', color: 'rgba(20, 184, 166, 0.1)', bestFor: '', projects: '', performance: '95%' });
       setEditingId(null);
       loadTechItems();
     } catch (err) {
@@ -1879,11 +1919,8 @@ const AdminDashboard = () => {
 
   const handleEditTech = (tech) => {
     setEditingId(tech._id);
-    const standardCats = ['frontend', 'backend', 'mobile', 'database', 'cloud', 'ai'];
-    const isCustom = !standardCats.includes(tech.category.toLowerCase());
-
     setTechForm({
-      category: isCustom ? 'custom' : tech.category,
+      category: tech.category,
       name: tech.name,
       icon: tech.icon || 'ri-code-line',
       desc: tech.desc || '',
@@ -1892,14 +1929,6 @@ const AdminDashboard = () => {
       projects: tech.metadata?.projects || '',
       performance: tech.metadata?.performance || '95%'
     });
-
-    if (isCustom) {
-      setCustomCategory(tech.category);
-      setShowCustomCategory(true);
-    } else {
-      setCustomCategory('');
-      setShowCustomCategory(false);
-    }
   };
 
   const handleDeleteTech = async (id) => {
@@ -1914,6 +1943,88 @@ const AdminDashboard = () => {
         loadTechItems();
       }
     } catch (e) {}
+  };
+
+  // CRUD handlers: Tech Categories
+  const handleCategorySubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setMessage('');
+
+    if (!categoryForm.key || !categoryForm.title) {
+      setError('Category key and title are required.');
+      setLoading(false);
+      return;
+    }
+
+    const payload = {
+      key: categoryForm.key.toLowerCase().trim(),
+      title: categoryForm.title,
+      desc: categoryForm.desc,
+      tag: categoryForm.tag,
+      icon: categoryForm.icon,
+      order: Number(categoryForm.order) || 0
+    };
+
+    const url = editingCategoryId ? `/api/techcategories/${editingCategoryId}` : '/api/techcategories';
+    const method = editingCategoryId ? 'PUT' : 'POST';
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to submit category.');
+
+      setMessage(editingCategoryId ? 'Technology category successfully updated!' : 'Technology category successfully created!');
+      setCategoryForm({ key: '', title: '', desc: '', tag: '', icon: 'ri-code-s-slash-line', order: 0 });
+      setEditingCategoryId(null);
+      loadTechCategories();
+      loadTechItems(); // reload items in case category key changed
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditCategory = (cat) => {
+    setEditingCategoryId(cat._id);
+    setCategoryForm({
+      key: cat.key,
+      title: cat.title,
+      desc: cat.desc || '',
+      tag: cat.tag || '',
+      icon: cat.icon || 'ri-code-s-slash-line',
+      order: cat.order || 0
+    });
+  };
+
+  const handleDeleteCategory = async (id) => {
+    if (!window.confirm('WARNING: Deleting a category will also delete ALL technology items in it! Are you absolutely sure you want to proceed?')) return;
+    try {
+      const res = await fetch(`/api/techcategories/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setMessage('Category and associated technologies deleted successfully.');
+        loadTechCategories();
+        loadTechItems();
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Failed to delete category.');
+      }
+    } catch (e) {
+      setError(e.message);
+    }
   };
 
   const handleDeleteLead = async (id) => {
@@ -2092,9 +2203,9 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager'].includes(activeSection) ? 'active-split' : ''}`}>
+        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager'].includes(activeSection) ? 'active-split' : ''}`}>
           {/* LIVE PREVIEW (Only for page sections) */}
-          {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager'].includes(activeSection) && sectionContent && (
+          {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager'].includes(activeSection) && sectionContent && (
             <div className="admin-section-preview-block">
               <div className="admin-preview-heading">
                 <small style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Live preview matching website styles</small>
@@ -2124,7 +2235,7 @@ const AdminDashboard = () => {
             {/* =========================================================
                 TAB 1 & 2: SECTIONS FORM EDITORS
                 ========================================================= */}
-            {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager'].includes(activeSection) && sectionContent && (
+            {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager'].includes(activeSection) && sectionContent && (
               <form onSubmit={handleSaveSection} style={{ display: 'grid', gap: '22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <h2 style={{ fontSize: '20px', fontWeight: 800 }}>Edit {activeSection.toUpperCase().replace('_', ' ')}</h2>
@@ -3513,141 +3624,277 @@ const AdminDashboard = () => {
             )}
 
             {/* =========================================================
-                TAB 5: TECH STACK CRUD MANAGER
+                TAB 5: TECH STACK & CATEGORIES CRUD MANAGER
                 ========================================================= */}
-            {activeTab === 'techstack' && (
+            {(activeTab === 'techstack' || (activeTab === 'tech_page' && activeSection === 'techstack_manager')) && (
               <div>
-                <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '18px' }}>
-                  {editingId ? 'Edit Tech Stack Item' : 'Add New Technology Item'}
-                </h2>
-
-                <div className="admin-inline-live-preview admin-inline-live-preview-top">
-                  <div className="admin-preview-heading">
-                    <span>Tech Card Preview</span>
-                    <small>Live while creating/updating</small>
-                  </div>
-                  {renderTechFormPreview()}
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '14px', flexWrap: 'wrap' }}>
+                  <button 
+                    type="button" 
+                    onClick={() => setTechManagerSubTab('items')} 
+                    className={`tech-tab ${techManagerSubTab === 'items' ? 'active' : ''}`}
+                    style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <i className="ri-cpu-line"></i> Manage Technology Items
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => setTechManagerSubTab('categories')} 
+                    className={`tech-tab ${techManagerSubTab === 'categories' ? 'active' : ''}`}
+                    style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <i className="ri-list-settings-line"></i> Manage Categories
+                  </button>
                 </div>
 
-                <form onSubmit={handleTechSubmit} style={{ display: 'grid', gap: '18px', background: 'rgba(255,255,255,0.01)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)', marginBottom: '36px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
-                    <div className="form-group">
-                      <label className="form-label">Technology Name *</label>
-                      <input className="form-control" type="text" placeholder="e.g. React" value={techForm.name} onChange={(e) => setTechForm(prev => ({ ...prev, name: e.target.value }))} required />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Category Group *</label>
-                      <select 
-                        className="form-control" 
-                        style={{ background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '6px', height: '48px', padding: '0 12px' }} 
-                        value={techForm.category} 
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setTechForm(prev => ({ ...prev, category: val }));
-                          if (val === 'custom') {
-                            setShowCustomCategory(true);
-                          } else {
-                            setShowCustomCategory(false);
-                          }
-                        }} 
-                        required
-                      >
-                        <option value="frontend">Frontend</option>
-                        <option value="backend">Backend</option>
-                        <option value="mobile">Mobile</option>
-                        <option value="database">Database</option>
-                        <option value="cloud">Cloud & DevOps</option>
-                        <option value="ai">AI & Analytics</option>
-                        <option value="custom">+ Add Custom Category...</option>
-                      </select>
-                    </div>
-                  </div>
+                {techManagerSubTab === 'items' ? (
+                  <div>
+                    <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '18px' }}>
+                      {editingId ? 'Edit Tech Stack Item' : 'Add New Technology Item'}
+                    </h2>
 
-                  {showCustomCategory && (
-                    <div className="form-group" style={{ marginTop: '-4px' }}>
-                      <label className="form-label">Custom Category Group Name *</label>
-                      <input 
-                        className="form-control" 
-                        type="text" 
-                        placeholder="e.g. cybersecurity, blockchain, testing" 
-                        value={customCategory} 
-                        onChange={(e) => setCustomCategory(e.target.value)} 
-                        required 
-                      />
+                    <div className="admin-inline-live-preview admin-inline-live-preview-top">
+                      <div className="admin-preview-heading">
+                        <span>Tech Card Preview</span>
+                        <small>Live while creating/updating</small>
+                      </div>
+                      {renderTechFormPreview()}
                     </div>
-                  )}
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
-                    <div className="form-group">
-                      <label className="form-label">Remixicon Icon Class</label>
-                      <input className="form-control" type="text" placeholder="e.g. ri-reactjs-line" value={techForm.icon} onChange={(e) => setTechForm(prev => ({ ...prev, icon: e.target.value }))} />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Custom Styling Accent Color</label>
-                      <input className="form-control" type="text" placeholder="rgba(20, 184, 166, 0.1)" value={techForm.color} onChange={(e) => setTechForm(prev => ({ ...prev, color: e.target.value }))} />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Description / Feature Summary</label>
-                    <textarea className="form-control" style={{ minHeight: '60px' }} value={techForm.desc} onChange={(e) => setTechForm(prev => ({ ...prev, desc: e.target.value }))} />
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-                    <div className="form-group">
-                      <label className="form-label" style={{ fontSize: '11px' }}>Best For</label>
-                      <input className="form-control" type="text" placeholder="Dynamic Web Apps" value={techForm.bestFor} onChange={(e) => setTechForm(prev => ({ ...prev, bestFor: e.target.value }))} />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label" style={{ fontSize: '11px' }}>Projects</label>
-                      <input className="form-control" type="text" placeholder="SPA, Dashboards" value={techForm.projects} onChange={(e) => setTechForm(prev => ({ ...prev, projects: e.target.value }))} />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label" style={{ fontSize: '11px' }}>Performance Score</label>
-                      <input className="form-control" type="text" placeholder="e.g. 99%" value={techForm.performance} onChange={(e) => setTechForm(prev => ({ ...prev, performance: e.target.value }))} />
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
-                    <button type="submit" className="btn btn-primary" style={{ padding: '12px 30px', border: 'none', height: '48px' }}>
-                      <span>{editingId ? 'Update Tech Item' : 'Add Tech Item'}</span>
-                    </button>
-                    {editingId && (
-                      <button 
-                        type="button" 
-                        onClick={() => { 
-                          setEditingId(null); 
-                          setTechForm({ category: 'frontend', name: '', icon: 'ri-code-line', desc: '', color: 'rgba(20, 184, 166, 0.1)', bestFor: '', projects: '', performance: '95%' }); 
-                          setCustomCategory('');
-                          setShowCustomCategory(false);
-                        }} 
-                        className="btn btn-secondary" 
-                        style={{ padding: '12px 20px', height: '48px' }}
-                      >
-                        Cancel
-                      </button>
-                    )}
-                  </div>
-                </form>
-
-                <h3 style={{ fontSize: '18px', fontWeight: 800, marginBottom: '14px' }}>Current Technologies List</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px' }}>
-                  {techItems.map((tech) => (
-                    <div key={tech._id} className="glass-card" style={{ padding: '14px', border: '1px solid var(--border)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ color: 'var(--accent)' }}><i className={tech.icon}></i></span>
-                          <strong style={{ fontSize: '14px' }}>{tech.name}</strong>
+                    <form onSubmit={handleTechSubmit} style={{ display: 'grid', gap: '18px', background: 'rgba(255,255,255,0.01)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)', marginBottom: '36px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+                        <div className="form-group">
+                          <label className="form-label">Technology Name *</label>
+                          <input className="form-control" type="text" placeholder="e.g. React" value={techForm.name} onChange={(e) => setTechForm(prev => ({ ...prev, name: e.target.value }))} required />
                         </div>
-                        <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Category: {tech.category}</span>
+                        <div className="form-group">
+                          <label className="form-label">Category Group *</label>
+                          <select 
+                            className="form-control" 
+                            style={{ background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '6px', height: '48px', padding: '0 12px' }} 
+                            value={techForm.category} 
+                            onChange={(e) => setTechForm(prev => ({ ...prev, category: e.target.value }))} 
+                            required
+                          >
+                            {techCategories.length > 0 ? (
+                              techCategories.map(cat => (
+                                <option key={cat.key} value={cat.key}>{cat.title} ({cat.key})</option>
+                              ))
+                            ) : (
+                              <>
+                                <option value="frontend">Frontend</option>
+                                <option value="backend">Backend</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="database">Database</option>
+                                <option value="cloud">Cloud & DevOps</option>
+                                <option value="ai">AI & Analytics</option>
+                              </>
+                            )}
+                          </select>
+                        </div>
                       </div>
-                      <div style={{ display: 'flex', gap: '4px' }}>
-                        <button onClick={() => handleEditTech(tech)} className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '11px' }}>Edit</button>
-                        <button onClick={() => handleDeleteTech(tech._id)} className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '11px', background: 'rgba(239,68,68,0.1)', color: '#ef4444', borderColor: 'rgba(239,68,68,0.2)' }}>Delete</button>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+                        <div className="form-group">
+                          <label className="form-label">Remixicon Icon Class</label>
+                          <input className="form-control" type="text" placeholder="e.g. ri-reactjs-line" value={techForm.icon} onChange={(e) => setTechForm(prev => ({ ...prev, icon: e.target.value }))} />
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label">Custom Styling Accent Color</label>
+                          <input className="form-control" type="text" placeholder="rgba(20, 184, 166, 0.1)" value={techForm.color} onChange={(e) => setTechForm(prev => ({ ...prev, color: e.target.value }))} />
+                        </div>
                       </div>
+
+                      <div className="form-group">
+                        <label className="form-label">Description / Feature Summary</label>
+                        <textarea className="form-control" style={{ minHeight: '60px' }} value={techForm.desc} onChange={(e) => setTechForm(prev => ({ ...prev, desc: e.target.value }))} />
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                        <div className="form-group">
+                          <label className="form-label" style={{ fontSize: '11px' }}>Best For</label>
+                          <input className="form-control" type="text" placeholder="Dynamic Web Apps" value={techForm.bestFor} onChange={(e) => setTechForm(prev => ({ ...prev, bestFor: e.target.value }))} />
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label" style={{ fontSize: '11px' }}>Projects</label>
+                          <input className="form-control" type="text" placeholder="SPA, Dashboards" value={techForm.projects} onChange={(e) => setTechForm(prev => ({ ...prev, projects: e.target.value }))} />
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label" style={{ fontSize: '11px' }}>Performance Score</label>
+                          <input className="form-control" type="text" placeholder="e.g. 99%" value={techForm.performance} onChange={(e) => setTechForm(prev => ({ ...prev, performance: e.target.value }))} />
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                        <button type="submit" className="btn btn-primary" style={{ padding: '12px 30px', border: 'none', height: '48px' }}>
+                          <span>{editingId ? 'Update Tech Item' : 'Add Tech Item'}</span>
+                        </button>
+                        {editingId && (
+                          <button 
+                            type="button" 
+                            onClick={() => { 
+                              setEditingId(null); 
+                              setTechForm({ category: techCategories[0]?.key || 'frontend', name: '', icon: 'ri-code-line', desc: '', color: 'rgba(20, 184, 166, 0.1)', bestFor: '', projects: '', performance: '95%' }); 
+                            }} 
+                            className="btn btn-secondary" 
+                            style={{ padding: '12px 20px', height: '48px' }}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
+                    </form>
+
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, marginBottom: '14px' }}>Current Technologies List</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px' }}>
+                      {techItems.map((tech) => (
+                        <div key={tech._id} className="glass-card" style={{ padding: '14px', border: '1px solid var(--border)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span style={{ color: 'var(--accent)' }}><i className={tech.icon}></i></span>
+                              <strong style={{ fontSize: '14px' }}>{tech.name}</strong>
+                            </div>
+                            <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Category: {tech.category}</span>
+                          </div>
+                          <div style={{ display: 'flex', gap: '4px' }}>
+                            <button onClick={() => handleEditTech(tech)} className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '11px' }}>Edit</button>
+                            <button onClick={() => handleDeleteTech(tech._id)} className="btn btn-secondary" style={{ padding: '4px 8px', fontSize: '11px', background: 'rgba(239,68,68,0.1)', color: '#ef4444', borderColor: 'rgba(239,68,68,0.2)' }}>Delete</button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ) : (
+                  <div>
+                    <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '18px' }}>
+                      {editingCategoryId ? 'Edit Technology Category' : 'Add New Technology Category'}
+                    </h2>
+
+                    <div className="admin-inline-live-preview admin-inline-live-preview-top">
+                      <div className="admin-preview-heading">
+                        <span>Category Live Preview</span>
+                        <small>Dynamic visual layout preview</small>
+                      </div>
+                      {renderCategoryFormPreview()}
+                    </div>
+
+                    <form onSubmit={handleCategorySubmit} style={{ display: 'grid', gap: '18px', background: 'rgba(255,255,255,0.01)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)', marginBottom: '36px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
+                        <div className="form-group">
+                          <label className="form-label">Category Key / Slug * (Unique, Lowercase)</label>
+                          <input 
+                            className="form-control" 
+                            type="text" 
+                            placeholder="e.g. frontend, cybersecurity" 
+                            value={categoryForm.key} 
+                            onChange={(e) => setCategoryForm(prev => ({ ...prev, key: e.target.value.toLowerCase().replace(/\s+/g, '-') }))} 
+                            required 
+                            disabled={!!editingCategoryId}
+                          />
+                          {editingCategoryId && <small style={{ color: 'var(--text-muted)' }}>Key cannot be modified after creation.</small>}
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label">Category Title *</label>
+                          <input 
+                            className="form-control" 
+                            type="text" 
+                            placeholder="e.g. Cybersecurity Solutions" 
+                            value={categoryForm.title} 
+                            onChange={(e) => setCategoryForm(prev => ({ ...prev, title: e.target.value }))} 
+                            required 
+                          />
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '18px' }}>
+                        <div className="form-group">
+                          <label className="form-label">Badge Tag (Uppercase)</label>
+                          <input 
+                            className="form-control" 
+                            type="text" 
+                            placeholder="e.g. CYBERSECURITY" 
+                            value={categoryForm.tag} 
+                            onChange={(e) => setCategoryForm(prev => ({ ...prev, tag: e.target.value.toUpperCase() }))} 
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label">Remixicon Icon Class</label>
+                          <input 
+                            className="form-control" 
+                            type="text" 
+                            placeholder="e.g. ri-shield-keyhole-line" 
+                            value={categoryForm.icon} 
+                            onChange={(e) => setCategoryForm(prev => ({ ...prev, icon: e.target.value }))} 
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label">Order Index (Number for sorting)</label>
+                          <input 
+                            className="form-control" 
+                            type="number" 
+                            placeholder="e.g. 10" 
+                            value={categoryForm.order} 
+                            onChange={(e) => setCategoryForm(prev => ({ ...prev, order: e.target.value }))} 
+                          />
+                        </div>
+                      </div>
+
+                      <div className="form-group">
+                        <label className="form-label">Category Description Summary</label>
+                        <textarea 
+                          className="form-control" 
+                          style={{ minHeight: '60px' }} 
+                          placeholder="e.g. Secure your infrastructure and scale with absolute peace of mind." 
+                          value={categoryForm.desc} 
+                          onChange={(e) => setCategoryForm(prev => ({ ...prev, desc: e.target.value }))} 
+                        />
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                        <button type="submit" className="btn btn-primary" style={{ padding: '12px 30px', border: 'none', height: '48px' }}>
+                          <span>{editingCategoryId ? 'Update Category' : 'Add Category'}</span>
+                        </button>
+                        {editingCategoryId && (
+                          <button 
+                            type="button" 
+                            onClick={() => { 
+                              setEditingCategoryId(null); 
+                              setCategoryForm({ key: '', title: '', desc: '', tag: '', icon: 'ri-code-s-slash-line', order: 0 }); 
+                            }} 
+                            className="btn btn-secondary" 
+                            style={{ padding: '12px 20px', height: '48px' }}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
+                    </form>
+
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, marginBottom: '14px' }}>Current Technology Categories</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+                      {techCategories.map((cat) => (
+                        <div key={cat._id} className="glass-card" style={{ padding: '16px', border: '1px solid var(--border)', borderRadius: '10px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                              <span style={{ fontSize: '20px', color: 'var(--accent)' }}><i className={cat.icon}></i></span>
+                              <strong style={{ fontSize: '15px' }}>{cat.title}</strong>
+                            </div>
+                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
+                              <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>key: {cat.key}</span>
+                              <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>order: {cat.order}</span>
+                            </div>
+                            {cat.tag && <span style={{ fontSize: '11px', color: 'var(--accent)', background: 'rgba(20,184,166,0.1)', padding: '1px 6px', borderRadius: '4px', display: 'inline-block', marginBottom: '8px' }}>{cat.tag}</span>}
+                            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{cat.desc || 'No description provided.'}</p>
+                          </div>
+                          <div style={{ display: 'flex', gap: '8px', marginTop: '14px' }}>
+                            <button onClick={() => handleEditCategory(cat)} className="btn btn-secondary" style={{ flex: 1, padding: '6px 0', fontSize: '12px' }}>Edit</button>
+                            <button onClick={() => handleDeleteCategory(cat._id)} className="btn btn-secondary" style={{ flex: 1, padding: '6px 0', fontSize: '12px', background: 'rgba(239,68,68,0.1)', color: '#ef4444', borderColor: 'rgba(239,68,68,0.2)' }}>Delete</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

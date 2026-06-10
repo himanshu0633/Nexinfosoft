@@ -5,6 +5,14 @@ import { normalizeVisibleServices } from '../utils/services';
 
 const Header = () => {
   const [services, setServices] = useState(normalizeVisibleServices(servicesData));
+  const [techCategories, setTechCategories] = useState([
+    { key: 'frontend', title: 'Frontend Tech' },
+    { key: 'backend', title: 'Backend Tech' },
+    { key: 'mobile', title: 'Mobile Solutions' },
+    { key: 'database', title: 'Database Systems' },
+    { key: 'cloud', title: 'Cloud & DevOps' },
+    { key: 'ai', title: 'AI & Analytics' }
+  ]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [techMenuOpen, setTechMenuOpen] = useState(false);
@@ -44,7 +52,22 @@ const Header = () => {
       }
     };
 
+    const fetchTechCategories = async () => {
+      try {
+        const res = await fetch(`/api/techcategories?t=${Date.now()}`, { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setTechCategories(data);
+          }
+        }
+      } catch (err) {
+        // Static fallback categories remain active
+      }
+    };
+
     fetchServices();
+    fetchTechCategories();
   }, []);
 
   // Handle scroll events for blur progress and sticky styling
@@ -284,30 +307,26 @@ const Header = () => {
                   <Link to="/technology-stack" className="mega-view-all">View all <i className="ri-arrow-right-s-line"></i></Link>
                 </div>
                 <div className="mega-services-grid">
-                  <Link to="/technology-stack?tab=frontend" className="mega-service-link">
-                    <span></span>
-                    Frontend Tech
-                  </Link>
-                  <Link to="/technology-stack?tab=backend" className="mega-service-link">
-                    <span></span>
-                    Backend Tech
-                  </Link>
-                  <Link to="/technology-stack?tab=mobile" className="mega-service-link">
-                    <span></span>
-                    Mobile Solutions
-                  </Link>
-                  <Link to="/technology-stack?tab=database" className="mega-service-link">
-                    <span></span>
-                    Database Systems
-                  </Link>
-                  <Link to="/technology-stack?tab=cloud" className="mega-service-link">
-                    <span></span>
-                    Cloud &amp; DevOps
-                  </Link>
-                  <Link to="/technology-stack?tab=ai" className="mega-service-link">
-                    <span></span>
-                    AI &amp; Analytics
-                  </Link>
+                  {techCategories.map((cat) => {
+                    let displayTitle = cat.title;
+                    if (cat.key === 'frontend' && cat.title === 'Modern Frontend Technologies') displayTitle = 'Frontend Tech';
+                    if (cat.key === 'backend' && cat.title === 'Robust Backend Technologies') displayTitle = 'Backend Tech';
+                    if (cat.key === 'mobile' && cat.title === 'Scalable Mobile Technologies') displayTitle = 'Mobile Solutions';
+                    if (cat.key === 'database' && cat.title === 'Secure Database Technologies') displayTitle = 'Database Systems';
+                    if (cat.key === 'cloud' && cat.title === 'DevOps & Cloud Orchestrations') displayTitle = 'Cloud & DevOps';
+                    if (cat.key === 'ai' && cat.title === 'Artificial Intelligence & Analytics') displayTitle = 'AI & Analytics';
+
+                    return (
+                      <Link 
+                        key={cat.key} 
+                        to={`/technology-stack?tab=${cat.key}`} 
+                        className="mega-service-link"
+                      >
+                        <span></span>
+                        {displayTitle}
+                      </Link>
+                    );
+                  })}
                 </div>
                 <div className="mega-menu-foot">
                   <span></span>

@@ -7,6 +7,7 @@ const SectionContent = require('../models/SectionContent');
 const Service = require('../models/Service');
 const Project = require('../models/Project');
 const TechItem = require('../models/TechItem');
+const TechCategory = require('../models/TechCategory');
 const projectDetails = require('../scripts/seedProjectDetails');
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/nexinfosoft';
@@ -857,7 +858,35 @@ async function initializeDatabase() {
         page: 'portfolio',
         order: 0,
         visible: true,
-        metadata: {}
+        metadata: {
+          stats: [
+            { label: 'Projects Delivered', value: '300+' },
+            { label: 'Happy Clients', value: '250+' },
+            { label: 'Experts Team', value: '50+' },
+            { label: 'Years Experience', value: '10+' }
+          ]
+        }
+      },
+      {
+        _id: 'portfolio_page_featured',
+        title: 'MedVitals Clinic Portal',
+        subtitle: 'Healthcare',
+        description: 'Manual medical patient registration and schedules triggered heavy booking delays, file losses, and data entry errors.',
+        image_url: '',
+        page: 'portfolio',
+        order: 1,
+        visible: true,
+        metadata: {
+          solution: 'An automated cloud clinic portal with interactive doctor scheduler grids, real-time secure patient records upload, and direct billing APIs.',
+          techStack: ['React', 'Node.js', 'PostgreSQL', 'AWS Cloud'],
+          metrics: [
+            { label: 'Leads Generated', value: '+200%' },
+            { label: 'Faster Operations', value: '+65%' },
+            { label: 'Revenue Growth', value: '+40%' }
+          ],
+          bg: 'linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(59, 130, 246, 0.08))',
+          icon: 'ri-heart-pulse-line'
+        }
       },
       {
         _id: 'portfolio_page_tech',
@@ -866,9 +895,23 @@ async function initializeDatabase() {
         description: 'We leverage the most stable, performant, and advanced technology stacks to secure and scale your software assets.',
         image_url: '',
         page: 'portfolio',
-        order: 1,
+        order: 2,
         visible: true,
-        metadata: {}
+        metadata: {
+          technologies: [
+            { name: 'React', icon: 'ri-reactjs-line', color: '#06b6d4' },
+            { name: 'Next.js', icon: 'ri-nextjs-line', color: '#0f172a' },
+            { name: 'Node.js', icon: 'ri-nodejs-line', color: '#10b981' },
+            { name: 'MongoDB', icon: 'ri-leaf-line', color: '#10b981' },
+            { name: 'PostgreSQL', icon: 'ri-database-2-line', color: '#3b82f6' },
+            { name: 'React Native', icon: 'ri-reactjs-line', color: '#06b6d4' },
+            { name: 'Flutter', icon: 'ri-flutter-line', color: '#06b6d4' },
+            { name: 'AWS', icon: 'ri-amazon-line', color: '#f59e0b' },
+            { name: 'Docker', icon: 'ri-box-3-line', color: '#3b82f6' },
+            { name: 'AI Solutions', icon: 'ri-brain-line', color: '#8b5cf6' },
+            { name: 'Power BI', icon: 'ri-bar-chart-box-line', color: '#f59e0b' }
+          ]
+        }
       },
       {
         _id: 'portfolio_page_testimonials',
@@ -877,9 +920,36 @@ async function initializeDatabase() {
         description: 'Nexinfosoft reviewed by company leaders and startup founders driving automation workflows.',
         image_url: '',
         page: 'portfolio',
-        order: 2,
+        order: 3,
         visible: true,
-        metadata: {}
+        metadata: {
+          testimonials: [
+            {
+              company: 'Zenith Logistics',
+              clientName: 'MR. HIMANSHU',
+              role: 'Founder',
+              avatar: 'ri-user-3-line',
+              review: 'Nexinfosoft custom hyperlocal delivery portal reduced our order schedule delays by 65% in the first month. The mobile tracking features are incredibly smooth and fast.',
+              rating: 5
+            },
+            {
+              company: 'PropFinder Realty',
+              clientName: 'MR. RAHUL',
+              role: 'Founder',
+              avatar: 'ri-user-3-line',
+              review: 'The real estate search application they built handles thousands of listing updates instantly. We saw an immediate 40% growth in client lead inquiries.',
+              rating: 5
+            },
+            {
+              company: 'Alpha MedGroup',
+              clientName: 'Dr. Ananya Mehta',
+              role: 'Chief Medical Officer',
+              avatar: 'ri-user-3-line',
+              review: 'Highly professional software team. The clinic scheduler system they built eliminated patient registration bottlenecks entirely. Flawlessly secure and compliant.',
+              rating: 5
+            }
+          ]
+        }
       },
       {
         _id: 'portfolio_page_industries',
@@ -888,9 +958,20 @@ async function initializeDatabase() {
         description: 'We engineer specialized software systems for diverse global business categories.',
         image_url: '',
         page: 'portfolio',
-        order: 3,
+        order: 4,
         visible: true,
-        metadata: {}
+        metadata: {
+          industries: [
+            { name: 'Healthcare', icon: 'ri-heart-pulse-line', color: 'rgba(20, 184, 166, 0.08)' },
+            { name: 'Real Estate', icon: 'ri-home-4-line', color: 'rgba(59, 130, 246, 0.08)' },
+            { name: 'Education', icon: 'ri-graduation-cap-line', color: 'rgba(139, 92, 246, 0.08)' },
+            { name: 'Manufacturing', icon: 'ri-settings-4-line', color: 'rgba(245, 158, 11, 0.08)' },
+            { name: 'Finance', icon: 'ri-bank-line', color: 'rgba(16, 185, 129, 0.08)' },
+            { name: 'Retail', icon: 'ri-shopping-bag-line', color: 'rgba(236, 72, 153, 0.08)' },
+            { name: 'Logistics', icon: 'ri-truck-line', color: 'rgba(6, 182, 212, 0.08)' },
+            { name: 'E-Commerce', icon: 'ri-shopping-cart-2-line', color: 'rgba(239, 68, 68, 0.08)' }
+          ]
+        }
       },
       {
         _id: 'portfolio_page_cta',
@@ -899,7 +980,7 @@ async function initializeDatabase() {
         description: "Let's transform your idea into a scalable digital solution.",
         image_url: '',
         page: 'portfolio',
-        order: 4,
+        order: 5,
         visible: true,
         metadata: {}
       }
@@ -1206,7 +1287,65 @@ async function initializeDatabase() {
       console.log('Default portfolio projects successfully seeded in MongoDB.');
     }
 
-    // 5. Seed Default Tech Stack Items
+    // 5. Seed Default Tech Categories
+    const techCategoriesCount = await TechCategory.countDocuments();
+    if (techCategoriesCount === 0) {
+      const defaultCategories = [
+        {
+          key: 'frontend',
+          title: 'Modern Frontend Technologies',
+          desc: 'Build beautiful, fast, and interactive user experiences with the best frontend technologies.',
+          tag: 'FRONTEND TECHNOLOGIES',
+          icon: 'ri-layout-4-line',
+          order: 0
+        },
+        {
+          key: 'backend',
+          title: 'Robust Backend Technologies',
+          desc: 'Power your applications with highly scalable, secure, and fast server-side technologies.',
+          tag: 'BACKEND TECHNOLOGIES',
+          icon: 'ri-server-line',
+          order: 1
+        },
+        {
+          key: 'mobile',
+          title: 'Scalable Mobile Technologies',
+          desc: 'Build native-performing mobile applications for iOS and Android devices.',
+          tag: 'MOBILE TECHNOLOGIES',
+          icon: 'ri-smartphone-line',
+          order: 2
+        },
+        {
+          key: 'database',
+          title: 'Secure Database Technologies',
+          desc: 'Store your structured and unstructured business information securely with rapid search indexing.',
+          tag: 'DATABASE TECHNOLOGIES',
+          icon: 'ri-database-2-line',
+          order: 3
+        },
+        {
+          key: 'cloud',
+          title: 'DevOps & Cloud Orchestrations',
+          desc: 'Deploy containerized, high-availability, scalable software pipelines globally.',
+          tag: 'CLOUD & DEVOPS',
+          icon: 'ri-cloud-line',
+          order: 4
+        },
+        {
+          key: 'ai',
+          title: 'Artificial Intelligence & Analytics',
+          desc: 'Build smart operations utilizing predictive algorithms and machine learning dashboards.',
+          tag: 'AI & ANALYTICS',
+          icon: 'ri-brain-line',
+          order: 5
+        }
+      ];
+
+      await TechCategory.insertMany(defaultCategories);
+      console.log('Default tech categories successfully seeded in MongoDB.');
+    }
+
+    // 6. Seed Default Tech Stack Items
     const techItemsCount = await TechItem.countDocuments();
     if (techItemsCount === 0) {
       const defaultTechs = [
