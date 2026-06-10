@@ -507,6 +507,11 @@ const Services = () => {
             <h2 className="section-title-premium text-center">
               {pageContent.benefits.title}
             </h2>
+            {pageContent.benefits.description && (
+              <p className="section-desc-premium text-center">
+                {pageContent.benefits.description}
+              </p>
+            )}
           </div>
 
           <div className="benefits-premium-horizontal-grid">

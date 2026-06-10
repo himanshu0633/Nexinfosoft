@@ -600,7 +600,16 @@ const AdminDashboard = () => {
         description: '',
         page: 'services',
         order: 2,
-        metadata: {}
+        metadata: {
+          cards: [
+            { icon: 'ri-line-chart-line', title: 'More qualified leads', text: 'Attract the right audience and grow consistently.' },
+            { icon: 'ri-time-line', title: 'Less manual work', text: 'Automate processes and save valuable time.' },
+            { icon: 'ri-shield-check-line', title: 'More trust', text: 'Build customer confidence with reliable solutions.' },
+            { icon: 'ri-bar-chart-box-line', title: 'Clearer reporting', text: 'Get insights that help you make better decisions.' },
+            { icon: 'ri-loop-left-line', title: 'Better Automation', text: 'Integrate tools to run workflows autonomously.' },
+            { icon: 'ri-pulse-line', title: 'Scalable Operations', text: 'Expand capability as transaction volume rises.' }
+          ]
+        }
       },
       services_page_tech: {
         _id: 'services_page_tech',
@@ -1357,6 +1366,19 @@ const AdminDashboard = () => {
           }
           throw new Error(data.error || 'Failed to retrieve section.');
         }
+        if (activeSection === 'services_page_benefits' && (!data.metadata || !data.metadata.cards || data.metadata.cards.length === 0)) {
+          data.metadata = {
+            ...(data.metadata || {}),
+            cards: [
+              { icon: 'ri-line-chart-line', title: 'More qualified leads', text: 'Attract the right audience and grow consistently.' },
+              { icon: 'ri-time-line', title: 'Less manual work', text: 'Automate processes and save valuable time.' },
+              { icon: 'ri-shield-check-line', title: 'More trust', text: 'Build customer confidence with reliable solutions.' },
+              { icon: 'ri-bar-chart-box-line', title: 'Clearer reporting', text: 'Get insights that help you make better decisions.' },
+              { icon: 'ri-loop-left-line', title: 'Better Automation', text: 'Integrate tools to run workflows autonomously.' },
+              { icon: 'ri-pulse-line', title: 'Scalable Operations', text: 'Expand capability as transaction volume rises.' }
+            ]
+          };
+        }
         setSectionContent(data);
       } catch (err) {
         setError(err.message);
@@ -1461,6 +1483,24 @@ const AdminDashboard = () => {
       metadata: {
         ...prev.metadata,
         [key]: [...(prev.metadata?.[key] || []), item]
+      }
+    }));
+  };
+
+  const initializeDefaultBenefits = () => {
+    const defaults = [
+      { icon: 'ri-line-chart-line', title: 'More qualified leads', text: 'Attract the right audience and grow consistently.' },
+      { icon: 'ri-time-line', title: 'Less manual work', text: 'Automate processes and save valuable time.' },
+      { icon: 'ri-shield-check-line', title: 'More trust', text: 'Build customer confidence with reliable solutions.' },
+      { icon: 'ri-bar-chart-box-line', title: 'Clearer reporting', text: 'Get insights that help you make better decisions.' },
+      { icon: 'ri-loop-left-line', title: 'Better Automation', text: 'Integrate tools to run workflows autonomously.' },
+      { icon: 'ri-pulse-line', title: 'Scalable Operations', text: 'Expand capability as transaction volume rises.' }
+    ];
+    setSectionContent(prev => ({
+      ...prev,
+      metadata: {
+        ...prev.metadata,
+        cards: defaults
       }
     }));
   };
@@ -2607,13 +2647,25 @@ const AdminDashboard = () => {
                           <div className="admin-page-edit-heading">
                             <strong>Cards Content List (Current: {currentCount})</strong>
                             {(!isStrengthsSection || currentCount < 6) ? (
-                              <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={() => addMetadataArrayObject(listKey, { title: 'New Card', text: '', ...(hasIcon ? { icon: 'ri-checkbox-circle-line' } : {}) })}
-                              >
-                                <i className="ri-add-line"></i> Add Card
-                              </button>
+                              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                {activeSection === 'services_page_benefits' && currentCount === 0 && (
+                                  <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={initializeDefaultBenefits}
+                                    style={{ background: 'rgba(20, 184, 166, 0.1)', color: 'var(--accent)', borderColor: 'rgba(20, 184, 166, 0.2)' }}
+                                  >
+                                    <i className="ri-refresh-line"></i> Load Default Benefits
+                                  </button>
+                                )}
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  onClick={() => addMetadataArrayObject(listKey, { title: 'New Card', text: '', ...(hasIcon ? { icon: 'ri-checkbox-circle-line' } : {}) })}
+                                >
+                                  <i className="ri-add-line"></i> Add Card
+                                </button>
+                              </div>
                             ) : (
                               <span style={{ fontSize: '12.5px', color: 'var(--accent)', fontWeight: 'bold' }}>
                                 <i className="ri-error-warning-line"></i> Max 6 strengths allowed
