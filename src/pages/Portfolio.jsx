@@ -79,6 +79,22 @@ const Portfolio = () => {
       subtitle: 'OUR PORTFOLIO',
       description: 'Explore custom software solutions, web applications, mobile apps, ERP systems, CRM platforms, and AI-powered products built for businesses across multiple industries.'
     },
+    featured: {
+      title: 'MedVitals Clinic Portal',
+      subtitle: 'Healthcare',
+      description: 'Manual medical patient registration and schedules triggered heavy booking delays, file losses, and data entry errors.',
+      metadata: {
+        solution: 'An automated cloud clinic portal with interactive doctor scheduler grids, real-time secure patient records upload, and direct billing APIs.',
+        techStack: ['React', 'Node.js', 'PostgreSQL', 'AWS Cloud'],
+        metrics: [
+          { label: 'Leads Generated', value: '+200%' },
+          { label: 'Faster Operations', value: '+65%' },
+          { label: 'Revenue Growth', value: '+40%' }
+        ],
+        bg: 'linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(59, 130, 246, 0.08))',
+        icon: 'ri-heart-pulse-line'
+      }
+    },
     tech: {
       title: 'Technologies Behind Our Solutions',
       subtitle: 'OUR ENGINE',
@@ -171,6 +187,7 @@ const Portfolio = () => {
     const fetchPageContent = async () => {
       const contentMap = {
         portfolio_page_hero: 'hero',
+        portfolio_page_featured: 'featured',
         portfolio_page_tech: 'tech',
         portfolio_page_testimonials: 'testimonials',
         portfolio_page_industries: 'industries',
@@ -313,22 +330,20 @@ const Portfolio = () => {
 
               {/* Micro Stats Counter Row */}
               <div className="portfolio-hero-stats">
-                <div className="port-stat-item">
-                  <h3><AnimatedCounter value="300+" /></h3>
-                  <span>Projects Delivered</span>
-                </div>
-                <div className="port-stat-item">
-                  <h3><AnimatedCounter value="250+" /></h3>
-                  <span>Happy Clients</span>
-                </div>
-                <div className="port-stat-item">
-                  <h3><AnimatedCounter value="50+" /></h3>
-                  <span>Experts Team</span>
-                </div>
-                <div className="port-stat-item">
-                  <h3><AnimatedCounter value="10+" /></h3>
-                  <span>Years Experience</span>
-                </div>
+                {(pageContent.hero?.metadata?.stats && pageContent.hero.metadata.stats.length > 0
+                  ? pageContent.hero.metadata.stats
+                  : [
+                      { value: '300+', label: 'Projects Delivered' },
+                      { value: '250+', label: 'Happy Clients' },
+                      { value: '50+', label: 'Experts Team' },
+                      { value: '10+', label: 'Years Experience' }
+                    ]
+                ).map((stat, idx) => (
+                  <div key={idx} className="port-stat-item">
+                    <h3><AnimatedCounter value={stat.value} /></h3>
+                    <span>{stat.label}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -414,63 +429,76 @@ const Portfolio = () => {
           {/* ==========================================================================
              SECTION 3: FEATURED CASE STUDY
              ========================================================================== */}
-          {filter === 'all' && (
-            <div className="featured-case-study-sec reveal slide-up delay-100">
-              <span className="featured-case-badge">FEATURED CASE STUDY</span>
-              
-              <div className="featured-case-grid" style={{ background: data.featuredCaseStudy.bg }}>
-                <div className="featured-case-left">
-                  <div className="featured-case-illustration">
-                    <i className={data.featuredCaseStudy.icon}></i>
-                    <div className="featured-pulsing-rings">
-                      <span></span><span></span>
-                    </div>
-                  </div>
-                </div>
+          {filter === 'all' && (() => {
+            const featuredStudy = pageContent.featured || {};
+            const metadata = featuredStudy.metadata || {};
+            const name = featuredStudy.title || data.featuredCaseStudy.name;
+            const industry = featuredStudy.subtitle || data.featuredCaseStudy.industry;
+            const problem = featuredStudy.description || data.featuredCaseStudy.problem;
+            const solution = metadata.solution || data.featuredCaseStudy.solution;
+            const techStack = metadata.techStack || data.featuredCaseStudy.techStack || [];
+            const metrics = metadata.metrics || data.featuredCaseStudy.metrics || [];
+            const bg = metadata.bg || data.featuredCaseStudy.bg;
+            const icon = metadata.icon || data.featuredCaseStudy.icon;
 
-                <div className="featured-case-right">
-                  <span className="featured-industry-tag">{data.featuredCaseStudy.industry}</span>
-                  <h2>{data.featuredCaseStudy.name}</h2>
-                  
-                  <div className="featured-case-specs">
-                    <div className="spec-block">
-                      <strong>Problem Statement:</strong>
-                      <p>{data.featuredCaseStudy.problem}</p>
-                    </div>
-                    
-                    <div className="spec-block">
-                      <strong>Our Solution:</strong>
-                      <p>{data.featuredCaseStudy.solution}</p>
-                    </div>
-                    
-                    <div className="spec-block">
-                      <strong>Technology Stack:</strong>
-                      <div className="featured-tech-chips">
-                        {data.featuredCaseStudy.techStack.map((tech, idx) => (
-                          <span key={idx} className="tech-chip-item">{tech}</span>
-                        ))}
+            return (
+              <div className="featured-case-study-sec reveal slide-up delay-100">
+                <span className="featured-case-badge">FEATURED CASE STUDY</span>
+                
+                <div className="featured-case-grid" style={{ background: bg }}>
+                  <div className="featured-case-left">
+                    <div className="featured-case-illustration">
+                      <i className={icon}></i>
+                      <div className="featured-pulsing-rings">
+                        <span></span><span></span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Results achieved metrics */}
-                  <div className="featured-case-metrics">
-                    {data.featuredCaseStudy.metrics.map((metric, idx) => (
-                      <div key={idx} className="featured-metric-box">
-                        <h3>{metric.value}</h3>
-                        <span>{metric.label}</span>
+                  <div className="featured-case-right">
+                    <span className="featured-industry-tag">{industry}</span>
+                    <h2>{name}</h2>
+                    
+                    <div className="featured-case-specs">
+                      <div className="spec-block">
+                        <strong>Problem Statement:</strong>
+                        <p>{problem}</p>
                       </div>
-                    ))}
-                  </div>
+                      
+                      <div className="spec-block">
+                        <strong>Our Solution:</strong>
+                        <p>{solution}</p>
+                      </div>
+                      
+                      <div className="spec-block">
+                        <strong>Technology Stack:</strong>
+                        <div className="featured-tech-chips">
+                          {(techStack || []).map((tech, idx) => (
+                            <span key={idx} className="tech-chip-item">{tech}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
 
-                  <Link to="/contact" className="btn btn-primary featured-case-cta">
-                    <span>View Case Study</span>
-                    <i className="ri-arrow-right-line"></i>
-                  </Link>
+                    {/* Results achieved metrics */}
+                    <div className="featured-case-metrics">
+                      {(metrics || []).map((metric, idx) => (
+                        <div key={idx} className="featured-metric-box">
+                          <h3>{metric.value}</h3>
+                          <span>{metric.label}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <Link to="/contact" className="btn btn-primary featured-case-cta">
+                      <span>View Case Study</span>
+                      <i className="ri-arrow-right-line"></i>
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* ==========================================================================
              SECTION 4: PROJECT GRID
@@ -535,9 +563,11 @@ const Portfolio = () => {
             </p>
           </div>
 
-          {/* Floating technology logos */}
           <div className="portfolio-techs-floating-row reveal slide-up delay-100">
-            {data.technologies.map((tech, idx) => (
+            {(pageContent.tech?.metadata?.technologies && pageContent.tech.metadata.technologies.length > 0
+              ? pageContent.tech.metadata.technologies
+              : data.technologies
+            ).map((tech, idx) => (
               <div key={idx} className="floating-tech-logo-card">
                 <i className={tech.icon} style={{ color: tech.color }}></i>
                 <span>{tech.name}</span>
@@ -568,11 +598,14 @@ const Portfolio = () => {
           </div>
 
           <div className="testimonials-glass-grid">
-            {data.testimonials.map((test, idx) => (
+            {(pageContent.testimonials?.metadata?.testimonials && pageContent.testimonials.metadata.testimonials.length > 0
+              ? pageContent.testimonials.metadata.testimonials
+              : data.testimonials
+            ).map((test, idx) => (
               <div key={idx} className="testimonial-glass-card reveal slide-up" style={{ '--delay': `${idx * 150}ms` }}>
                 <div className="test-card-head">
                   <div className="test-avatar">
-                    <i className={test.avatar}></i>
+                    <i className={test.avatar || 'ri-user-3-line'}></i>
                   </div>
                   <div>
                     <h4>{test.clientName}</h4>
@@ -583,7 +616,7 @@ const Portfolio = () => {
                 <p className="test-review-text">"{test.review}"</p>
 
                 <div className="test-rating-stars">
-                  {Array.from({ length: test.rating }).map((_, rIdx) => (
+                  {Array.from({ length: test.rating || 5 }).map((_, rIdx) => (
                     <i key={rIdx} className="ri-star-fill star-active"></i>
                   ))}
                 </div>
@@ -609,10 +642,13 @@ const Portfolio = () => {
           </div>
 
           <div ref={portfolioIndustriesScrollerRef} className="industries-icon-grid portfolio-industries-grid">
-            {data.industries.map((ind, idx) => (
+            {(pageContent.industries?.metadata?.industries && pageContent.industries.metadata.industries.length > 0
+              ? pageContent.industries.metadata.industries
+              : data.industries
+            ).map((ind, idx) => (
               <div key={idx} className="industry-icon-card reveal slide-up" style={{ '--delay': `${idx * 80}ms` }}>
                 <div className="industry-icon-badge" style={{ background: ind.color }}>
-                  <i className={ind.icon}></i>
+                  <i className={ind.icon || 'ri-tools-line'}></i>
                 </div>
                 <h3>{ind.name}</h3>
               </div>

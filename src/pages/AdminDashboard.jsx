@@ -899,6 +899,7 @@ const AdminDashboard = () => {
       tech_page_matters: { pageClass: 'tech-page-wrapper', sectionClass: 'tech-matters-sec' },
       tech_page_cta: { pageClass: 'tech-page-wrapper', sectionClass: 'tech-final-cta-sec' },
       portfolio_page_hero: { pageClass: 'portfolio-page-wrapper', sectionClass: 'portfolio-hero-sec', titleClass: 'portfolio-hero-title', descClass: 'portfolio-hero-desc', titleTag: 'h1' },
+      portfolio_page_featured: { pageClass: 'portfolio-page-wrapper', sectionClass: 'featured-case-study-sec' },
       portfolio_page_tech: { pageClass: 'portfolio-page-wrapper', sectionClass: 'portfolio-techs-sec' },
       portfolio_page_testimonials: { pageClass: 'portfolio-page-wrapper', sectionClass: 'portfolio-testimonials-sec' },
       portfolio_page_industries: { pageClass: 'portfolio-page-wrapper', sectionClass: 'portfolio-industries-sec' },
@@ -1418,7 +1419,7 @@ const AdminDashboard = () => {
       }
     };
 
-    if (PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager'].includes(activeSection)) {
+    if (PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection)) {
       fetchSection();
     }
   }, [activeSection, activeTab, token]);
@@ -1479,7 +1480,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (!token) return;
     if (activeTab === 'services' || activeTab === 'service_page') loadServices();
-    if (activeTab === 'projects') loadProjects();
+    if (activeTab === 'projects' || (activeTab === 'portfolio_page' && activeSection === 'projects_manager')) loadProjects();
     if (activeTab === 'techstack' || (activeTab === 'tech_page' && activeSection === 'techstack_manager')) {
       loadTechItems();
       loadTechCategories();
@@ -2203,9 +2204,9 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager'].includes(activeSection) ? 'active-split' : ''}`}>
+        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection) ? 'active-split' : ''}`}>
           {/* LIVE PREVIEW (Only for page sections) */}
-          {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager'].includes(activeSection) && sectionContent && (
+          {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection) && sectionContent && (
             <div className="admin-section-preview-block">
               <div className="admin-preview-heading">
                 <small style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Live preview matching website styles</small>
@@ -2235,7 +2236,7 @@ const AdminDashboard = () => {
             {/* =========================================================
                 TAB 1 & 2: SECTIONS FORM EDITORS
                 ========================================================= */}
-            {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager'].includes(activeSection) && sectionContent && (
+            {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection) && sectionContent && (
               <form onSubmit={handleSaveSection} style={{ display: 'grid', gap: '22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <h2 style={{ fontSize: '20px', fontWeight: 800 }}>Edit {activeSection.toUpperCase().replace('_', ' ')}</h2>
@@ -3114,6 +3115,202 @@ const AdminDashboard = () => {
                   </div>
                 )}
 
+                {activeSection === 'portfolio_page_hero' && sectionContent.metadata && (
+                  <div style={{ display: 'grid', gap: '18px', borderTop: '1px solid var(--border)', paddingTop: '22px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ fontSize: '15px', fontWeight: 700, margin: 0 }}>Hero Stats List</h4>
+                      <button type="button" className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px', margin: 0 }} onClick={() => addMetadataArrayObject('stats', { label: 'New Stat', value: '100+' })}>
+                        <i className="ri-add-line"></i> Add Stat
+                      </button>
+                    </div>
+                    <div style={{ display: 'grid', gap: '12px' }}>
+                      {(sectionContent.metadata.stats || []).map((stat, idx) => (
+                        <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: '10px', alignItems: 'center' }}>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Label *</label>
+                            <input className="form-control" type="text" value={stat.label || ''} onChange={(e) => updateMetadataArrayObject('stats', idx, 'label', e.target.value)} required />
+                          </div>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Value *</label>
+                            <input className="form-control" type="text" value={stat.value || ''} onChange={(e) => updateMetadataArrayObject('stats', idx, 'value', e.target.value)} required />
+                          </div>
+                          <button type="button" onClick={() => removeMetadataArrayObject('stats', idx)} className="btn btn-secondary" style={{ padding: 0, height: '48px', marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }} title="Remove Stat">
+                            <i className="ri-delete-bin-line"></i>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeSection === 'portfolio_page_featured' && sectionContent.metadata && (
+                  <div style={{ display: 'grid', gap: '18px', borderTop: '1px solid var(--border)', paddingTop: '22px' }}>
+                    <h4 style={{ fontSize: '15px', fontWeight: 700, margin: 0 }}>Featured Case Study Extra Fields</h4>
+                    <div className="form-group">
+                      <label className="form-label">Solution Description *</label>
+                      <textarea className="form-control" style={{ minHeight: '80px' }} value={sectionContent.metadata.solution || ''} onChange={(e) => handleMetadataChange('solution', e.target.value)} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Tech Stack (comma-separated) *</label>
+                      <input className="form-control" type="text" value={Array.isArray(sectionContent.metadata.techStack) ? sectionContent.metadata.techStack.join(', ') : (sectionContent.metadata.techStack || '')} onChange={(e) => handleMetadataChange('techStack', e.target.value.split(',').map(s => s.trim()).filter(Boolean))} placeholder="e.g. React, Node.js, PostgreSQL" required />
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                      <div className="form-group">
+                        <label className="form-label">Remixicon Icon Class</label>
+                        <input className="form-control" type="text" value={sectionContent.metadata.icon || 'ri-award-line'} onChange={(e) => handleMetadataChange('icon', e.target.value)} />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Background Style (CSS gradient / color)</label>
+                        <input className="form-control" type="text" value={sectionContent.metadata.bg || ''} onChange={(e) => handleMetadataChange('bg', e.target.value)} placeholder="e.g. linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(59, 130, 246, 0.08))" />
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+                      <h5 style={{ fontSize: '13px', fontWeight: 700, margin: 0 }}>Metrics List</h5>
+                      <button type="button" className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px', margin: 0 }} onClick={() => addMetadataArrayObject('metrics', { label: 'Metric Label', value: '+50%' })}>
+                        <i className="ri-add-line"></i> Add Metric
+                      </button>
+                    </div>
+                    <div style={{ display: 'grid', gap: '10px' }}>
+                      {(sectionContent.metadata.metrics || []).map((metric, idx) => (
+                        <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: '10px', alignItems: 'center' }}>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '10px', marginBottom: '2px' }}>Label *</label>
+                            <input className="form-control" style={{ height: '36px', fontSize: '12.5px' }} type="text" value={metric.label || ''} onChange={(e) => updateMetadataArrayObject('metrics', idx, 'label', e.target.value)} required />
+                          </div>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '10px', marginBottom: '2px' }}>Value *</label>
+                            <input className="form-control" style={{ height: '36px', fontSize: '12.5px' }} type="text" value={metric.value || ''} onChange={(e) => updateMetadataArrayObject('metrics', idx, 'value', e.target.value)} required />
+                          </div>
+                          <button type="button" onClick={() => removeMetadataArrayObject('metrics', idx)} className="btn btn-secondary" style={{ padding: 0, height: '36px', marginTop: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }} title="Remove Metric">
+                            <i className="ri-delete-bin-line"></i>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeSection === 'portfolio_page_tech' && sectionContent.metadata && (
+                  <div style={{ display: 'grid', gap: '18px', borderTop: '1px solid var(--border)', paddingTop: '22px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ fontSize: '15px', fontWeight: 700, margin: 0 }}>Technology Engines List</h4>
+                      <button type="button" className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px', margin: 0 }} onClick={() => addMetadataArrayObject('technologies', { name: 'React', icon: 'ri-reactjs-line', color: '#06b6d4' })}>
+                        <i className="ri-add-line"></i> Add Technology
+                      </button>
+                    </div>
+                    <div style={{ display: 'grid', gap: '12px' }}>
+                      {(sectionContent.metadata.technologies || []).map((tech, idx) => (
+                        <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 40px', gap: '10px', alignItems: 'center' }}>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Tech Name *</label>
+                            <input className="form-control" type="text" value={tech.name || ''} onChange={(e) => updateMetadataArrayObject('technologies', idx, 'name', e.target.value)} required />
+                          </div>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Remixicon Icon Class</label>
+                            <input className="form-control" type="text" value={tech.icon || 'ri-cpu-line'} onChange={(e) => updateMetadataArrayObject('technologies', idx, 'icon', e.target.value)} />
+                          </div>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Color (Hex / CSS)</label>
+                            <input className="form-control" type="text" value={tech.color || '#06b6d4'} onChange={(e) => updateMetadataArrayObject('technologies', idx, 'color', e.target.value)} />
+                          </div>
+                          <button type="button" onClick={() => removeMetadataArrayObject('technologies', idx)} className="btn btn-secondary" style={{ padding: 0, height: '48px', marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }} title="Remove Technology">
+                            <i className="ri-delete-bin-line"></i>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeSection === 'portfolio_page_testimonials' && sectionContent.metadata && (
+                  <div style={{ display: 'grid', gap: '18px', borderTop: '1px solid var(--border)', paddingTop: '22px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ fontSize: '15px', fontWeight: 700, margin: 0 }}>Client Testimonials</h4>
+                      <button type="button" className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px', margin: 0 }} onClick={() => addMetadataArrayObject('testimonials', { clientName: 'New Client', role: 'Founder', company: 'Zenith Logistics', review: 'Awesome work!', rating: 5, avatar: 'ri-user-3-line' })}>
+                        <i className="ri-add-line"></i> Add Testimonial
+                      </button>
+                    </div>
+                    <div style={{ display: 'grid', gap: '16px' }}>
+                      {(sectionContent.metadata.testimonials || []).map((t, idx) => (
+                        <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '20px', borderRadius: '12px', border: '1px solid var(--border)', display: 'grid', gap: '12px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <strong style={{ fontSize: '13px' }}>Testimonial #{idx + 1}</strong>
+                            <button type="button" onClick={() => removeMetadataArrayObject('testimonials', idx)} className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px', margin: 0, color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }} title="Remove Testimonial">
+                              <i className="ri-delete-bin-line"></i> Remove
+                            </button>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+                            <div>
+                              <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Client Name *</label>
+                              <input className="form-control" type="text" value={t.clientName || ''} onChange={(e) => updateMetadataArrayObject('testimonials', idx, 'clientName', e.target.value)} required />
+                            </div>
+                            <div>
+                              <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Role / Designation *</label>
+                              <input className="form-control" type="text" value={t.role || ''} onChange={(e) => updateMetadataArrayObject('testimonials', idx, 'role', e.target.value)} required />
+                            </div>
+                            <div>
+                              <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Company Name *</label>
+                              <input className="form-control" type="text" value={t.company || ''} onChange={(e) => updateMetadataArrayObject('testimonials', idx, 'company', e.target.value)} required />
+                            </div>
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div>
+                              <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Remixicon Avatar Icon / Class</label>
+                              <input className="form-control" type="text" value={t.avatar || 'ri-user-3-line'} onChange={(e) => updateMetadataArrayObject('testimonials', idx, 'avatar', e.target.value)} />
+                            </div>
+                            <div>
+                              <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Rating Stars (1-5) *</label>
+                              <select className="form-control" style={{ background: 'var(--bg-card)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '6px', height: '48px', padding: '0 12px' }} value={t.rating || 5} onChange={(e) => updateMetadataArrayObject('testimonials', idx, 'rating', parseInt(e.target.value, 10) || 5)} required>
+                                <option value="5">5 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="2">2 Stars</option>
+                                <option value="1">1 Star</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Client Review / Feedback Statement *</label>
+                            <textarea className="form-control" style={{ minHeight: '70px' }} value={t.review || ''} onChange={(e) => updateMetadataArrayObject('testimonials', idx, 'review', e.target.value)} required />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeSection === 'portfolio_page_industries' && sectionContent.metadata && (
+                  <div style={{ display: 'grid', gap: '18px', borderTop: '1px solid var(--border)', paddingTop: '22px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ fontSize: '15px', fontWeight: 700, margin: 0 }}>Industries Served List</h4>
+                      <button type="button" className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '12px', margin: 0 }} onClick={() => addMetadataArrayObject('industries', { name: 'Healthcare', icon: 'ri-heart-pulse-line', color: 'rgba(20, 184, 166, 0.08)' })}>
+                        <i className="ri-add-line"></i> Add Industry
+                      </button>
+                    </div>
+                    <div style={{ display: 'grid', gap: '12px' }}>
+                      {(sectionContent.metadata.industries || []).map((ind, idx) => (
+                        <div key={idx} style={{ background: 'rgba(255,255,255,0.01)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 40px', gap: '10px', alignItems: 'center' }}>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Industry Name *</label>
+                            <input className="form-control" type="text" value={ind.name || ''} onChange={(e) => updateMetadataArrayObject('industries', idx, 'name', e.target.value)} required />
+                          </div>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Remixicon Icon Class</label>
+                            <input className="form-control" type="text" value={ind.icon || 'ri-tools-line'} onChange={(e) => updateMetadataArrayObject('industries', idx, 'icon', e.target.value)} />
+                          </div>
+                          <div>
+                            <label className="form-label" style={{ fontSize: '11px', marginBottom: '4px' }}>Background Color/Opacity</label>
+                            <input className="form-control" type="text" value={ind.color || 'rgba(255,255,255,0.05)'} onChange={(e) => updateMetadataArrayObject('industries', idx, 'color', e.target.value)} />
+                          </div>
+                          <button type="button" onClick={() => removeMetadataArrayObject('industries', idx)} className="btn btn-secondary" style={{ padding: 0, height: '48px', marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }} title="Remove Industry">
+                            <i className="ri-delete-bin-line"></i>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <button type="submit" className="btn btn-primary" style={{ width: '100%', height: '54px', border: 'none' }} disabled={loading}>
                   <span>{loading ? 'Saving changes...' : 'Save Section Content'}</span>
                   <i className="ri-save-line"></i>
@@ -3470,7 +3667,7 @@ const AdminDashboard = () => {
             {/* =========================================================
                 TAB 4: PROJECTS CRUD MANAGER
                 ========================================================= */}
-            {activeTab === 'projects' && (
+            {(activeTab === 'projects' || (activeTab === 'portfolio_page' && activeSection === 'projects_manager')) && (
               <div>
                 <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '18px' }}>
                   {editingId ? 'Edit Project' : 'Add New Portfolio Project'}
