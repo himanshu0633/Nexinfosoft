@@ -8,6 +8,7 @@ const Service = require('../models/Service');
 const Project = require('../models/Project');
 const TechItem = require('../models/TechItem');
 const TechCategory = require('../models/TechCategory');
+const CodeInjection = require('../models/CodeInjection');
 const projectDetails = require('../scripts/seedProjectDetails');
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/nexinfosoft';
@@ -77,6 +78,36 @@ async function initializeDatabase() {
       });
       console.log('Default admin user successfully seeded (username: admin, password: admin123)');
     }
+
+    // Seed Default Code Injection Records
+    const defaultPages = [
+      'global',
+      'home',
+      'about',
+      'services',
+      'service-detail',
+      'technology-stack',
+      'portfolio',
+      'project-detail',
+      'contact',
+      'company-profile',
+      'corporate',
+      'free-consultation',
+      'faqs',
+      'privacy-policy',
+      'terms-conditions'
+    ];
+    for (const pageName of defaultPages) {
+      const exists = await CodeInjection.findOne({ page: pageName });
+      if (!exists) {
+        await CodeInjection.create({
+          page: pageName,
+          headCode: '',
+          bodyCode: ''
+        });
+      }
+    }
+    console.log('Code injection records initialized/seeded.');
 
     // 2. Seed Default Section Contents
     // 2. Seed Default Section Contents

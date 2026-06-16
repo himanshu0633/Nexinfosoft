@@ -23,6 +23,7 @@ const projectsRoutes = require('./routes/projects');
 const techstackRoutes = require('./routes/techstack');
 const techcategoriesRoutes = require('./routes/techcategories');
 const contactRoutes = require('./routes/contact');
+const codeInjectionRoutes = require('./routes/codeInjection');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/content', contentRoutes);
@@ -32,6 +33,7 @@ app.use('/api/projects', projectsRoutes);
 app.use('/api/techstack', techstackRoutes);
 app.use('/api/techcategories', techcategoriesRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/code-injections', codeInjectionRoutes);
 
 // Simple backend status route
 app.get('/api/status', (req, res) => {
