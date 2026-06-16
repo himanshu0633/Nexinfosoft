@@ -212,6 +212,11 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
+              <Link to="/admin/dashboard?tab=code_injection" className={`nav-link ${activeTab === 'code_injection' ? 'active' : ''}`}>
+                Code Injection
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to="/admin/dashboard?tab=icons" className={`nav-link ${activeTab === 'icons' ? 'active' : ''}`} style={{ borderLeft: '1px solid rgba(255,255,255,0.15)', paddingLeft: '9px', marginLeft: '3px' }}>
                 <i className="ri-remixicon-line" style={{ marginRight: '3px' }}></i> Icons
               </Link>

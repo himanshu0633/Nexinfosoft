@@ -7,6 +7,7 @@ import CursorGlow from './components/CursorGlow';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import WhatsAppWidget from './components/WhatsAppWidget';
+import CodeInjector from './components/CodeInjector';
 
 // Import page views
 import Home from './pages/Home';
@@ -34,6 +35,7 @@ const AppShell = () => {
     <>
       {/* Premium UX enhancements */}
       <Preloader />
+      <CodeInjector />
       {!isAdminLogin && <CursorGlow />}
       
       {/* Navigation Header */}

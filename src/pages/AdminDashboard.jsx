@@ -9,7 +9,7 @@ import Process from '../components/home/Process';
 import PortfolioPreview from '../components/home/PortfolioPreview';
 import { CustomDynamicSection } from '../components/DynamicPageSections';
 
-const PAGE_TABS = ['home', 'sections', 'about', 'service_page', 'tech_page', 'portfolio_page', 'corporate', 'company_profile', 'contact', 'consultation', 'faqs', 'policies', 'global', 'icons'];
+const PAGE_TABS = ['home', 'sections', 'about', 'service_page', 'tech_page', 'portfolio_page', 'corporate', 'company_profile', 'contact', 'consultation', 'faqs', 'policies', 'global', 'code_injection', 'icons'];
 
 const PAGE_CATEGORY_BY_TAB = {
   home: 'home',
@@ -154,6 +154,8 @@ const getTabLabel = (tab) => {
       return 'Policies Page';
     case 'global':
       return 'Global & Footer';
+    case 'code_injection':
+      return 'Code Injection';
     case 'icons':
       return 'Icons Guide';
     default:
@@ -189,6 +191,7 @@ const getDefaultSectionForTab = (tab) => {
     case 'global':
       return 'footer_links';
     case 'icons':
+    case 'code_injection':
       return '';
     default:
       return '';
@@ -359,6 +362,12 @@ const AdminDashboard = () => {
   // Custom section states
   const [allSections, setAllSections] = useState([]);
   const [customSectionForm, setCustomSectionForm] = useState({ _id: '', title: '', subtitle: '', description: '', image_url: '', page: 'home', order: 0, visible: true });
+
+  // Code Injection states
+  const [codeInjections, setCodeInjections] = useState([]);
+  const [selectedInjectionPage, setSelectedInjectionPage] = useState('global');
+  const [headCode, setHeadCode] = useState('');
+  const [bodyCode, setBodyCode] = useState('');
   
   // Loading & UI states
   const [loading, setLoading] = useState(false);
@@ -1477,6 +1486,87 @@ const AdminDashboard = () => {
     } catch (e) {}
   };
 
+  const loadCodeInjections = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/code-injections', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Failed to load code injections.');
+      const data = await res.json();
+      setCodeInjections(data);
+      // Select the active one
+      const globalInj = data.find(item => item.page === 'global') || data[0];
+      if (globalInj) {
+        setSelectedInjectionPage(globalInj.page);
+        setHeadCode(globalInj.headCode || '');
+        setBodyCode(globalInj.bodyCode || '');
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInjectionPageChange = (pageName, currentInjections = codeInjections) => {
+    setSelectedInjectionPage(pageName);
+    const inj = currentInjections.find(item => item.page === pageName);
+    setHeadCode(inj ? inj.headCode || '' : '');
+    setBodyCode(inj ? inj.bodyCode || '' : '');
+  };
+
+  const handleSaveCodeInjection = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setMessage('');
+    try {
+      const res = await fetch(`/api/code-injections/${selectedInjectionPage}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ headCode, bodyCode })
+      });
+      const data = await res.json();
+      if (res.status === 401 || res.status === 403) {
+        handleAuthExpired();
+        return;
+      }
+      if (!res.ok) throw new Error(data.error || 'Failed to save code injection.');
+
+      setCodeInjections(prev => prev.map(item => item.page === selectedInjectionPage ? data.data : item));
+      window.dispatchEvent(new CustomEvent('code-injections-updated'));
+      setMessage('Code injection configurations saved successfully!');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApplyTemplate = (type, target) => {
+    let code = '';
+    if (type === 'gtm_head') {
+      code = `<!-- Google Tag Manager -->\n<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\nnew Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\nj=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>\n<!-- End Google Tag Manager -->`;
+    } else if (type === 'ga_head') {
+      code = `<!-- Global site tag (gtag.js) - Google Analytics -->\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>\n<script>\n  window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n  gtag('config', 'G-XXXXXXXXXX');\n</script>`;
+    } else if (type === 'css_head') {
+      code = `<style>\n  /* Custom styles injected here */\n  body {\n    /* font-family: sans-serif; */\n  }\n</style>`;
+    } else if (type === 'chat_body') {
+      code = `<!-- Injected Chat Widget Mock -->\n<script>\n  console.log('Initializing custom chat widget...');\n  // Add your chat widget script here\n</script>`;
+    }
+
+    if (target === 'head') {
+      setHeadCode(prev => prev ? prev + '\n' + code : code);
+    } else {
+      setBodyCode(prev => prev ? prev + '\n' + code : code);
+    }
+  };
+
   useEffect(() => {
     if (!token) return;
     if (activeTab === 'services' || activeTab === 'service_page') loadServices();
@@ -1486,6 +1576,7 @@ const AdminDashboard = () => {
       loadTechCategories();
     }
     if (activeTab === 'leads') loadLeads();
+    if (activeTab === 'code_injection') loadCodeInjections();
   }, [activeTab, activeSection, token]);
 
   // Inputs Handlers
@@ -2181,7 +2272,7 @@ const AdminDashboard = () => {
   return (
     <>
       <section className="content-page admin-dashboard-page" style={{ paddingTop: '130px', paddingBottom: '120px' }}>
-        {PAGE_TABS.includes(activeTab) && (
+        {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && activeTab !== 'code_injection' && (
           <div className="container admin-page-navigation">
             <div className="glass-card admin-section-subnav">
               <div className="admin-section-subnav-title">
@@ -2204,9 +2295,9 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection) ? 'active-split' : ''}`}>
+        <div className={`container admin-split-grid ${PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && activeTab !== 'code_injection' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection) ? 'active-split' : ''}`}>
           {/* LIVE PREVIEW (Only for page sections) */}
-          {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection) && sectionContent && (
+          {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && activeTab !== 'code_injection' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection) && sectionContent && (
             <div className="admin-section-preview-block">
               <div className="admin-preview-heading">
                 <small style={{ color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Live preview matching website styles</small>
@@ -2236,7 +2327,7 @@ const AdminDashboard = () => {
             {/* =========================================================
                 TAB 1 & 2: SECTIONS FORM EDITORS
                 ========================================================= */}
-            {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection) && sectionContent && (
+            {PAGE_TABS.includes(activeTab) && activeTab !== 'icons' && activeTab !== 'code_injection' && !['sections_manager', 'services_manager', 'techstack_manager', 'projects_manager'].includes(activeSection) && sectionContent && (
               <form onSubmit={handleSaveSection} style={{ display: 'grid', gap: '22px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                   <h2 style={{ fontSize: '20px', fontWeight: 800 }}>Edit {activeSection.toUpperCase().replace('_', ' ')}</h2>
@@ -4361,6 +4452,158 @@ const AdminDashboard = () => {
                       })}
                     </div>
                   )}
+                </div>
+              );
+            })()}
+
+            {activeTab === 'code_injection' && (() => {
+              const INJECTION_PAGES = [
+                { value: 'global', label: 'Global (All Pages)' },
+                { value: 'home', label: 'Home Page' },
+                { value: 'about', label: 'About Page' },
+                { value: 'services', label: 'Services List Page' },
+                { value: 'service-detail', label: 'Service Detail Pages' },
+                { value: 'technology-stack', label: 'Technology Stack Page' },
+                { value: 'portfolio', label: 'Portfolio Page' },
+                { value: 'project-detail', label: 'Project Detail Pages' },
+                { value: 'contact', label: 'Contact Page' },
+                { value: 'company-profile', label: 'Company Profile Page' },
+                { value: 'corporate', label: 'Corporate Page' },
+                { value: 'free-consultation', label: 'Free Consultation Page' },
+                { value: 'faqs', label: 'FAQs Page' },
+                { value: 'privacy-policy', label: 'Privacy Policy Page' },
+                { value: 'terms-conditions', label: 'Terms & Conditions Page' }
+              ];
+
+              return (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '14px' }}>
+                    <div>
+                      <h2 style={{ fontSize: '20px', fontWeight: 800, margin: 0 }}>Custom Code Injection</h2>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '13px', margin: '4px 0 0 0' }}>
+                        Inject tracking scripts, stylesheets, meta tags, and third-party widgets into page heads or bodies.
+                      </p>
+                    </div>
+                    {loading && <span style={{ fontSize: '13px', color: 'var(--primary)' }}><i className="ri-loader-4-line ri-spin"></i> Saving...</span>}
+                  </div>
+
+                  <div className="glass-card" style={{ padding: '24px', border: '1px solid var(--border)', borderRadius: '12px', marginBottom: '28px', background: 'rgba(245, 158, 11, 0.03)', borderColor: 'rgba(245, 158, 11, 0.15)' }}>
+                    <h3 style={{ fontSize: '14px', color: '#f59e0b', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <i className="ri-error-warning-line"></i> Safety Warning
+                    </h3>
+                    <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5' }}>
+                      These scripts run directly on the live site. Make sure your HTML syntax is correct. Syntax errors in script tags or styles can break the frontend rendering for all users.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleSaveCodeInjection} style={{ display: 'grid', gap: '24px' }}>
+                    <div className="form-group">
+                      <label className="form-label">Select Target Page Scope</label>
+                      <select
+                        className="form-control"
+                        value={selectedInjectionPage}
+                        onChange={(e) => handleInjectionPageChange(e.target.value)}
+                        style={{ 
+                          background: 'var(--bg-card)', 
+                          color: 'var(--text-main)', 
+                          border: '1px solid var(--border)', 
+                          borderRadius: '6px', 
+                          height: '46px', 
+                          padding: '0 14px', 
+                          fontSize: '14px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {INJECTION_PAGES.map(p => (
+                          <option key={p.value} value={p.value} style={{ background: 'var(--bg-card)' }}>
+                            {p.label} {p.value === 'global' ? '(global)' : `(${p.value})`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
+                      {/* Head Injection Block */}
+                      <div className="form-group" style={{ display: 'grid', gap: '8px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <label className="form-label" style={{ margin: 0, fontWeight: 700 }}>
+                            Inject inside <code style={{ color: 'var(--accent)', background: 'rgba(20,184,166,0.1)', padding: '2px 6px', borderRadius: '4px' }}>&lt;head&gt;</code> tag
+                          </label>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button type="button" onClick={() => handleApplyTemplate('gtm_head', 'head')} className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px', margin: 0 }}>
+                              GTM Template
+                            </button>
+                            <button type="button" onClick={() => handleApplyTemplate('ga_head', 'head')} className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px', margin: 0 }}>
+                              Google Analytics
+                            </button>
+                            <button type="button" onClick={() => handleApplyTemplate('css_head', 'head')} className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px', margin: 0 }}>
+                              Style tag
+                            </button>
+                          </div>
+                        </div>
+                        <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+                          Useful for meta descriptions, links, styles, and initialization script parts.
+                        </p>
+                        <textarea
+                          className="form-control"
+                          value={headCode}
+                          onChange={(e) => setHeadCode(e.target.value)}
+                          placeholder="<!-- Add HTML or JS/CSS elements to inject into head -->"
+                          style={{
+                            minHeight: '220px',
+                            fontFamily: 'Courier New, Courier, monospace',
+                            fontSize: '13px',
+                            lineHeight: '1.6',
+                            background: '#0d0d0d',
+                            color: '#e0e0e0',
+                            borderColor: '#262626',
+                            padding: '16px',
+                            borderRadius: '8px'
+                          }}
+                        />
+                      </div>
+
+                      {/* Body Injection Block */}
+                      <div className="form-group" style={{ display: 'grid', gap: '8px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <label className="form-label" style={{ margin: 0, fontWeight: 700 }}>
+                            Inject before closing <code style={{ color: 'var(--accent)', background: 'rgba(20,184,166,0.1)', padding: '2px 6px', borderRadius: '4px' }}>&lt;/body&gt;</code> tag
+                          </label>
+                          <div>
+                            <button type="button" onClick={() => handleApplyTemplate('chat_body', 'body')} className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '11px', margin: 0 }}>
+                              Widget script
+                            </button>
+                          </div>
+                        </div>
+                        <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+                          Useful for chat support integrations, tracking pixels, or custom page footer scripts.
+                        </p>
+                        <textarea
+                          className="form-control"
+                          value={bodyCode}
+                          onChange={(e) => setBodyCode(e.target.value)}
+                          placeholder="<!-- Add script or widget markup to inject before body ends -->"
+                          style={{
+                            minHeight: '220px',
+                            fontFamily: 'Courier New, Courier, monospace',
+                            fontSize: '13px',
+                            lineHeight: '1.6',
+                            background: '#0d0d0d',
+                            color: '#e0e0e0',
+                            borderColor: '#262626',
+                            padding: '16px',
+                            borderRadius: '8px'
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '20px', marginTop: '10px' }}>
+                      <button type="submit" disabled={loading} className="btn btn-primary" style={{ padding: '12px 24px', fontSize: '14px' }}>
+                        {loading ? <><i className="ri-loader-4-line ri-spin" style={{ marginRight: '6px' }}></i> Saving...</> : 'Save Injection Configurations'}
+                      </button>
+                    </div>
+                  </form>
                 </div>
               );
             })()}
