@@ -10031,14 +10031,14 @@ body {
 .footer .contact-info-item {
     color: #9ca3af !important;
     display: flex !important;
-    align-items: start !important;
+    align-items: center !important;
     gap: 12px !important;
 }
 
 .footer .contact-info-item i {
     color: var(--primary) !important; /* Teal green icons */
     font-size: 18px !important;
-    margin-top: 2px !important;
+    margin-top: 0 !important;
 }
 
 .footer .contact-info-item span {
@@ -13151,6 +13151,8 @@ body {
     backdrop-filter: blur(20px) !important;
     overflow: hidden;
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 .portfolio-glass-card:hover {
@@ -13220,6 +13222,9 @@ body {
 
 .portfolio-card-desc {
     padding: 24px;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
 }
 
 .proj-cat-pill {
@@ -13258,6 +13263,8 @@ body {
     font-weight: 700;
     color: var(--accent) !important;
     transition: all 0.3s;
+    margin-top: auto !important;
+    align-self: flex-start !important;
 }
 
 .btn-view-project i {
@@ -24295,7 +24302,7 @@ strong {
 .core-service-card-small {
     grid-column: auto !important;
     grid-row: auto !important;
-    min-height: 238px !important;
+    min-height: 195px !important;
     width: 100% !important;
     max-width: 100% !important;
     display: flex !important;
@@ -24348,7 +24355,7 @@ strong {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin: 0 0 16px !important;
+    margin: 0 0 12px !important;
     border-radius: 8px !important;
     color: #0f8b8d !important;
     background: rgba(15, 139, 141, 0.09) !important;
@@ -24382,7 +24389,7 @@ strong {
     order: 1;
     display: inline-flex !important;
     width: fit-content;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     padding: 5px 9px;
     border-radius: 999px;
     color: #0f8b8d;
@@ -24394,7 +24401,7 @@ strong {
 
 .core-service-card h3 {
     order: 2;
-    margin: 0 0 8px !important;
+    margin: 0 0 6px !important;
     color: #0f172a !important;
     font-size: 18px !important;
     line-height: 1.2 !important;
@@ -24417,7 +24424,7 @@ strong {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: 18px;
+    margin-top: 12px;
     color: #0f8b8d;
     font-size: 12px;
     font-weight: 850;
