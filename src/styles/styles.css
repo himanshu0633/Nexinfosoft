@@ -24499,7 +24499,7 @@ strong {
     .core-service-card-large,
     .core-service-card-medium,
     .core-service-card-small {
-        min-height: 258px !important;
+        min-height: 195px !important;
         padding: 19px !important;
     }
 
