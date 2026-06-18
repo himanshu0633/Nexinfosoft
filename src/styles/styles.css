@@ -24302,7 +24302,7 @@ strong {
 .core-service-card-small {
     grid-column: auto !important;
     grid-row: auto !important;
-    min-height: 195px !important;
+    min-height: 140px !important;
     width: 100% !important;
     max-width: 100% !important;
     display: flex !important;
@@ -24477,7 +24477,7 @@ strong {
 
     .core-service-card,
     .core-service-card-compact {
-        min-height: 190px !important;
+        min-height: 140px !important;
         padding: 20px !important;
     }
 }
@@ -24499,7 +24499,7 @@ strong {
     .core-service-card-large,
     .core-service-card-medium,
     .core-service-card-small {
-        min-height: 195px !important;
+        min-height: 140px !important;
         padding: 19px !important;
     }
 
